@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let Clients = sequelize.define('Clients',
+  let Client = sequelize.define('Client',
     {
       companyName: {
         type: DataTypes.STRING(50)
@@ -32,8 +32,14 @@ module.exports = function (sequelize, DataTypes) {
       },
       UserId: {
         type: DataTypes.INTEGER(11)
-      },
+      }
+    }, {
+      associate: function (models) {
+        Client.hasMany(models.Payment, { foreignKey: 'ClientId', as: 'clientPayments' })
+        Client.hasMany(models.Inspector, { foreignKey: 'ClientId', as: 'clientInspectors' })
+        Client.hasMany(models.ClientZipCode, { foreignKey: 'ClientId', as: 'clientZipCodes' })
+      }
     }
   )
-  return Clients
+  return Client
 }

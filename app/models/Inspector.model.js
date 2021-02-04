@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let Inspectors = sequelize.define('Inspectors',
+  let Inspector = sequelize.define('Inspector',
     {
       fName: {
         type: DataTypes.STRING(50)
@@ -17,5 +17,5 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   )
-  return Inspectors
+  return Inspector
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let Permissions = sequelize.define('Permissions',
+  let Permission = sequelize.define('Permission',
     {
       ModuleActionId: {
         type: DataTypes.INTEGER(20)
@@ -11,5 +11,5 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   )
-  return Permissions
+  return Permission
 }

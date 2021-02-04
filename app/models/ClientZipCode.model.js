@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let ClientZipCodes = sequelize.define('ClientZipCodes',
+  let ClientZipCode = sequelize.define('ClientZipCode',
     {
       ZipCodeId: {
         type: DataTypes.INTEGER(11)
@@ -13,7 +13,11 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.BOOLEAN,
         defaultValue: false
       }
+    }, {
+      associate: function (models) {
+        ClientZipCode.hasMany(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'clientParkingZone' })
+      }
     }
   )
-  return ClientZipCodes
+  return ClientZipCode
 }

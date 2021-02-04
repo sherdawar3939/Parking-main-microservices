@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let Payments = sequelize.define('Payments',
+  let Payment = sequelize.define('Payment',
     {
       amount: {
         type: DataTypes.DECIMAL(11, 4)
@@ -23,5 +23,5 @@ module.exports = function (sequelize, DataTypes) {
       }
     }
   )
-  return Payments
+  return Payment
 }

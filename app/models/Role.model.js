@@ -3,7 +3,7 @@
 module.exports = function (sequelize, DataTypes) {
   let Role = sequelize.define('Role',
     {
-      Name: {
+      name: {
         type: DataTypes.STRING(20)
       },
       description: {
@@ -20,9 +20,11 @@ module.exports = function (sequelize, DataTypes) {
       isDeleteAble: {
         type: DataTypes.BOOLEAN,
         defaultValue: false
-      },
-      RoleId: {
-        type: DataTypes.INTEGER(11)
+      }
+    }, {
+      associate: function (models) {
+        Role.hasMany(models.Permission, { foreignKey: 'RoleId', as: 'rolePermission' })
+        Role.hasMany(models.User, { foreignKey: 'RoleId', as: 'roleUser' })
       }
     }
   )

@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let Modules = sequelize.define('Modules',
+  let Module = sequelize.define('Module',
     {
       name: {
         type: DataTypes.INTEGER(20)
@@ -12,7 +12,11 @@ module.exports = function (sequelize, DataTypes) {
       description: {
         type: DataTypes.INTEGER(100)
       }
+    }, {
+      associate: function (models) {
+        Module.hasMany(models.ModuleAction, { foreignKey: 'ModuleId', as: 'ModuleActions' })
+      }
     }
   )
-  return Modules
+  return Module
 }

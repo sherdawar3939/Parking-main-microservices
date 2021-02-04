@@ -1,7 +1,7 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let ParkingZones = sequelize.define('ParkingZones',
+  let ParkingZone = sequelize.define('ParkingZone',
     {
       uid: {
         type: DataTypes.STRING(20)
@@ -27,7 +27,11 @@ module.exports = function (sequelize, DataTypes) {
       ClientZipCodeId: {
         type: DataTypes.INTEGER(11)
       }
+    }, {
+      associate: function (models) {
+        ParkingZone.hasMany(models.Parking, { foreignKey: 'ParkingZoneId', as: 'parkingZoneParkings' })
+      }
     }
   )
-  return ParkingZones
+  return ParkingZone
 }
