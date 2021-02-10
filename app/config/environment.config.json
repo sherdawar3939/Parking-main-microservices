@@ -5,7 +5,7 @@
       "password": "",
       "host": "localhost",
       "port": 2701,
-      "database": "zaqoota_main"
+      "database": "parking_main"
     },
     "testing": {
       "username": "",
@@ -26,10 +26,10 @@
       "password": "",
       "host": "localhost",
       "port": 3306,
-      "database": "zaqoota_main"
+      "database": "parking_main"
     }
   },
-  "FORCE_DB_SYNC": "false",
+  "FORCE_DB_SYNC": "true",
   "jwtOptions": {
     "secretOrKey": "boilerplate",
     "ignoreExpiration": true,

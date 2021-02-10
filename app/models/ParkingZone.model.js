@@ -21,15 +21,13 @@ module.exports = function (sequelize, DataTypes) {
       polygons: {
         type: DataTypes.TEXT
       },
-      creatives: {
-        type: DataTypes.INTEGER(5)
-      },
       ClientZipCodeId: {
         type: DataTypes.INTEGER(11)
       }
     }, {
       associate: function (models) {
         ParkingZone.hasMany(models.Parking, { foreignKey: 'ParkingZoneId', as: 'parkingZoneParkings' })
+        ParkingZone.hasMany(models.CreativeRequest, { foreignKey: 'ParkingZoneId', as: 'parkingCreatives' })
       }
     }
   )

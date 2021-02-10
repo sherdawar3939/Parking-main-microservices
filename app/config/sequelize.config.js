@@ -53,12 +53,11 @@ Object.keys(db).forEach(function (modelName) {
 
 // Synchronizing any model changes with database.
 // set FORCE_DB_SYNC=true in the environment, or the program parameters to drop the database,
-//   and force model changes into it, if required
+// and force model changes into it, if required
 // Caution: Do not set FORCE_DB_SYNC to true for every run to avoid losing data with restarts
 sequelize
   .sync({
-    // force: config.FORCE_DB_SYNC === 'true',
-    force: false,
+    force: config.FORCE_DB_SYNC === 'true',
     logging: config.enableSequelizeLog === 'true' ? winston.verbose : false
   })
   .then(function () {
