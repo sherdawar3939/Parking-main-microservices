@@ -31,7 +31,7 @@ module.exports = function (app, passport) {
   app.use(express.static(path.join(__dirname, '../../dist')))
   app.use(express.static(path.join(__dirname, '../../node_modules')))
 
-  const apiVersion = '/admin/api/v1'
+  const apiVersion = '/main/api/v1'
 
   // Globbing routing files
   config.getGlobbedFiles('./app/routes/**/*.js').forEach(function (routePath) {
