@@ -24,20 +24,3 @@ const getCountry = function(req, res) {
 module.exports = {
     getCountry
 }
-
-
-//add country
-const addCountry = (req, res) => {
-    return countryHelper.addCountry(req.validateBody)
-        .then(function(data) {
-            return generalController.successResponse(res, 'Country added Successfully', 'country.controller.addCountry', data)
-        }).catch(StandardError, function(err) {
-            return generalController.errorResponse(res, err, 'Country.controller.addCountry', SERVER_RESPONSE.VALIDATION_ERROR)
-        }).catch(function(err) {
-            return generalController.errorResponse(err, 'Please check up for detail error', 'Country.controller.addCountry', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
-        })
-
-}
-module.exports = {
-    addCountry
-}

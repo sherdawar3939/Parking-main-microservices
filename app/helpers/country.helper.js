@@ -16,13 +16,3 @@ function getCountry(conditions) {
 module.exports = {
     getCountry
 }
-
-//Add Country
-function addCountry(validateBody) {
-    return db.Country.Create({
-        where: validateBody
-    })
-}
-module.exports = {
-    addCountry
-}

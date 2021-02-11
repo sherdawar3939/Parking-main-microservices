@@ -10,4 +10,5 @@ module.exports = function(app, apiVersion) {
     //*********************/
 
     app.get(route + '/country', countryMiddleware.validateGetCountry, countryController.getCountry)
+
 }
