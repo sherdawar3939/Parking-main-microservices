@@ -12,18 +12,25 @@ function getUserVehicle (conditions) {
   })
 }
 function addUserVehicle (data) {
-  return db.UserVehicle.create({ licensePlate: `${data.licensePlate}`, quantity: `${data.quantity}`, VehicleCategoryId: `${data.VehicleCategoryId}` })
+  return db.UserVehicle.create({ licensePlate: data.licensePlate, quantity: data.quantity, VehicleCategoryId: data.VehicleCategoryId })
 }
 function updateUserVehicle (data, id) {
-  const userVehicle = db.UserVehicle.update({ licensePlate: `${data.licensePlate}` }, {
+  return db.UserVehicle.update({ licensePlate: data.licensePlate }, {
     where: {
-      id: id
+      id
     }
   })
-  return userVehicle
+}
+function deleteUserVehicle (id) {
+  return db.UserVehicle.update({ isDeleted: true }, {
+    where: {
+      id
+    }
+  })
 }
 module.exports = {
   getUserVehicle,
   addUserVehicle,
-  updateUserVehicle
+  updateUserVehicle,
+  deleteUserVehicle
 }
