@@ -15,7 +15,6 @@ function addUserVehicle (data) {
   return db.UserVehicle.create({ licensePlate: data.licensePlate, quantity: data.quantity, VehicleCategoryId: data.VehicleCategoryId })
 }
 function updateUserVehicle (id, data) {
-  console.log('data ', data, ' id ', id)
   return db.UserVehicle.update(data, {
     where: {
       id
