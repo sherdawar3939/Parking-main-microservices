@@ -7,7 +7,7 @@ const generalController = require('./general.controller')
 const addPayment = function (req, res) {
   return paymentHelper.addpayment(req.validatedBody)
     .then(function (data) {
-      generalController.successResponse(res, 'Payment added successfully.', data, 'payment.controller.addpayment')
+      generalController.successResponse(res, 'Payment added successfully.', data, 'payment.controller.addPayment')
     }).catch(StandardError, function (err) {
       generalController.errorResponse(res, err, null, 'Payment.controller.addPayment', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {
@@ -17,7 +17,7 @@ const addPayment = function (req, res) {
 const getPayment = function (req, res) {
   return paymentHelper.getpayment(req.validatedConditions)
     .then(function (data) {
-      generalController.successResponse(res, ' Get Payment  successfully.', data, 'payment.controller.getpayment')
+      generalController.successResponse(res, ' Get Payment  successfully.', data, 'payment.controller.getPayment')
     }).catch(StandardError, function (err) {
       generalController.errorResponse(res, err, null, 'Payment.controller.getPayment', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {

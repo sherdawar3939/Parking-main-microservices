@@ -50,7 +50,7 @@ const validatePostUserVehicle = (req, res, done) => {
       message: 'Please provide only valid \'licensePlate\' as string, length must be between 2 and 20.'
     })
   }
-  // quantity must be required required  Validating as not empty, valid interger.
+  // quantity must be required required  Validating as not empty, valid integer.
   if (!body.quantity || isNaN(body.quantity)) {
     errorArray.push({
       field: 'quantity',
@@ -58,7 +58,7 @@ const validatePostUserVehicle = (req, res, done) => {
       message: 'Please provide only valid \'quantity\' as numeric, length must be between 0 and 2.'
     })
   }
-  // VehicleCategoryId must be required required  Validating as not empty, valid interger.
+  // VehicleCategoryId must be required required  Validating as not empty, valid integer.
   if (!body.VehicleCategoryId || isNaN(body.VehicleCategoryId)) {
     errorArray.push({
       field: 'VehicleCategoryId',
@@ -66,7 +66,7 @@ const validatePostUserVehicle = (req, res, done) => {
       message: 'Please provide only valid \'VehicleCategoryId\' as numeric,.'
     })
   }
-  // UserId must be required required  Validating as not empty, valid interger.
+  // UserId must be required required  Validating as not empty, valid integer.
   if (!body.UserId || isNaN(body.UserId)) {
     errorArray.push({
       field: 'UserId',
@@ -75,7 +75,7 @@ const validatePostUserVehicle = (req, res, done) => {
     })
   }
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validatePostuserVihicle')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validatePostUserVehicle')
   }
   validatedBody.licensePlate = body.licensePlate
   validatedBody.quantity = body.quantity
@@ -96,7 +96,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     errorArray.push({
       field: 'id',
       error: 80140,
-      message: 'Please provide only valid \'UserVehicleid\' as numeric.'
+      message: 'Please provide only valid \'UserVehicleId\' as numeric.'
     })
     if (!body) {
       errorArray.push({
@@ -148,23 +148,23 @@ const validateUpdateUserVehicleId = (req, res, done) => {
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'uservehicle.middleware.validateUpdateUserVehiceId')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validateUpdateUserVehicleId')
   }
   req.validatedBody = validatedBody
   done()
 }
-const validateDeleteUservehicleId = (req, res, done) => {
+const validateDeleteUserVehicleId = (req, res, done) => {
   const errorArray = []
   const params = req.params
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
       error: 80140,
-      message: 'Please provide only valid \'UserVehicleid\' as numeric.'
+      message: 'Please provide only valid \'UserVehicleId\' as numeric.'
     })
   }
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'uservehicle.middleware.validateUpdateUserVehiceId')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validateUpdateUserVehicleId')
   }
   done()
 }
@@ -172,5 +172,5 @@ module.exports = {
   validateGetUserVehicle,
   validatePostUserVehicle,
   validateUpdateUserVehicleId,
-  validateDeleteUservehicleId
+  validateDeleteUserVehicleId
 }
