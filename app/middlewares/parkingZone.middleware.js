@@ -1,7 +1,8 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-const validateGetparkingZone = (req, res, done) => {
+
+const validateGetParkingZone = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
@@ -57,6 +58,7 @@ const validateGetparkingZone = (req, res, done) => {
 
   done()
 }
+
 module.exports = {
-  validateGetparkingZone
+  validateGetParkingZone
 }

@@ -5,7 +5,7 @@ const validatePostPayment = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-  // amount must be required required  Validating as not empty, valid interger.
+  // amount must be required required  Validating as not empty, valid integer.
   if (!body.amount || isNaN(body.amount)) {
     errorArray.push({
       field: 'amount',
@@ -13,7 +13,7 @@ const validatePostPayment = (req, res, done) => {
       message: 'Please provide only valid \'amount\' as numeric.'
     })
   }
-  // ClientId must be required required  Validating as not empty, valid interger.
+  // ClientId must be required required  Validating as not empty, valid integer.
   if (!body.ClientId || isNaN(body.ClientId)) {
     errorArray.push({
       field: 'ClientId',
@@ -23,13 +23,14 @@ const validatePostPayment = (req, res, done) => {
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validatePostuserVihicle')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'payment.middleware.validatePostPayment')
   }
   validatedBody.amount = body.amount
   validatedBody.ClientId = body.ClientId
   req.validatedBody = validatedBody
   done()
 }
+
 const validateGetPayment = (req, res, done) => {
   const errorArray = []
   const query = req.query
@@ -46,6 +47,7 @@ const validateGetPayment = (req, res, done) => {
   }
   done()
 }
+
 module.exports = {
   validatePostPayment,
   validateGetPayment
