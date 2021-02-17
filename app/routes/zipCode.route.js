@@ -1,14 +1,13 @@
 'use strict'
-const zipCodeController = require('../controllers/zipCode.controller');
+const zipCodeController = require('../controllers/zipCode.controller')
 const zipCodeMiddleware = require('../middlewares/zipCode.middleware')
 
-module.exports = function(app, apiVersion) {
-    const route = apiVersion
+module.exports = function (app, apiVersion) {
+  const route = apiVersion
 
-    //**********************
-    // get zipCode 
-    //*********************/
+  //* *********************
+  // get zipCode
+  //* ********************/
 
-    app.get(route + '/zipCode', zipCodeMiddleware.validateGetZipCode, zipCodeController.getZipCode)
-
+  app.get(route + '/zipcode', zipCodeMiddleware.validateGetZipCode, zipCodeController.getZipCode)
 }
