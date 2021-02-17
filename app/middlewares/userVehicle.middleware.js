@@ -153,7 +153,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
   req.validatedBody = validatedBody
   done()
 }
-const validateDeleteUservehicleId = (req,res,done) => {
+const validateDeleteUservehicleId = (req, res, done) => {
   const errorArray = []
   const params = req.params
   if (!params.id || isNaN(params.id)) {

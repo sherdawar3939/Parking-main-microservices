@@ -2,10 +2,11 @@
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
 const validateGetparkingZone = (req, res, done) => {
-    console.log('parking zone call')
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
+  let limit = 50
+  let offset = 0
   if (query.hasOwnProperty('uid') && query.uid) {
     if (isNaN(query.uid)) {
       errorArray.push({
@@ -38,12 +39,22 @@ const validateGetparkingZone = (req, res, done) => {
       validatedConditions.zip = query.zip
     }
   }
+  if (query.limit && query.limit > 0) {
+    limit = parseInt(query.limit)
+  }
+
+  if (query.offset && query.offset > 0) {
+    offset = parseInt(query.offset)
+  }
 
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetParkingZone')
   }
 
   req.conditions = validatedConditions
+  req.limit = limit
+  req.offset = offset
+
   done()
 }
 module.exports = {

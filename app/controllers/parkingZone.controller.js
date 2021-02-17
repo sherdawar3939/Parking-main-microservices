@@ -5,7 +5,7 @@ const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
 const getParkingZone = function (req, res) {
-  return ParkingZoneHelper.getparkingZone(req.conditions)
+  return ParkingZoneHelper.getparkingZone(req.conditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'Parking zone fetched successfully.', data, 'Banner.controller.getparkingzone')
     }).catch(StandardError, function (err) {

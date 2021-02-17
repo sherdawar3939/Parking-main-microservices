@@ -5,10 +5,14 @@ const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const _ = require('lodash')
 const generalHelpingMethods = require('./general.helper')
-// fetch banners
-function getparkingZone (conditions) {
+function getparkingZone (conditions, limit, offset) {
   return db.ParkingZone.findAll({
-    where: conditions
+    where: conditions,
+    order: [
+      ['id', 'DESC']
+    ],
+    limit: limit,
+    offset: offset
   })
 }
 module.exports = {

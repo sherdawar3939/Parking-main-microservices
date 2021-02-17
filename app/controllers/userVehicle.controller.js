@@ -26,7 +26,7 @@ const addUserVehicle = function (req, res) {
     })
 }
 const updateUserVehicle = (req, res) => {
-  return UserVehicleHelper.updateUserVehicle(req.params.id , req.body )
+  return UserVehicleHelper.updateUserVehicle(req.params.id, req.body)
     .then((data) => {
       generalController.successResponse(res, 'User Vehicle Updated successfully.', data, 'uservehicle.controller.updateuservehicle')
     }).catch(StandardError, (err) => {
