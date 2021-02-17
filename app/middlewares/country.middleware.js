@@ -12,7 +12,7 @@ const validateGetCountry = (req, res, done) => {
     }
 
     if (!_.isEmpty(errorArray)) {
-        return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.getCountry');
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'country.middleware.getCountry');
     }
 
     req.conditions = validateConditions;

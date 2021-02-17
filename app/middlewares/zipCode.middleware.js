@@ -10,12 +10,9 @@ const validateGetZipCode = (req, res, done) => {
     if (query.hasOwnProperty('city') && query.city && query.city.length < 20) {
         validateConditions.CityId = query.city;
     }
-    if (query.hasOwnProperty('zip') && query.zip && query.zip.length < 20) {
-        validateConditions.zipCode = query.zip
-    }
 
     if (!_.isEmpty(errorArray)) {
-        return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.getZipCode');
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'city.middleware.getZipCode');
     }
 
     req.conditions = validateConditions;
