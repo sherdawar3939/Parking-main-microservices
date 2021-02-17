@@ -8,7 +8,7 @@ const generalController = require('./general.controller')
 const getVehicleCategory = function(req, res) {
     return vehicleCategoryHelper.getVehicleCategory(req.conditions)
         .then(function(data) {
-            generalController.successResponse(res, 'Vehicle fetched successfully.', data, 'Banner.controller.getVehicleCategory')
+            generalController.successResponse(res, 'Vehicle fetched successfully.', data, 'vehicleCategory.controller.getVehicleCategory')
         }).catch(StandardError, function(err) {
             generalController.errorResponse(res, err, null, 'vehicleCategory.controller.getVehicleCategory', SERVER_RESPONSE.VALIDATION_ERROR)
         }).catch(function(err) {
