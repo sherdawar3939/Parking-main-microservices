@@ -4,7 +4,7 @@
     "description": "Boilerplate for Node.js service.",
     "main": "app.js",
     "scripts": {
-        "start": "node app.js",
+        "start": "nodemon app.js",
         "dev": "nodemon app.js",
         "test": "export NODE_ENV=testing && mocha app/**/*.test.js",
         "test-watch": "nodemon --exec \"npm test\""
