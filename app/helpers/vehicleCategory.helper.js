@@ -12,6 +12,11 @@ function getVehicleCategory(conditions) {
     })
 }
 
+function createCategoryVehicle(data) {
+    return db.VehicleCategory.create(data)
+}
+
 module.exports = {
-    getVehicleCategory
+    getVehicleCategory,
+    createCategoryVehicle
 }
