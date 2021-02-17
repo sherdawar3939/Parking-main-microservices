@@ -1,0 +1,42 @@
+'use strict'
+const generalMiddleware = require('./general.middleware')
+const _ = require('lodash')
+
+const validateGetContractList = (req, res, done) => {
+    const errorArray = []
+    const query = req.query
+    const validateConditions = {}
+
+    if (query.hasOwnProperty('id') && !isNaN(query.id)) {
+        validateConditions.id = query.id;
+    }
+
+    if (query.hasOwnProperty('clientId') && !isNaN(query.clientId)) {
+        validateConditions.ClientId = query.clientId
+    }
+
+    if (query.hasOwnProperty('status') && query.status && query.status.length < 20) {
+        validateConditions.status = query.status
+    }
+
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.getContractList')
+    }
+
+    if (query.limit && query.limit > 0) {
+        limit = parseInt(query.limit)
+    }
+
+    if (query.offset && query.offset > 0) {
+        offset = parseInt(query.offset)
+    }
+
+    req.conditions = validateConditions
+    req.limit = query.limit && query.limit > 0 ? parseInt(query.limit) : 50
+    req.offset = query.offset && query.offset > 0 ? parseInt(query.offset) : 0
+    done()
+}
+
+module.exports = {
+    validateGetContractList
+}
