@@ -30,7 +30,7 @@ const validateGetUserVehicle = (req, res, done) => {
     }
 
     if (!_.isEmpty(errorArray)) {
-        return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetUserVehicle')
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'vehicleList.middleware.validateGetUserVehicle')
     }
 
     req.conditions = validatedConditions

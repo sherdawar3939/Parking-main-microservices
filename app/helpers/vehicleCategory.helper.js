@@ -12,6 +12,14 @@ function getVehicleCategory(conditions) {
     })
 }
 
+// Delete VehicleCategory
+function deleteVehicleCategory(id) {
+    return db.VehicleCategory.update({ isDeleted: true }, {
+        where: { id }
+    })
+}
+
 module.exports = {
+    deleteVehicleCategory,
     getVehicleCategory
 }

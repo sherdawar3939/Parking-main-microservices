@@ -5,9 +5,10 @@ const generalMiddleware = require('../middlewares/general.middleware')
 
 const passport = require('../config/passport')
 
-module.exports = function (app, apiVersion) {
-  const route = apiVersion
+module.exports = function(app, apiVersion) {
+    const route = apiVersion
 
-  // get categories of vehicle
-  app.get(route + '/vehicle-category', vehicleCategoryMiddleware.validateGetVehicleCategory, vehicleCategoryController.getVehicleCategory)
+    // get categories of vehicle
+    app.get(route + '/vehicle-category', vehicleCategoryMiddleware.validateGetVehicleCategory, vehicleCategoryController.getVehicleCategory)
+    app.delete(route + '/vehicle-category/:id', vehicleCategoryMiddleware.validateDeleteVehicleCategoryId, vehicleCategoryController.deleteVehicleCategory)
 }

@@ -5,8 +5,8 @@ const generalMiddleware = require('../middlewares/general.middleware')
 
 const passport = require('../config/passport')
 
-module.exports = function (app, apiVersion) {
-  const route = apiVersion
-  // get user vehicle
-  app.get(`${route}/parking-zone`, parkingZoneMiddleware.validateGetparkingZone, ParkingZoneController.getParkingZone)
+module.exports = function(app, apiVersion) {
+    const route = apiVersion
+        // get user vehicle
+    app.get(`${route}/parking-zone`, parkingZoneMiddleware.validateGetParkingZone, ParkingZoneController.getParkingZone)
 }
