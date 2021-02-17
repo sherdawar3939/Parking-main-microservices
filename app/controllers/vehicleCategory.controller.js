@@ -16,5 +16,5 @@ const getVehicleCategory = function(req, res) {
         })
 }
 module.exports = {
-  getVehicleCategory
+    getVehicleCategory
 }
