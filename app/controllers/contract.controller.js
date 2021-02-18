@@ -33,7 +33,20 @@ const getContractList = function (req, res) {
             generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getContractList', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
 }
+
+const verificationOfContract = (req, res) => {
+    return contractHelper.verifyContract(req.validatedBody)
+        .then((data) => {
+            generalController.successResponse(res, 'Contract Updated successfully.', data, 'contract.controller.verificationOfContract')
+        }).catch(StandardError, (err) => {
+            generalController.errorResponse(res, err, null, 'contract.controller.verificationOfContract', SERVER_RESPONSE.VALIDATION_ERROR)
+        }).catch((err) => {
+            generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.verificationOfContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+        })
+}
+
 module.exports = {
     addContract,
-    getContractList
+    getContractList,
+    verificationOfContract
 }

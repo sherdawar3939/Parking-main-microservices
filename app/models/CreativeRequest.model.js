@@ -10,11 +10,20 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.INTEGER(11)
       },
       status: {
-        type: DataTypes.STRING(20),
-        comment: 'Pending, InProcess, Dispatched'
+        type: DataTypes.ENUM({ values: ['Pending', 'InProcess', 'Dispatched'] }),
+        allowNull: false,
+        defaultValue: 'Pending',
+        field: 'status'
       },
-      UpdatedBy: {
-        type: DataTypes.INTEGER(11)
+      // UpdatedBy: {
+      //   type: DataTypes.INTEGER(11)
+      // }
+    },
+    {
+      associate: function (models) {
+        CreativeRequest.belongsTo(models.User, { foreignKey: 'UpdatedBy', as: 'creativeRequestUser' });
+        CreativeRequest.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'creativeRequestClient' });
+        CreativeRequest.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'creativeParkingZone' })
       }
     }
   )

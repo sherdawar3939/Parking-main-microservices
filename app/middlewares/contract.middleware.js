@@ -37,6 +37,50 @@ const validateGetContractList = (req, res, done) => {
     done()
 }
 
+// const validateVerifyContract = (req, res, done) => {
+//     const errorArray = []
+//     const body = req.body
+//     const validatedBody = {}
+
+//     console.log(req.body.id)
+//     if (!body.id || isNaN(body.id)) {
+//         errorArray.push({
+//             field: 'id',
+//             error: 80140,
+//             message: 'Please provide only valid \'id\' as numeric.'
+//         })
+//         validatedBody.id = body.id
+//     }
+
+//     req.validatedBody.id = validatedBody
+
+//     done()
+// }
+
+const validateVerifyContract = (req, res, done) => {
+    const errorArray = []
+    const params = req.body
+    const validatedBody = {};
+    // if (!params.id || isNaN(params.id)) {
+    //     errorArray.push({
+    //         field: 'id',
+    //         error: 80140,
+    //         message: 'Please provide only valid \'id\' as numeric.'
+    //     })
+    //     validatedBody.id = validatedBody
+    // }
+
+    if (params.hasOwnProperty('id') && !isNaN(params.id)) {
+        validatedBody.id = params.id;
+    }
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.validateVerifyContract')
+    }
+    req.validatedBody = validatedBody
+    done()
+}
+
 module.exports = {
-    validateGetContractList
+    validateGetContractList,
+    validateVerifyContract
 }
