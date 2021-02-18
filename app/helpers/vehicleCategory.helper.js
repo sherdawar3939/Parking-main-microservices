@@ -9,6 +9,7 @@ const _ = require('lodash')
 function getVehicleCategory(conditions) {
     return db.VehicleCategory.findAll({
         where: conditions
+
     })
 }
 

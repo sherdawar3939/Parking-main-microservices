@@ -75,7 +75,7 @@ const validatePostUserVehicle = (req, res, done) => {
         })
     }
     if (!_.isEmpty(errorArray)) {
-        return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validatePostuserVihicle')
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validatePostUserVehicle')
     }
     validatedBody.licensePlate = body.licensePlate
     validatedBody.quantity = body.quantity
