@@ -7,6 +7,7 @@ const passport = require('../config/passport')
 
 module.exports = function (app, apiVersion) {
   const route = apiVersion
-  // get user vehicle
+  // get parking zones
   app.get(`${route}/parking-zone`, parkingZoneMiddleware.validateGetParkingZone, ParkingZoneController.getParkingZone)
+  app.get(`${route}/parking-zone/:id`, parkingZoneMiddleware.validateGetParkingZoneId, ParkingZoneController.getParkingZoneById)
 }
