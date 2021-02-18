@@ -61,14 +61,13 @@ const validateVerifyContract = (req, res, done) => {
     const errorArray = []
     const params = req.body
     const validatedBody = {};
-    // if (!params.id || isNaN(params.id)) {
-    //     errorArray.push({
-    //         field: 'id',
-    //         error: 80140,
-    //         message: 'Please provide only valid \'id\' as numeric.'
-    //     })
-    //     validatedBody.id = validatedBody
-    // }
+    if (!params.id || isNaN(params.id)) {
+        errorArray.push({
+            field: 'id',
+            error: 80140,
+            message: 'Please provide only valid \'id\' as numeric.'
+        })
+    }
 
     if (params.hasOwnProperty('id') && !isNaN(params.id)) {
         validatedBody.id = params.id;
