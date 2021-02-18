@@ -34,13 +34,15 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.INTEGER(11)
       }
     }, {
-      associate: function (models) {
-        Client.hasMany(models.Payment, { foreignKey: 'ClientId', as: 'clientPayments' })
-        Client.hasMany(models.Inspector, { foreignKey: 'ClientId', as: 'clientInspectors' })
-        Client.hasMany(models.ClientZipCode, { foreignKey: 'ClientId', as: 'clientZipCodes' })
-        Client.hasMany(models.ParkingZone, { foreignKey: 'ClientId', as: 'clientParkingZones' })
-      }
+    associate: function (models) {
+      Client.hasMany(models.Payment, { foreignKey: 'ClientId', as: 'clientPayments' });
+      Client.hasMany(models.Inspector, { foreignKey: 'ClientId', as: 'clientInspectors' });
+      Client.hasMany(models.ClientZipCode, { foreignKey: 'ClientId', as: 'clientZipCodes' });
+      Client.hasMany(models.ParkingZone, { foreignKey: 'ClientId', as: 'clientParkingZones' });
+      Client.hasMany(models.Contract, { foreignKey: 'ClientId', as: 'clientContracts' });
+      Client.hasMany(models.CreativeRequest, { foreignKey: 'ClientId', as: 'clientCreativeRequest' });
     }
+  }
   )
   return Client
 }

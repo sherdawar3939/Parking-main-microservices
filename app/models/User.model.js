@@ -37,14 +37,15 @@ module.exports = function (sequelize, DataTypes) {
         defaultValue: false
       }
     }, {
-      associate: function (models) {
-        User.hasMany(models.Parking, { foreignKey: 'UserId', as: 'userParking' })
-        User.hasMany(models.UserVehicle, { foreignKey: 'UserId', as: 'userVehicle' })
-        User.hasMany(models.Payment, { foreignKey: 'UserId', as: 'userPayment' })
-        User.hasOne(models.Inspector, { foreignKey: 'UserId', as: 'inspector' })
-        User.hasOne(models.Client, { foreignKey: 'UserId', as: 'client' })
-      }
+    associate: function (models) {
+      User.hasMany(models.Parking, { foreignKey: 'UserId', as: 'userParking' })
+      User.hasMany(models.UserVehicle, { foreignKey: 'UserId', as: 'userVehicle' })
+      User.hasMany(models.Payment, { foreignKey: 'UserId', as: 'userPayment' })
+      User.hasOne(models.Inspector, { foreignKey: 'UserId', as: 'inspector' })
+      User.hasMany(models.Contract, { foreignKey: 'UserId', as: 'userContract' })
+      User.hasMany(models.CreativeRequest, { foreignKey: 'UpdatedBy', as: 'userCreativeRequest' })
     }
+  }
   )
 
   User.prototype.toJSON = function () {

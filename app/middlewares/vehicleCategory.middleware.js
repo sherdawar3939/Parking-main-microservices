@@ -35,7 +35,28 @@ const validateDeleteVehicleCategoryId = (req, res, done) => {
     done()
 }
 
+const createVehicleCategory = (req, res, done) => {
+    const errorArray = []
+    const body = req.body
+    const validatedBody = {}
+    if (!body.name || !isNaN(body.name)) {
+        errorArray.push({
+            field: 'name',
+            error: 26,
+            message: 'Please provide only valid \'name\' as string.'
+        })
+    }
+
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'vehicleCategory.middleware.createVehicleCategory')
+    }
+    validatedBody.name = body.name
+    req.validatedBody = validatedBody
+    done()
+}
+
 module.exports = {
     validateGetVehicleCategory,
-    validateDeleteVehicleCategoryId
+    validateDeleteVehicleCategoryId,
+    createVehicleCategory
 }
