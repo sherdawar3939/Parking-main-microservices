@@ -103,3 +103,7 @@ dist
 # TernJS port file
 .tern-port
 package-lock.json
+.vs/slnx.sqlite
+.vs/ProjectSettings.json
+.vs/VSWorkspaceState.json
+.vs/parking-main-microservice/v16/.suo

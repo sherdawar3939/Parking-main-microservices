@@ -19,7 +19,6 @@ const validateGetClient = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.CityId && !isNaN(query.CityId)) {
     validatedConditions.status = query.status
   }
-
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetClient')
   }

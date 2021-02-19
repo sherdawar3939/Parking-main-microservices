@@ -69,7 +69,6 @@ const getClientList = (conditions) => {
         include: [[Sequelize.fn('COUNT', Sequelize.col('ClientId')), 'Count']]
       }
     }
-
     ],
     group: ['id']
     // {
