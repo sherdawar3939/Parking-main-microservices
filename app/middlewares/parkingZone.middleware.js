@@ -41,6 +41,7 @@ const validateGetParkingZone = (req, res, done) => {
 
   done()
 }
+
 const validateGetParkingZoneId = (req, res, done) => {
   const errorArray = []
   const params = req.params
@@ -53,6 +54,7 @@ const validateGetParkingZoneId = (req, res, done) => {
   }
   done()
 }
+
 module.exports = {
   validateGetParkingZone,
   validateGetParkingZoneId

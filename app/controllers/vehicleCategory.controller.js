@@ -4,6 +4,7 @@ const vehicleCategoryHelper = require('../helpers/vehicleCategory.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
+// Get Vehicle Category
 const getVehicleCategory = function (req, res) {
   return vehicleCategoryHelper.getVehicleCategory(req.conditions)
     .then(function (data) {

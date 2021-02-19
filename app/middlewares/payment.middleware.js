@@ -23,13 +23,14 @@ const validatePostPayment = (req, res, done) => {
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validatePostUserVehicle')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'payment.middleware.validatePostPayment')
   }
   validatedBody.amount = body.amount
   validatedBody.ClientId = body.ClientId
   req.validatedBody = validatedBody
   done()
 }
+
 const validateGetPayment = (req, res, done) => {
   const errorArray = []
   const query = req.query
@@ -46,6 +47,7 @@ const validateGetPayment = (req, res, done) => {
   }
   done()
 }
+
 module.exports = {
   validatePostPayment,
   validateGetPayment

@@ -107,3 +107,4 @@ package-lock.json
 .vs/ProjectSettings.json
 .vs/VSWorkspaceState.json
 .vs/parking-main-microservice/v16/.suo
+.vs
