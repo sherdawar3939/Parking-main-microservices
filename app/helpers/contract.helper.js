@@ -11,7 +11,9 @@ function getContractList(Conditions) {
         include: {
             model: db.Client,
             as: 'clientContract'
-        }
+        },
+        limit: limit,
+        offset: offset
     })
 }
 

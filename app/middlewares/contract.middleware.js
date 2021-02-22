@@ -38,7 +38,7 @@ const validateGetContractList = (req, res, done) => {
 }
 const validateVerifyContract = (req, res, done) => {
     const errorArray = []
-    const params = req.body
+    const params = req.params;
     const validatedBody = {};
     if (!params.id || isNaN(params.id)) {
         errorArray.push({

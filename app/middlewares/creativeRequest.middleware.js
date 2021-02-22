@@ -52,6 +52,9 @@ const validateGetCreativeRequest = (req, res, done) => {
     const query = req.query
     const validatedConditions = {}
 
+    let limit = 50;
+    let offset = 0;
+
     if (query.hasOwnProperty('search') && query.search) {
         validatedConditions.search = query.search
     }
@@ -68,11 +71,21 @@ const validateGetCreativeRequest = (req, res, done) => {
         validatedConditions.ParkingZoneId = query.ParkingZoneId
     }
 
+    if (query.limit && query.limit > 0) {
+        limit = parseInt(query.limit)
+    }
+
+    if (query.offset && query.offset > 0) {
+        offset = parseInt(query.offset)
+    }
+
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateGetCreativeRequest')
     }
 
     req.conditions = validatedConditions;
+    req.limit = limit;
+    req.offset = offset;
     done()
 }
 
