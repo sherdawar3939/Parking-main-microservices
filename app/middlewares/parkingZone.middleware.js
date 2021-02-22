@@ -1,45 +1,28 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-
 const validateGetParkingZone = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
   let limit = 50
   let offset = 0
-  if (query.hasOwnProperty('uid') && query.uid) {
-    if (isNaN(query.uid)) {
-      errorArray.push({
-        field: 'uid',
-        error: 25,
-        message: 'Please provide only valid \'uid\' as numeric.'
-      })
-    }
-    validatedConditions.uid = query.uid
-  }
 
   // validating as optional string field
-  if (query.hasOwnProperty('ClientZipCodeId') && query.ClientZipCodeId) {
-    if (isNaN(query.ClientZipCodeId)) {
-      errorArray.push({
-        field: 'ClientZipCodeId',
-        error: 26,
-        message: 'Please provide only valid \'ClientZipCodeId\' as numeric.'
-      })
-      validatedConditions.ClientZipCodeId = query.ClientZipCodeId
-    }
+  if (query.hasOwnProperty('search') && query.search) {
+    validatedConditions.search = query.search
   }
-  if (query.hasOwnProperty('zip') && query.zip) {
-    if (!_.isString(query.zip)) {
-      errorArray.push({
-        field: 'zip',
-        error: 26,
-        message: 'Please provide only valid \'zip\' as string.'
-      })
-      validatedConditions.zip = query.zip
-    }
+
+  // validating as optional number field
+  if (query.hasOwnProperty('ClientId') && query.ClientId && !isNaN(query.ClientId)) {
+    validatedConditions.ClientId = query.ClientId
   }
+
+  // validating as optional number field
+  if (query.hasOwnProperty('CityId') && query.CityId && !isNaN(query.CityId)) {
+    validatedConditions.CityId = query.CityId
+  }
+
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }
@@ -59,6 +42,20 @@ const validateGetParkingZone = (req, res, done) => {
   done()
 }
 
+const validateGetParkingZoneId = (req, res, done) => {
+  const errorArray = []
+  const params = req.params
+  if (!params.id || isNaN(params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 80140,
+      message: 'Please provide only valid \'Parking_Zone id\' as numeric.'
+    })
+  }
+  done()
+}
+
 module.exports = {
-  validateGetParkingZone
+  validateGetParkingZone,
+  validateGetParkingZoneId
 }

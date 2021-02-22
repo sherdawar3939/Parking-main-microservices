@@ -5,9 +5,30 @@ const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const _ = require('lodash')
 const generalHelpingMethods = require('./general.helper')
+
 function getparkingZone (conditions, limit, offset) {
+  const where = {}
+
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+
+  if (conditions.CityId) {
+    where.CityId = conditions.CityId
+  }
+
+  if (conditions.search) {
+    where[[Op.or]] = {
+      days: {
+        [Op.like]: '%' + conditions.search + '%'
+      },
+      zip: {
+        [Op.like]: '%' + conditions.search + '%'
+      }
+    }
+  }
   return db.ParkingZone.findAll({
-    where: conditions,
+    where,
     order: [
       ['id', 'DESC']
     ],
@@ -15,6 +36,14 @@ function getparkingZone (conditions, limit, offset) {
     offset: offset
   })
 }
+const getParkingZoneId = (id) => {
+  return db.ParkingZone.findAll({
+    where: {
+      id
+    }
+  })
+}
 module.exports = {
-  getparkingZone
+  getparkingZone,
+  getParkingZoneId
 }
