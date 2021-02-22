@@ -10,6 +10,6 @@ module.exports = function (app, apiVersion) {
 
   // get categories of vehicle
   app.get(route + '/vehicle-category', vehicleCategoryMiddleware.validateGetVehicleCategory, vehicleCategoryController.getVehicleCategory)
-  app.post(route + '/create/vehicle-category', vehicleCategoryMiddleware.createVehicleCategory, vehicleCategoryController.createVehicleCategory)
+  app.post(route + '/vehicle-category', vehicleCategoryMiddleware.createVehicleCategory, vehicleCategoryController.createVehicleCategory)
 
 }
