@@ -1,7 +1,7 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-const { isString } = require('lodash')
+const { isString, isInteger } = require('lodash')
 const validateCreateRequest = (req, res, done) => {
     const errorArray = []
     const body = req.body
@@ -15,7 +15,7 @@ const validateCreateRequest = (req, res, done) => {
         })
     }
     // qty must be required required  Validating as not empty, valid integer.
-    if (!body.qty || isNaN(body.qty)) {
+    if (!body.qty || !isInteger(body.qty)) {
         errorArray.push({
             field: 'qty',
             error: 26,
@@ -32,9 +32,10 @@ const validateCreateRequest = (req, res, done) => {
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateCreateRequest')
     }
-    validatedBody.uid = body.uid
-    validatedBody.qty = body.qty
-    req.validatedBody = validatedBody
+    validatedBody.uid = body.uid;
+    validatedBody.qty = body.qty;
+    validatedBody.status = body.status;
+    req.validatedBody = validatedBody;
     done()
 }
 
