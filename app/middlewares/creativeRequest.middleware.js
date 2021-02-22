@@ -6,12 +6,12 @@ const validateCreateRequest = (req, res, done) => {
     const errorArray = []
     const body = req.body
     const validatedBody = {}
-    // amount must be required required  Validating as not empty, valid integer.
+        // amount must be required required  Validating as not empty, valid integer.
     if (!body.uid || !isNaN(body.uid)) {
         errorArray.push({
             field: 'uid',
             error: 26,
-            message: 'Please provide only valid \'uid\' as numeric.'
+            message: 'Please provide only valid \'uid\' as string.'
         })
     }
     // qty must be required required  Validating as not empty, valid integer.
@@ -46,13 +46,12 @@ const validateGetCreativeRequest = (req, res, done) => {
     if (query.hasOwnProperty('status') && query.status) {
         validatedConditions.status = query.status
     }
-    if (query.hasOwnProperty('Clientid') && !isNaN(query.Clientid)) {
-        validatedConditions.Clientid = query.Clientid
+    if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
+        validatedConditions.ClientId = query.ClientId
     }
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateGetCreativeRequest')
     }
-
     req.conditions = validatedConditions;
     done()
 }
