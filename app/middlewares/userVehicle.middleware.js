@@ -1,31 +1,42 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
+const { isInteger } = require('lodash')
 
 const validateGetUserVehicle = (req, res, done) => {
     const errorArray = []
     const query = req.query
     const validatedConditions = {}
     if (query.hasOwnProperty('UserId') && query.UserId) {
-        if (isNaN(query.UserId)) {
+        if (!isInteger(query.UserId)) {
             errorArray.push({
                 field: 'UserId',
                 error: 25,
-                message: 'Please provide only valid \'UserId\' as numeric.'
+                message: 'Please provide only valid \'UserId\' as integer.'
             })
         }
         validatedConditions.UserId = query.UserId
     }
+    // if (query.hasOwnProperty('quantity') && query.quantity) {
+    //     if (!isInteger(query.quantity)) {
+    //         errorArray.push({
+    //             field: 'quantity',
+    //             error: 25,
+    //             message: 'Please provide only valid \'quantity\' as integer.'
+    //         })
+    //     }
+    //     validatedConditions.quantity = query.quantity
+    // }
 
     // validating as optional string field
-    if (query.hasOwnProperty('VehicleCategoryId') && query.VehicleCategoryId) {
-        if (isNaN(query.VehicleCategoryId)) {
+    if (query.hasOwnProperty('name') && query.name) {
+        if (isInteger(query.name)) {
             errorArray.push({
-                field: 'VehicleCategoryId',
+                field: 'name',
                 error: 26,
-                message: 'Please provide only valid \'VehicleCategoryId\' as numeric.'
+                message: 'Please provide only valid \'name\' as string.'
             })
-            validatedConditions.VehicleCategoryId = query.VehicleCategoryId
+            validatedConditions.name = query.name
         }
     }
 
@@ -51,7 +62,7 @@ const validatePostUserVehicle = (req, res, done) => {
         })
     }
     // quantity must be required required  Validating as not empty, valid integer.
-    if (!body.quantity || isNaN(body.quantity)) {
+    if (!body.quantity || !isInteger(body.quantity)) {
         errorArray.push({
             field: 'quantity',
             error: 26,
@@ -59,7 +70,7 @@ const validatePostUserVehicle = (req, res, done) => {
         })
     }
     // VehicleCategoryId must be required required  Validating as not empty, valid interger.
-    if (!body.VehicleCategoryId || isNaN(body.VehicleCategoryId)) {
+    if (!body.VehicleCategoryId || !isInteger(body.VehicleCategoryId)) {
         errorArray.push({
             field: 'VehicleCategoryId',
             error: 26,

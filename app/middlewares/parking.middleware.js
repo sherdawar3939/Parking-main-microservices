@@ -129,6 +129,12 @@ const validateGetParkingList = (req, res, done) => {
     if (query.hasOwnProperty('status') && query.status) {
         validatedConditions.status = query.status
     }
+    if (query.hasOwnProperty('vehicleCategoryId') && query.vehicleCategoryId) {
+        validatedConditions.vehicleCategoryId = query.vehicleCategoryId
+    }
+    if (query.hasOwnProperty('ParkingZoneId') && query.ParkingZoneId) {
+        validatedConditions.ParkingZoneId = query.ParkingZoneId
+    }
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateGetParkingList')
     }
