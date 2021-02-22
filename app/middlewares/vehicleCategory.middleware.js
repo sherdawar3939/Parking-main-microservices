@@ -33,6 +33,21 @@ const validateGetVehicleCategory = (req, res, done) => {
 
     done()
 }
+const validateDeleteVehicleCategoryId = (req, res, done) => {
+    const errorArray = []
+    const params = req.params
+    if (!params.id || isNaN(params.id)) {
+        errorArray.push({
+            field: 'id',
+            error: 80140,
+            message: 'Please provide only valid \'VehicleCategoryId\' as numeric.'
+        })
+    }
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'vehicleCategory.middleware.validateDeleteVehicleCategoryId')
+    }
+    done()
+}
 
 const createVehicleCategory = (req, res, done) => {
     const errorArray = []
@@ -56,5 +71,6 @@ const createVehicleCategory = (req, res, done) => {
 
 module.exports = {
     validateGetVehicleCategory,
+    validateDeleteVehicleCategoryId,
     createVehicleCategory
 }

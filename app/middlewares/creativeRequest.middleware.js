@@ -1,15 +1,21 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-const { isString } = require('lodash')
-
+const { isInteger } = require('lodash')
 const validateCreateRequest = (req, res, done) => {
     const errorArray = []
     const body = req.body
     const validatedBody = {}
-
+    // amount must be required required  Validating as not empty, valid integer.
+    if (!body.uid || !isNaN(body.uid)) {
+        errorArray.push({
+            field: 'uid',
+            error: 26,
+            message: 'Please provide only valid \'uid\' as string.'
+        })
+    }
     // qty must be required required  Validating as not empty, valid integer.
-    if (!body.qty || isNaN(body.qty)) {
+    if (!body.qty || !isInteger(body.qty)) {
         errorArray.push({
             field: 'qty',
             error: 'cr-5',
@@ -18,11 +24,11 @@ const validateCreateRequest = (req, res, done) => {
     }
 
     // ParkingZoneId must be required required  Validating as not empty, valid integer.
-    if (!body.ParkingZoneId || isNaN(body.ParkingZoneId)) {
+    if (!body.status || !isNaN(body.status)) {
         errorArray.push({
-            field: 'ParkingZoneId',
+            field: 'status',
             error: 'cr-10',
-            message: 'Please provide only valid \'ParkingZoneId\' as numeric,.'
+            message: 'Please provide only valid \'status\' as numeric,.'
         })
     }
 
@@ -38,12 +44,10 @@ const validateCreateRequest = (req, res, done) => {
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateCreateRequest')
     }
-
-    validatedBody.ParkingZoneId = body.ParkingZoneId
-    validatedBody.ClientId = body.ClientId
-    validatedBody.qty = body.qty
-    validatedBody.status = 'Pending'
-    req.validatedBody = validatedBody
+    validatedBody.uid = body.uid;
+    validatedBody.qty = body.qty;
+    validatedBody.status = body.status;
+    req.validatedBody = validatedBody;
     done()
 }
 
@@ -62,13 +66,8 @@ const validateGetCreativeRequest = (req, res, done) => {
     if (query.hasOwnProperty('status') && query.status) {
         validatedConditions.status = query.status
     }
-
-    if (query.hasOwnProperty('Clientid') && !isNaN(query.Clientid)) {
-        validatedConditions.ClientId = query.Clientid
-    }
-
-    if (query.hasOwnProperty('ParkingZoneId') && !isNaN(query.ParkingZoneId)) {
-        validatedConditions.ParkingZoneId = query.ParkingZoneId
+    if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
+        validatedConditions.ClientId = query.ClientId
     }
 
     if (query.limit && query.limit > 0) {
@@ -82,7 +81,6 @@ const validateGetCreativeRequest = (req, res, done) => {
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateGetCreativeRequest')
     }
-
     req.conditions = validatedConditions;
     req.limit = limit;
     req.offset = offset;

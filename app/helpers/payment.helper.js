@@ -6,21 +6,21 @@ const db = require('../config/sequelize.config')
 const _ = require('lodash')
 const generalHelpingMethods = require('./general.helper')
 
-function addpayment (data) {
-  return db.Payment.create(data)
+function addPayment(data) {
+    return db.Payment.create(data)
 }
 
-function getpayment (Conditions) {
-  return db.Client.findAll({
-    nest: false,
-    raw: true,
-    include: {
-      model: db.Payment,
-      as: 'clientPayments'
-    }
-  })
+function getPayment(Conditions) {
+    return db.Client.findAll({
+        nest: false,
+        raw: true,
+        include: {
+            model: db.Payment,
+            as: 'clientPayments'
+        }
+    })
 }
 module.exports = {
-  addpayment,
-  getpayment
+    addPayment,
+    getPayment
 }

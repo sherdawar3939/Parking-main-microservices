@@ -3,18 +3,18 @@ const SERVER_RESPONSE = require('../config/serverResponses')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 const contractHelper = require('../helpers/contract.helper')
-// const _ = require('lodash')
+    // const _ = require('lodash')
 
 // **************************
 //         Contract
 // **********************//
-const addContract = function (req, res) {
+const addContract = function(req, res) {
     return contractHelper.addContract(req.validatedBody)
-        .then(function (data) {
+        .then(function(data) {
             generalController.successResponse(res, 'Contract added successfully.', data, 'contract.controller.addContract')
-        }).catch(StandardError, function (err) {
+        }).catch(StandardError, function(err) {
             generalController.errorResponse(res, err, null, 'contract.controller.addContract', SERVER_RESPONSE.VALIDATION_ERROR)
-        }).catch(function (err) {
+        }).catch(function(err) {
             generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.addContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
 }
@@ -23,13 +23,13 @@ const addContract = function (req, res) {
 // Get Contract list
 // ***********************************
 
-const getContractList = function (req, res) {
+const getContractList = function(req, res) {
     return contractHelper.getContractList(req.conditions)
-        .then(function (data) {
+        .then(function(data) {
             generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContractList')
-        }).catch(StandardError, function (err) {
+        }).catch(StandardError, function(err) {
             generalController.errorResponse(res, err, null, 'contract.controller.getContractList', SERVER_RESPONSE.VALIDATION_ERROR)
-        }).catch(function (err) {
+        }).catch(function(err) {
             generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getContractList', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
 }

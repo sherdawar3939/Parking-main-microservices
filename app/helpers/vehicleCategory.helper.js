@@ -9,6 +9,14 @@ const _ = require('lodash')
 function getVehicleCategory(conditions) {
     return db.VehicleCategory.findAll({
         where: conditions
+
+    })
+}
+
+// Delete VehicleCategory
+function deleteVehicleCategory(id) {
+    return db.VehicleCategory.update({ isDeleted: true }, {
+        where: { id }
     })
 }
 
@@ -17,6 +25,7 @@ function createCategoryVehicle(data) {
 }
 
 module.exports = {
+    deleteVehicleCategory,
     getVehicleCategory,
     createCategoryVehicle
 }
