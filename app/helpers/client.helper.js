@@ -67,14 +67,11 @@ const getClientList = (conditions) => {
   })
 }
 const getClientDetail = (id) => {
-  return db.Client.findAll({
+  return db.Client.findOne({
 
     where: {
       id
     },
-    order: [
-      ['id', 'ASC']
-    ],
     attributes: ['id', 'companyName', 'email', 'phone', 'iban', 'secondaryPhone', 'secondaryEmail', 'secondaryContactPersonName', 'address'],
     include: [{
       model: db.ClientZipCode,
@@ -105,8 +102,7 @@ const getClientDetail = (id) => {
       attributes: ['amount']
     }, {
       model: db.ParkingZone,
-      as: 'clientParkingZones',
-      attributes: ['days']
+      as: 'clientParkingZones'
     }
     ]
 
