@@ -1,6 +1,6 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const ParkingZoneHelper = require('../helpers/paringZone.helper')
+const ParkingZoneHelper = require('../helpers/parkingZone.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
