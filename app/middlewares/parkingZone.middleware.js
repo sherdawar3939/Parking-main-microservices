@@ -52,6 +52,9 @@ const validateGetParkingZoneId = (req, res, done) => {
       message: 'Please provide only valid \'Parking_Zone id\' as numeric.'
     })
   }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.getZipCode')
+  }
   done()
 }
 

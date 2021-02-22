@@ -16,9 +16,11 @@
     "@sendgrid/mail": "^6.4.0",
     "amqplib": "^0.5.6",
     "aws-sdk": "^2.698.0",
+    "balanced-match": "^1.0.0",
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.4",
+    "core-util-is": "^1.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^5.3.1",
@@ -38,7 +40,8 @@
     "standard-error": "^1.1.0",
     "underscore": "^1.9.2",
     "util": "^0.11.1",
-    "v": "^0.3.0"
+    "v": "^0.3.0",
+    "webpack-dev-server": "^3.11.2"
   },
   "devDependencies": {
     "expect": "^24.7.1",

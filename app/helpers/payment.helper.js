@@ -1,10 +1,5 @@
 'use strict'
-
-var Sequelize = require('sequelize')
-const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
-const _ = require('lodash')
-const generalHelpingMethods = require('./general.helper')
 
 function addpayment (data) {
   return db.Payment.create(data)

@@ -3,10 +3,6 @@
 var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
-const _ = require('lodash')
-const generalHelpingMethods = require('./general.helper')
-const { groupBy } = require('lodash')
-
 const getClientList = (conditions) => {
   const where = {}
 
@@ -27,8 +23,8 @@ const getClientList = (conditions) => {
   }
   // return db.Client.findAndCountAll({
   //   attributes: ['id', 'companyName', 'address',
-  //     // [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('clientzipcodes.ClientId'))), 'count_of_actions'],
-  //     [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('parkingzones.ClientId'))), 'count_of_comments']
+  //     [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('clientzipcodes.ClientId'))), 'count_of_actions']
+  //     [Sequelize.fn('count', Sequelize.fn('DISTINCT', Sequelize.col('clientParkingZones.ClientId'))), 'count_of_comments']
   //   ],
   //   include: [
   //     {
@@ -40,53 +36,83 @@ const getClientList = (conditions) => {
   //       attributes: [],
   //       model: db.ParkingZone,
   //       as: 'clientParkingZones'
-  //     }]
-  //   // group: ['clients.id'],
-  //   // order: ['clients.id', 'ASC']
+  //     }],
+  //   group: ['client.id']
+  //   order: ['client.id', 'ASC']
   // })
   return db.Client.findAll({
     where,
     order: [
       ['id', 'ASC']
-    ],
-    attributes: ['id', 'companyName', 'address', [Sequelize.fn('COUNT', Sequelize.col('ClientId')), 'ZipCodeCount']],
-    include: [{
-      model: db.ClientZipCode,
-      // attributes: [],
-      as: 'clientZipCodes',
-      // attributes: {
-      //   include: [[Sequelize.fn('COUNT', Sequelize.col('ClientId')), 'ZipCodeCount']]
-      // },
-      where: {
-        isDeleted: false
-      }
+    ]
+    // attributes: ['id', 'companyName', 'address'],
+    // include: [{
+    //   model: db.ClientZipCode,
+    //   as: 'clientZipCodes',
+    //   attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientzipcodes.ClientId')), 'ZipCodeCount']],
+    //   where: {
+    //     isDeleted: false
+    //   }
 
-    },
-    {
-      model: db.ParkingZone,
-      as: 'clientParkingZones',
-      attributes: {
-        include: [[Sequelize.fn('COUNT', Sequelize.col('ClientId')), 'Count']]
-      }
-    }
-    ],
-    group: ['id']
+    // },
     // {
     //   model: db.ParkingZone,
-    //   as: 'clientParkingZones'
+    //   as: 'clientParkingZones',
+    //   attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientParkingZones.ClientId')), 'ZoneCount']]
 
-    // }]
+    // }
+    // ],
+    // group: ['id']
 
-    // }, {
-    //   model: db.ParkingZone,
-    //   // attributes: [],
-    //   as: 'clientParkingZones'
-    //   // attributes:
-    //   //     [[Sequelize.fn('COUNT', Sequelize.col('parkingzones.ClientId')), 'ParkingZoneCount']]
-    // }],
-    // group: ['ClientId']
+  })
+}
+const getClientDetail = (id) => {
+  return db.Client.findAll({
+
+    where: {
+      id
+    },
+    order: [
+      ['id', 'ASC']
+    ],
+    attributes: ['id', 'companyName', 'email', 'phone', 'iban', 'secondaryPhone', 'secondaryEmail', 'secondaryContactPersonName', 'address'],
+    include: [{
+      model: db.ClientZipCode,
+      as: 'clientZipCodes',
+      attributes: ['clientId'],
+      where: {
+        isDeleted: false
+      },
+      include: [{
+        model: db.ZipCode,
+        as: 'zipCodes',
+        attributes: ['zipCode'],
+        include: [{
+          model: db.City,
+          as: 'cityZipCodes',
+          attributes: ['name'],
+          include: [{
+            model: db.Country,
+            as: 'countryCities',
+            attributes: ['name']
+          }]
+
+        }]
+      }]
+    }, {
+      model: db.Payment,
+      as: 'clientPayments',
+      attributes: ['amount']
+    }, {
+      model: db.ParkingZone,
+      as: 'clientParkingZones',
+      attributes: ['days']
+    }
+    ]
+
   })
 }
 module.exports = {
-  getClientList
+  getClientList,
+  getClientDetail
 }

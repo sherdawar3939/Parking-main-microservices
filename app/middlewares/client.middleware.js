@@ -25,7 +25,23 @@ const validateGetClient = (req, res, done) => {
   req.validatedConditions = validatedConditions
   done()
 }
+const validateGetClientId = (req, res, done) => {
+  const errorArray = []
+  const params = req.params
+  if (!params.id || isNaN(params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 80140,
+      message: 'Please provide only valid \'Client id\' as numeric.'
+    })
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validateGetClientId')
+  }
+  done()
+}
 module.exports = {
-  validateGetClient
+  validateGetClient,
+  validateGetClientId
 
 }
