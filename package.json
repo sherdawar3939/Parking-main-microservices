@@ -25,6 +25,7 @@
         "express-validator": "^5.3.1",
         "firebase-admin": "^8.9.2",
         "formidable": "^1.2.2",
+        "generate-password": "^1.6.0",
         "glob": "^7.1.6",
         "jsonwebtoken": "^8.4.0",
         "lodash": "^4.17.20",

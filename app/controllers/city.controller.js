@@ -3,8 +3,6 @@ const SERVER_RESPONSE = require('../config/serverResponses')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 const cityHelper = require('../helpers/city.helper')
-const _ = require('lodash')
-
 // **************************
 // Get country
 // **********************//

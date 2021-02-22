@@ -3,9 +3,8 @@ const { validateCreateParking, validateGetParkingList } = require('../middleware
 const { createParking, getActiveParkingList } = require('../controllers/parking.controller')
 
 module.exports = function (app, apiVersion) {
-    const route = apiVersion;
+  const route = apiVersion
 
-    app.post(route + '/parking', validateCreateParking, createParking)
-    app.get(route + '/parking', validateGetParkingList, getActiveParkingList)
-
+  app.post(route + '/parking', validateCreateParking, createParking)
+  app.get(route + '/parking', validateGetParkingList, getActiveParkingList)
 }

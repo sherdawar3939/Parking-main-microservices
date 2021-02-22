@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const AWS = require('aws-sdk')
 const formidable = require('formidable')
 const fs = require('fs')
+var generator = require('generate-password')
 
 let newConfig = {
   jwtOptions: {
@@ -67,7 +68,7 @@ const signLoginData = (userInfo) => {
 // a middleware tp attach files and field to form data requests
 const attachBodyAndFiles = (req, res, next) => {
   let form = new formidable.IncomingForm()
-  form.parse(req, function (err, fields, files) {
+  form.parse(req, function (_err, fields, files) {
     req.body = fields
     req.files = files
     next()

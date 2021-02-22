@@ -3,10 +3,9 @@ const { validateCreateRequest, validateGetCreativeRequest } = require('../middle
 const { createCreativeRequest, getCreativeRequestList } = require('../controllers/creativeRequest.controller')
 
 module.exports = function (app, apiVersion) {
-    const route = apiVersion
+  const route = apiVersion
 
-    // get categories of vehicle
-    app.post(route + '/creative', validateCreateRequest, createCreativeRequest)
-    app.get(route + '/creative', validateGetCreativeRequest, getCreativeRequestList)
-
+  // get categories of vehicle
+  app.post(route + '/creative', validateCreateRequest, createCreativeRequest)
+  app.get(route + '/creative', validateGetCreativeRequest, getCreativeRequestList)
 }

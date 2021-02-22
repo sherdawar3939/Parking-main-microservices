@@ -2,7 +2,7 @@
 const parkingZoneMiddleware = require('../middlewares/parkingZone.middleware')
 const ParkingZoneController = require('../controllers/parkingZone.controller')
 
-const passport = require('../config/passport')
+// const passport = require('../config/passport')
 
 module.exports = function (app, apiVersion) {
   const route = apiVersion
