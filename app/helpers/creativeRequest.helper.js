@@ -7,10 +7,17 @@ const _ = require('lodash')
 
 /** Create Creative Requests */
 function createRequest(data) {
-    return db.CreativeRequest.create(data)
-}
-/**Fetch Creative Request List */
+    return db.CreativeRequest.findOne()
+        .then((result) => {
+            let foundUid = result.uid
 
+            data.uid = foundUid + 1
+
+            return db.createRequest.create(data)
+        })
+}
+
+/**Fetch Creative Request List */
 function getRequestList(conditions) {
     const where = {}
 
@@ -29,10 +36,13 @@ function getRequestList(conditions) {
             }
         }
     }
-    return db.CreativeRequest.findAll({
+
+    return db.CreativeRequest.findAndCountAll({
         raw: true,
         nest: false,
-        where
+        where,
+        limit: limit,
+        offset: offset
     })
 }
 // function getRequestList(conditions) {

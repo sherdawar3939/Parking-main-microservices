@@ -1,9 +1,6 @@
 'use strict'
 const userVehicleMiddleware = require('../middlewares/userVehicle.middleware')
 const UserVehicleController = require('../controllers/userVehicle.controller')
-const generalMiddleware = require('../middlewares/general.middleware')
-
-const passport = require('../config/passport')
 
 module.exports = function (app, apiVersion) {
   const route = apiVersion

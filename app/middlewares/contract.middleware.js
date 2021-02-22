@@ -37,30 +37,44 @@ const validateGetContractList = (req, res, done) => {
     done()
 }
 
-// const validateVerifyContract = (req, res, done) => {
-//     const errorArray = []
-//     const body = req.body
-//     const validatedBody = {}
+const validateCreateContract = (req, res, done) => {
+    const errorArray = []
+    const body = req.body
+    const validatedBody = {}
 
-//     console.log(req.body.id)
-//     if (!body.id || isNaN(body.id)) {
-//         errorArray.push({
-//             field: 'id',
-//             error: 80140,
-//             message: 'Please provide only valid \'id\' as numeric.'
-//         })
-//         validatedBody.id = body.id
-//     }
+    if (!body.data || !isNaN(body.data)) {
+        errorArray.push({
+            field: 'data',
+            error: 80140,
+            message: 'Please provide only valid \'data\' as string.'
+        })
+        // validatedBody.data = body.data
+    }
 
-//     req.validatedBody.id = validatedBody
+    if (!body.status || !isNaN(body.status)) {
+        errorArray.push({
+            field: 'status',
+            error: 80140,
+            message: 'Please provide only valid \'status\' as string.'
+        })
+        // validatedBody.status = body.status
+    }
 
-//     done()
-// }
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.validateCreateContract')
+    }
+
+    validatedBody.data = body.data,
+        validatedBody.status = body.status
+
+    req.validatedBody = validatedBody;
+    done()
+}
 
 const validateVerifyContract = (req, res, done) => {
     const errorArray = []
-    const params = req.body
-    const validatedBody = {};
+    const params = req.params;
+    const validatedBody = {}
     if (!params.id || isNaN(params.id)) {
         errorArray.push({
             field: 'id',
@@ -70,7 +84,7 @@ const validateVerifyContract = (req, res, done) => {
     }
 
     if (params.hasOwnProperty('id') && !isNaN(params.id)) {
-        validatedBody.id = params.id;
+        validatedBody.id = params.id
     }
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.validateVerifyContract')
@@ -81,5 +95,6 @@ const validateVerifyContract = (req, res, done) => {
 
 module.exports = {
     validateGetContractList,
-    validateVerifyContract
+    validateVerifyContract,
+    validateCreateContract
 }

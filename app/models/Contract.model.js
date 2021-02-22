@@ -3,10 +3,12 @@
 module.exports = function(sequelize, DataTypes) {
     let Contract = sequelize.define('Contract', {
         data: {
-            type: DataTypes.STRING(50)
+            type: DataTypes.STRING(50),
+            allowNull: false,
+            field: 'data'
         },
         status: {
-            type: DataTypes.ENUM({ values: ['PENDING', 'APPROVED', 'REJECTED'] }),
+            type: DataTypes.ENUM(['PENDING', 'APPROVED', 'REJECTED']),
             allowNull: false,
             defaultValue: 'PENDING',
             field: 'status'

@@ -29,7 +29,6 @@ module.exports = function (sequelize, DataTypes) {
       ParkingZone.hasMany(models.Parking, { foreignKey: 'ParkingZoneId', as: 'parkingZoneParkings' })
       ParkingZone.hasMany(models.CreativeRequest, { foreignKey: 'ParkingZoneId', as: 'parkingCreatives' })
     }
-  }
-  )
+  })
   return ParkingZone
 }
