@@ -16,6 +16,10 @@ module.exports = function (sequelize, DataTypes) {
       UpdatedBy: {
         type: DataTypes.INTEGER(11)
       }
+    }, {
+      associate: function (models) {
+        CreativeRequest.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'parkingCreatives' })
+      }
     }
   )
   return CreativeRequest
