@@ -7,16 +7,30 @@ const validateGetVehicleCategory = (req, res, done) => {
     const query = req.query
     const validatedConditions = {}
 
+    let limit = 50
+    let offset = 0
+
     // validating as optional string field
     if (query.hasOwnProperty('name') && query.name && query.name.length < 20) {
         validatedConditions.name = query.name
+    }
+
+    if (query.limit && query.limit > 0) {
+        limit = parseInt(query.limit)
+    }
+
+    if (query.offset && query.offset > 0) {
+        offset = parseInt(query.offset)
     }
 
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'vehicleCategory.middleware.validateGetVehicleCategory')
     }
 
-    req.conditions = validatedConditions
+    req.conditions = validatedConditions;
+    req.limit = limit;
+    req.offset = offset;
+
     done()
 }
 

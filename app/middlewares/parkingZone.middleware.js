@@ -40,6 +40,7 @@ const validateGetParkingZone = (req, res, done) => {
       validatedConditions.zip = query.zip
     }
   }
+
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }

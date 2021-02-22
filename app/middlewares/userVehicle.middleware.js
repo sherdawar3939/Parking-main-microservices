@@ -116,6 +116,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
       validatedBody.VehicleCategoryId = body.VehicleCategoryId
     }
   }
+
   if (body.hasOwnProperty('licensePlate') && body.licensePlate) {
     if (!_.isString(body.licensePlate) || body.licensePlate.length < 2 || body.licensePlate.length > 20) {
       errorArray.push({
@@ -126,6 +127,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     }
     validatedBody.licensePlate = body.licensePlate
   }
+
   if (body.hasOwnProperty('quantity') && body.quantity) {
     if (!body.quantity || isNaN(body.quantity)) {
       errorArray.push({
@@ -136,6 +138,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     }
     validatedBody.quantity = body.quantity
   }
+
   if (body.hasOwnProperty('UserId') && body.UserId) {
     if (!body.UserId || isNaN(body.UserId)) {
       errorArray.push({
@@ -153,6 +156,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
   req.validatedBody = validatedBody
   done()
 }
+
 const validateDeleteUservehicleId = (req, res, done) => {
   const errorArray = []
   const params = req.params
@@ -168,6 +172,7 @@ const validateDeleteUservehicleId = (req, res, done) => {
   }
   done()
 }
+
 module.exports = {
   validateGetUserVehicle,
   validatePostUserVehicle,

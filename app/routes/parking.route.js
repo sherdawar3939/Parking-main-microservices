@@ -6,7 +6,7 @@ module.exports = function (app, apiVersion) {
     const route = apiVersion
 
     // get categories of vehicle
-    app.post(route + '/create-parking', validateCreateParking, createParking)
-    app.get(route + '/active-parking-list', validateGetParkingList, getActiveParkingList)
+    app.post(route + '/parking', validateCreateParking, createParking)
+    app.get(route + '/parking', validateGetParkingList, getActiveParkingList)
 
 }

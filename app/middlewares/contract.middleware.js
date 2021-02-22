@@ -36,27 +36,6 @@ const validateGetContractList = (req, res, done) => {
     req.offset = query.offset && query.offset > 0 ? parseInt(query.offset) : 0
     done()
 }
-
-// const validateVerifyContract = (req, res, done) => {
-//     const errorArray = []
-//     const body = req.body
-//     const validatedBody = {}
-
-//     console.log(req.body.id)
-//     if (!body.id || isNaN(body.id)) {
-//         errorArray.push({
-//             field: 'id',
-//             error: 80140,
-//             message: 'Please provide only valid \'id\' as numeric.'
-//         })
-//         validatedBody.id = body.id
-//     }
-
-//     req.validatedBody.id = validatedBody
-
-//     done()
-// }
-
 const validateVerifyContract = (req, res, done) => {
     const errorArray = []
     const params = req.body

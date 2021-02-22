@@ -5,6 +5,7 @@ const validatePostPayment = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
+
   // amount must be required required  Validating as not empty, valid integer.
   if (!body.amount || isNaN(body.amount)) {
     errorArray.push({

@@ -7,6 +7,6 @@ module.exports = function (app, apiVersion) {
 
     // get categories of vehicle
     app.post(route + '/creative-request', validateCreateRequest, createCreativeRequest)
-    app.get(route + '/get/creative-request-list', validateGetCreativeRequest, getCreativeRequestList)
+    app.get(route + '/creative-request', validateGetCreativeRequest, getCreativeRequestList)
 
 }
