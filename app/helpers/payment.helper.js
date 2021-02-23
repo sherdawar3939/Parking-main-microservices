@@ -5,14 +5,27 @@ function addpayment (data) {
   return db.Payment.create(data)
 }
 
-function getpayment (Conditions) {
+function getpayment (conditions, limit, offset) {
+  const where = {}
+
+  if (conditions.ClientId) {
+    where.id = conditions.ClientId
+  }
+
+  if (conditions.paymentStatus) {
+    where.paymentStatus = conditions.paymentStatus
+  }
+  console.log('id', where)
   return db.Client.findAll({
+    where,
     nest: false,
     raw: true,
     include: {
       model: db.Payment,
       as: 'clientPayments'
-    }
+    },
+    limit: limit,
+    offset: offset
   })
 }
 module.exports = {
