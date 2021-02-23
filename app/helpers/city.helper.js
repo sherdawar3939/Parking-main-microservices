@@ -5,14 +5,14 @@ const db = require('../config/sequelize.config')
 // const _ = require('lodash');
 
 // **************************
-// Get country
+// Get Cities
 // **********************//
 
-function getCountry (conditions) {
-  return db.Country.findAll({
+function getCity (conditions) {
+  return db.City.findAll({
     where: conditions
   })
 }
 module.exports = {
-  getCountry
+  getCity
 }

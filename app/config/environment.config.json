@@ -49,9 +49,6 @@
         },
         "exchange": "ZaqootaExchange",
         "queue": "mainServiceQueue",
-        "binding_keys": [
-            "productImages",
-            "supplierImage"
-        ]
+        "binding_keys": ["productImages", "supplierImage"]
     }
 }

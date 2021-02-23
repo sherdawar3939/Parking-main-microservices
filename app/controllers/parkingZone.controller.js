@@ -1,6 +1,6 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const ParkingZoneHelper = require('../helpers/paringZone.helper')
+const ParkingZoneHelper = require('../helpers/parkingZone.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
@@ -14,6 +14,17 @@ const getParkingZone = function (req, res) {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'ParkingZone.controller.getParkingZone', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+const getParkingZoneById = (req, res) => {
+  return ParkingZoneHelper.getParkingZoneId(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'Parking zone fetched successfully.', data, 'Banner.controller.getParkingZoneById')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'ParkingZone.controller.getParkingZoneById', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'ParkingZone.controller.getParkingZoneById', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
-  getParkingZone
+  getParkingZone,
+  getParkingZoneById
 }

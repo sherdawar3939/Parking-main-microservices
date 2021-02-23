@@ -20,7 +20,7 @@ const addUserVehicle = function(req, res) {
         .then(function(data) {
             generalController.successResponse(res, 'User Vehicle added successfully.', data, 'userVehicle.controller.adduservehicle')
         }).catch(StandardError, function(err) {
-            generalController.errorResponse(res, err, null, 'userVehicle.controller.adduserVehicle', SERVER_RESPONSE.VALIDATION_ERROR)
+            generalController.errorResponse(res, err, null, 'userVehicle.controller.addUserVehicle', SERVER_RESPONSE.VALIDATION_ERROR)
         }).catch(function(err) {
             generalController.errorResponse(res, err, 'Please check originalError for details', 'userVehicle.controller.adduserVehicle', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
@@ -28,22 +28,22 @@ const addUserVehicle = function(req, res) {
 const updateUserVehicle = (req, res) => {
     return UserVehicleHelper.updateUserVehicle(req.params.id, req.body)
         .then((data) => {
-            generalController.successResponse(res, 'User Vehicle Updated successfully.', data, 'uservehicle.controller.updateuservehicle')
+            generalController.successResponse(res, 'User Vehicle Updated successfully.', data, 'userVehicle.controller.updateUserVehicle')
         }).catch(StandardError, (err) => {
-            generalController.errorResponse(res, err, null, 'userVehicle.controller.updateuserVehicle', SERVER_RESPONSE.VALIDATION_ERROR)
+            generalController.errorResponse(res, err, null, 'userVehicle.controller.updateUserVehicle', SERVER_RESPONSE.VALIDATION_ERROR)
         }).catch((err) => {
-            generalController.errorResponse(res, err, 'Please check originalError for details', 'userVehicle.controller.updateuserVehicle', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+            generalController.errorResponse(res, err, 'Please check originalError for details', 'userVehicle.controller.updateUserVehicle', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
 }
 
 const deleteUserVehicle = function(req, res) {
     return UserVehicleHelper.deleteUserVehicle(req.params.id)
         .then((data) => {
-            generalController.successResponse(res, 'User Vehicle deleted successfully.', data, 'uservehicle.controller.deleteuservehicle')
+            generalController.successResponse(res, 'User Vehicle deleted successfully.', data, 'userVehicle.controller.deleteUserVehicle')
         }).catch(StandardError, (err) => {
-            generalController.errorResponse(res, err, null, 'userVehicle.controller.deleteuserVehicle', SERVER_RESPONSE.VALIDATION_ERROR)
+            generalController.errorResponse(res, err, null, 'userVehicle.controller.deleteUserVehicle', SERVER_RESPONSE.VALIDATION_ERROR)
         }).catch((err) => {
-            generalController.errorResponse(res, err, 'Please check originalError for details', 'userVehicle.controller.deleteuserVehicle', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+            generalController.errorResponse(res, err, 'Please check originalError for details', 'userVehicle.controller.deleteUserVehicle', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
 }
 module.exports = {

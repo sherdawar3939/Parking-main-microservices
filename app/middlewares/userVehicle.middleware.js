@@ -1,7 +1,7 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-const { isInteger } = require('lodash')
+const { isInteger, isString } = require('lodash')
 
 const validateGetUserVehicle = (req, res, done) => {
     const errorArray = []
@@ -17,37 +17,13 @@ const validateGetUserVehicle = (req, res, done) => {
         }
         validatedConditions.UserId = query.UserId
     }
-    // if (query.hasOwnProperty('quantity') && query.quantity) {
-    //     if (!isInteger(query.quantity)) {
-    //         errorArray.push({
-    //             field: 'quantity',
-    //             error: 25,
-    //             message: 'Please provide only valid \'quantity\' as integer.'
-    //         })
-    //     }
-    //     validatedConditions.quantity = query.quantity
-    // }
-
-    // validating as optional string field
-    if (query.hasOwnProperty('name') && query.name) {
-        if (isInteger(query.name)) {
-            errorArray.push({
-                field: 'name',
-                error: 26,
-                message: 'Please provide only valid \'name\' as string.'
-            })
-            validatedConditions.name = query.name
-        }
-    }
-
     if (!_.isEmpty(errorArray)) {
-        return generalMiddleware.standardErrorResponse(res, errorArray, 'vehicleList.middleware.validateGetUserVehicle')
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'uservehicle.middleware.validateUpdateUserVehiceId')
     }
 
     req.conditions = validatedConditions
     done()
 }
-
 const validatePostUserVehicle = (req, res, done) => {
     const errorArray = []
     const body = req.body
@@ -164,6 +140,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     req.validatedBody = validatedBody
     done()
 }
+
 const validateDeleteUservehicleId = (req, res, done) => {
     const errorArray = []
     const params = req.params
@@ -179,6 +156,7 @@ const validateDeleteUservehicleId = (req, res, done) => {
     }
     done()
 }
+
 module.exports = {
     validateGetUserVehicle,
     validatePostUserVehicle,

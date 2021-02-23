@@ -10,34 +10,16 @@ function createParkingHelper(data) {
     return db.Parking.create(data)
 }
 /**Fetch Creative Request List */
-
-// function getActiveParkingList(conditions) {
-//     const where = {}
-
-//     if (conditions.ClientId) {
-//         where.ClientId = conditions.ClientId
-//     }
-
-//     if (conditions.status) {
-//         where.status = conditions.status
-//     }
-
-//     if (conditions.search) {
-//         where[[Op.or]] = {
-//             qty: {
-//                 [Op.like]: '%' + conditions.search + '%'
-//             }
-//         }
-//     }
-//     return db.CreativeRequest.findAll({
-//         raw: true,
-//         nest: false,
-//         where
-//     })
-// }
-function ActiveParkingListHelper(conditions) {
+function ActiveParkingListHelper(conditions, limit, offset) {
     return db.Parking.findAll({
-        where: conditions
+        where: conditions,
+        limit: limit,
+        offset: offset,
+        include: [{
+            model: db.ParkingZone,
+            as: 'parkingZone',
+            attributes: ['zip', 'fee']
+        }]
     })
 }
 

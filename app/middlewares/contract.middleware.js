@@ -44,20 +44,20 @@ const validateCreateContract = (req, res, done) => {
 
     if (!body.data || !isNaN(body.data)) {
         errorArray.push({
-                field: 'data',
-                error: 80140,
-                message: 'Please provide only valid \'data\' as string.'
-            })
-            // validatedBody.data = body.data
+            field: 'data',
+            error: 80140,
+            message: 'Please provide only valid \'data\' as string.'
+        })
+        // validatedBody.data = body.data
     }
 
     if (!body.status || !isNaN(body.status)) {
         errorArray.push({
-                field: 'status',
-                error: 80140,
-                message: 'Please provide only valid \'status\' as string.'
-            })
-            // validatedBody.status = body.status
+            field: 'status',
+            error: 80140,
+            message: 'Please provide only valid \'status\' as string.'
+        })
+        // validatedBody.status = body.status
     }
 
     if (!_.isEmpty(errorArray)) {
@@ -73,7 +73,7 @@ const validateCreateContract = (req, res, done) => {
 
 const validateVerifyContract = (req, res, done) => {
     const errorArray = []
-    const params = req.body
+    const params = req.params;
     const validatedBody = {}
     if (!params.id || isNaN(params.id)) {
         errorArray.push({
