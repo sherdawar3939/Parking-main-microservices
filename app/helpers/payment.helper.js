@@ -9,19 +9,22 @@ function getpayment (conditions, limit, offset) {
   const where = {}
 
   if (conditions.ClientId) {
-    where.id = conditions.ClientId
+    where.ClientId = conditions.ClientId
   }
 
   if (conditions.paymentStatus) {
     where.paymentStatus = conditions.paymentStatus
   }
+  if (conditions.fromDate) {
+    where.paymentStatus = conditions.paymentStatus
+  }
   console.log('id', where)
-  return db.Client.findAll({
+  return db.Payment.findAll({
     where,
     nest: false,
     raw: true,
     include: {
-      model: db.Payment,
+      model: db.Client,
       as: 'clientPayments'
     },
     limit: limit,

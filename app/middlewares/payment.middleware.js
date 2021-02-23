@@ -50,6 +50,9 @@ const validateGetPayment = (req, res, done) => {
   if (query.hasOwnProperty('paymentStatus') && query.paymentStatus) {
     validatedConditions.paymentStatus = query.paymentStatus
   }
+  if (query.hasOwnProperty('fromDate') && query.fromDate) {
+    validatedConditions.fromDate = query.fromDate
+  }
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }
