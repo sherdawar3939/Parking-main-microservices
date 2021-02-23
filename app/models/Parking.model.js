@@ -48,7 +48,11 @@ module.exports = function (sequelize, DataTypes) {
       UserVehicleId: {
         type: DataTypes.INTEGER(11)
       }
+  }, {
+    associate: function (models) {
+      Parking.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'parkingZone' })
+      Parking.belongsTo(models.User, { foreignKey: 'UserId', as: 'userParking' })
     }
-  )
+  })
   return Parking
 }

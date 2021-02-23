@@ -3,7 +3,6 @@ const SERVER_RESPONSE = require('../config/serverResponses')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 const zipCodeHelper = require('../helpers/zipCode.helper')
-const _ = require('lodash')
 
 // **************************
 // Get ZipCode
