@@ -72,7 +72,7 @@ const getClientDetail = (id) => {
     where: {
       id
     },
-    attributes: ['id', 'companyName', 'email', 'phone', 'iban', 'secondaryPhone', 'secondaryEmail', 'secondaryContactPersonName', 'address'],
+    attributes: ['id', 'companyName', 'email', 'phone', 'iban', 'secondaryPhone', 'secondaryEmail', 'secondaryContactPersonName', 'address', 'balance'],
     include: [{
       model: db.ClientZipCode,
       as: 'clientZipCodes',
@@ -96,10 +96,6 @@ const getClientDetail = (id) => {
 
         }]
       }]
-    }, {
-      model: db.Payment,
-      as: 'clientPayments',
-      attributes: ['amount']
     }, {
       model: db.ParkingZone,
       as: 'clientParkingZones'
