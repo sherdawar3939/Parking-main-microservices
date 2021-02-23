@@ -21,7 +21,6 @@ module.exports = function(sequelize, DataTypes) {
     }, {
         associate: function(models) {
             UserVehicle.hasMany(models.Parking, { foreignKey: 'UserVehicleId', as: 'UserVehicleParking' })
-
         }
     })
     return UserVehicle

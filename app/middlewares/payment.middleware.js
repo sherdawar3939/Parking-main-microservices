@@ -37,8 +37,8 @@ const validateGetPayment = (req, res, done) => {
   const query = req.query
   const validatedConditions = {}
 
-  let limit = 50;
-  let offset = 0;
+  let limit = 50
+  let offset = 0
 
   if (query.hasOwnProperty('ClientId') && query.ClientId) {
     if (isNaN(query.UserId)) {
@@ -63,9 +63,9 @@ const validateGetPayment = (req, res, done) => {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'payment.middleware.validateGetPayment')
   }
 
-  req.conditions = validatedConditions;
-  req.limit = limit;
-  req.offset = offset;
+  req.conditions = validatedConditions
+  req.limit = limit
+  req.offset = offset
   done()
 }
 

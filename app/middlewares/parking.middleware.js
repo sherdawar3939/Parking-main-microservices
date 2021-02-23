@@ -103,18 +103,18 @@ const validateCreateParking = (req, res, done) => {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateCreateParking')
     }
     validatedBody.status = body.status
-    validatedBody.totalSeconds = body.totalSeconds,
-        validatedBody.quantity = body.quantity,
-        validatedBody.licensePlate = body.licensePlate,
-        validatedBody.parkingCharges = body.parkingCharges,
-        validatedBody.profit = body.profit,
-        validatedBody.total = body.total,
-        validatedBody.paymentId = body.paymentId,
-        validatedBody.PayerID = body.PayerID,
-        validatedBody.paymentStatus = body.paymentStatus,
-        validatedBody.ParkingZoneId = body.ParkingZoneId,
-        validatedBody.UserId = body.UserId,
-        validatedBody.UserVehicleId = body.UserVehicleId
+    validatedBody.totalSeconds = body.totalSeconds
+    validatedBody.quantity = body.quantity
+    validatedBody.licensePlate = body.licensePlate
+    validatedBody.parkingCharges = body.parkingCharges
+    validatedBody.profit = body.profit
+    validatedBody.total = body.total
+    validatedBody.paymentId = body.paymentId
+    validatedBody.PayerID = body.PayerID
+    validatedBody.paymentStatus = body.paymentStatus
+    validatedBody.ParkingZoneId = body.ParkingZoneId
+    validatedBody.UserId = body.UserId
+    validatedBody.UserVehicleId = body.UserVehicleId
 
     req.validatedBody = validatedBody
 
@@ -125,15 +125,17 @@ const validateGetParkingList = (req, res, done) => {
     const errorArray = []
     const query = req.query
     const validatedConditions = {}
-    let limit = 50;
-    let offset = 0;
+    let limit = 50
+    let offset = 0
 
     if (query.hasOwnProperty('status') && query.status) {
         validatedConditions.status = query.status
     }
-    if (query.hasOwnProperty('vehicleCategoryId') && query.vehicleCategoryId) {
-        validatedConditions.vehicleCategoryId = query.vehicleCategoryId
+
+    if (query.hasOwnProperty('VehicleCategoryId') && query.VehicleCategoryId) {
+        validatedConditions.VehicleCategoryId = query.VehicleCategoryId
     }
+
     if (query.hasOwnProperty('ParkingZoneId') && query.ParkingZoneId) {
         validatedConditions.ParkingZoneId = query.ParkingZoneId
     }
@@ -150,9 +152,9 @@ const validateGetParkingList = (req, res, done) => {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateGetParkingList')
     }
 
-    req.conditions = validatedConditions;
-    req.limit = limit;
-    req.offset = offset;
+    req.conditions = validatedConditions
+    req.limit = limit
+    req.offset = offset
     done()
 }
 

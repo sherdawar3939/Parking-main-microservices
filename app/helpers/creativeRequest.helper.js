@@ -3,7 +3,7 @@
 var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
-const _ = require('lodash')
+    // const _ = require('lodash')
 
 /** Create Creative Requests */
 function createRequest(data) {
@@ -17,7 +17,7 @@ function createRequest(data) {
         })
 }
 
-/**Fetch Creative Request List */
+/** Fetch Creative Request List */
 function getRequestList(conditions, limit, offset) {
     const where = {}
 
@@ -45,16 +45,10 @@ function getRequestList(conditions, limit, offset) {
         offset: offset,
         include: [{
             model: db.Client,
-            as: "creativeRequestClient"
+            as: 'creativeRequestClient'
         }]
     })
 }
-// function getRequestList(conditions) {
-//     return db.CreativeRequest.findAll({
-//         where: conditions
-//     })
-// }
-
 
 module.exports = {
     createRequest,

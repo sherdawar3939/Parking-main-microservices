@@ -5,8 +5,11 @@
 
 var PromiseReturns = require('bluebird')
 var StandardError = require('standard-error')
-var _ = require('lodash')
+// var _ = require('lodash')
 var fs = require('fs')
+const winston = require('../config/winston')
+const config = require('../config/config')
+const AWS = require('aws-sdk')
 
 // Check if user has permission or not
 function checkIfUserHasPermission (permissionName, permissionsArray) {
@@ -38,7 +41,7 @@ function putS3Object (s3, params) {
   return new PromiseReturns(function (resolve, reject) {
     s3.putObject(params, function (err) {
       if (err) {
-        return rejectPromiseReturns(reject, err)
+        return rejectPromise(reject, err)
       }
       resolve()
     })
@@ -79,5 +82,4 @@ module.exports = {
   rejectPromise,
   catchException,
   putS3Object,
-  uploadImageToS3
-}
+  uploadImageToS3 }

@@ -1,6 +1,6 @@
 'use strict'
-const Sequelize = require('sequelize')
-const Op = Sequelize.Op
+// const Sequelize = require('sequelize')
+// const Op = Sequelize.Op
 
 module.exports = async function dbseed (db, sequelize) {
   const roles = [{

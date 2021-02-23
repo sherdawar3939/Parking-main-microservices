@@ -4,7 +4,7 @@ const vehicleCategoryController = require('../controllers/vehicleCategory.contro
 
 module.exports = function (app, apiVersion) {
   const route = apiVersion
-  app.post(route + '/vehicle/category', vehicleCategoryMiddleware.createVehicleCategory, vehicleCategoryController.createVehicleCategory);
-  app.get(route + '/vehicle/category', vehicleCategoryMiddleware.validateGetVehicleCategory, vehicleCategoryController.getVehicleCategory);
-  app.delete(route + '/vehicle/category/:id', vehicleCategoryMiddleware.validateDeleteVehicleCategoryId, vehicleCategoryController.deleteVehicleCategory);
+  app.post(route + '/vehicle/category', vehicleCategoryMiddleware.createVehicleCategory, vehicleCategoryController.createVehicleCategory)
+  app.get(route + '/vehicle/category', vehicleCategoryMiddleware.validateGetVehicleCategory, vehicleCategoryController.getVehicleCategory)
+  app.delete(route + '/vehicle/category/:id', vehicleCategoryMiddleware.validateDeleteVehicleCategoryId, vehicleCategoryController.deleteVehicleCategory)
 }
