@@ -60,7 +60,7 @@ const validateGetPayment = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetPayment')
   }
-
+  req.conditions = validatedConditions
   req.limit = limit
   req.offset = offset
   done()
