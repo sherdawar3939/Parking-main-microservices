@@ -19,9 +19,6 @@ module.exports = function (sequelize, DataTypes) {
     },
     polygons: {
       type: DataTypes.TEXT
-    },
-    ClientZipCodeId: {
-      type: DataTypes.INTEGER(11)
     }
   }, {
     associate: function (models) {
