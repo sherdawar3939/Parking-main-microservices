@@ -16,7 +16,7 @@ const createCreativeRequest = function (req, res) {
 }
 /* Get Creative Request List **/
 const getCreativeRequestList = function (req, res) {
-  return getRequestList(req.conditions)
+  return getRequestList(req.conditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'CreateiveRequest fetched successfully.', data, 'creativeRequest.controller.getCreativeRequestList')
     }).catch(StandardError, function (err) {

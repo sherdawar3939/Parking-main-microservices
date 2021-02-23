@@ -6,7 +6,7 @@ const generalController = require('./general.controller')
 
 // Get Vehicle Category
 const getVehicleCategory = function (req, res) {
-  return vehicleCategoryHelper.getVehicleCategory(req.conditions)
+  return vehicleCategoryHelper.getVehicleCategory(req.conditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'Vehicle fetched successfully.', data, 'vehicleCategory.controller.getVehicleCategory')
     }).catch(StandardError, function (err) {

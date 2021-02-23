@@ -24,7 +24,7 @@ const addContract = function (req, res) {
 // ***********************************
 
 const getContractList = function (req, res) {
-  return contractHelper.getContractList(req.conditions)
+  return contractHelper.getContractList(req.conditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContractList')
     }).catch(StandardError, function (err) {

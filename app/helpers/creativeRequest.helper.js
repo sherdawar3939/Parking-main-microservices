@@ -42,7 +42,11 @@ function getRequestList (conditions, limit, offset) {
     nest: false,
     where,
     limit: limit,
-    offset: offset
+    offset: offset,
+    include: [{
+      model: db.Client,
+      as: 'creativeReequestClient'
+    }]
   })
 }
 
