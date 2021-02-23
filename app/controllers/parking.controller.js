@@ -16,7 +16,7 @@ const createParking = function (req, res) {
 }
 /* Get Active Parking List */
 const getActiveParkingList = function (req, res) {
-  return ActiveParkingListHelper(req.conditions)
+  return ActiveParkingListHelper(req.conditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'Parking fetched successfully.', data, 'parking.controller.getActiveParkingList')
     }).catch(StandardError, function (err) {
