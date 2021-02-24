@@ -29,6 +29,7 @@ function ActiveParkingListHelper (conditions, limit, offset) {
   if (conditions.VehicleCategoryId) {
     includes.push({
       model: db.UserVehicle,
+      as: 'parkingUserVehicle',
       attributes: [],
       where: {
         VehicleCategoryId: conditions.VehicleCategoryId,
