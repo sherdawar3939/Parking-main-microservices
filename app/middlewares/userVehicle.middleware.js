@@ -83,7 +83,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     errorArray.push({
       field: 'id',
       error: 80140,
-      message: 'Please provide only valid \'UserVehicleid\' as numeric.'
+      message: 'Please provide only valid \'UserVehicleId\' as numeric.'
     })
     if (!body) {
       errorArray.push({
@@ -135,31 +135,29 @@ const validateUpdateUserVehicleId = (req, res, done) => {
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'uservehicle.middleware.validateUpdateUserVehiceId')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validateUpdateUserVehicleId')
   }
   req.validatedBody = validatedBody
   done()
 }
-
-const validateDeleteUservehicleId = (req, res, done) => {
+const validateDeleteUserVehicleId = (req, res, done) => {
   const errorArray = []
   const params = req.params
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
       error: 80140,
-      message: 'Please provide only valid \'UserVehicleid\' as numeric.'
+      message: 'Please provide only valid \'UserVehicleId\' as numeric.'
     })
   }
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'uservehicle.middleware.validateUpdateUserVehiceId')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validateUpdateUserVehicleId')
   }
   done()
 }
-
 module.exports = {
   validateGetUserVehicle,
   validatePostUserVehicle,
   validateUpdateUserVehicleId,
-  validateDeleteUservehicleId
+  validateDeleteUserVehicleId
 }

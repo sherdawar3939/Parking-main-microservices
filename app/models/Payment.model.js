@@ -21,6 +21,10 @@ module.exports = function (sequelize, DataTypes) {
       ClientId: {
         type: DataTypes.INTEGER(11)
       }
+    }, {
+      associate: function (models) {
+        Payment.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'clientPayments' })
+      }
     }
   )
   return Payment

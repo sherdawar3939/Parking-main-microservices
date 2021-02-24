@@ -30,6 +30,10 @@ function getparkingZone (conditions, limit, offset) {
     order: [
       ['id', 'DESC']
     ],
+    include: [{
+      model: db.Client,
+      as: 'parkingZoneClient'
+    }],
     limit: limit,
     offset: offset
   })
@@ -38,7 +42,20 @@ const getParkingZoneId = (id) => {
   return db.ParkingZone.findAll({
     where: {
       id
+    },
+    order: [
+      ['id', 'ASC']
+    ],
+    include: [{
+      attributes: ['id', 'companyName', 'email', 'address'],
+      model: db.Client,
+      as: 'parkingZoneClient'
+    }, {
+      model: db.CreativeRequest,
+      as: 'parkingCreatives'
     }
+
+    ]
   })
 }
 module.exports = {
