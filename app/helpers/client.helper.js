@@ -44,7 +44,7 @@ const getClientList = (conditions) => {
     order: [
       ['id', 'ASC']
     ],
-    attributes: ['id', 'companyName', 'address'],
+    attributes: ['id', 'companyName', 'address']
     // include: [{
     //   model: db.ClientZipCode,
     //   as: 'clientZipCodes',

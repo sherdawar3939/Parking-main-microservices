@@ -30,9 +30,9 @@ function getpayment (conditions, limit, offset) {
   }
   console.log('where', where)
   return db.Payment.findAll({
-    nest: false,
-    raw: true,
     where,
+    // nest: false,
+    // raw: true,
     include: {
       model: db.Client,
       as: 'clientPayments'

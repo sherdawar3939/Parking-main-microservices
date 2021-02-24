@@ -45,11 +45,12 @@ function getRequestList (conditions, limit, offset) {
     offset: offset,
     include: [{
       model: db.Client,
-      as: 'creativeReequestClient'
+      as: 'creativeRequestClient'
     }]
   })
 }
 
 module.exports = {
   createRequest,
-  getRequestList }
+  getRequestList
+}
