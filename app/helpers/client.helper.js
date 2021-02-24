@@ -29,7 +29,7 @@ const getClientList = (conditions) => {
     // attributes: ['id', 'companyName', 'address', 'phone'],
     include: [{
       model: db.Contract,
-      as: 'clientContract',
+      as: 'clientContracts',
       attributes: ['id', 'data', 'status']
     }]
 
