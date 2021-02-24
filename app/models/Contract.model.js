@@ -15,7 +15,7 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     associate: function (models) {
-      Contract.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'clientContract' })
+      Contract.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'clientContracts' })
       Contract.belongsTo(models.User, { foreignKey: 'UserId', as: 'contractUser' })
     }
   })

@@ -26,11 +26,9 @@ function getContractById (id) {
     where: {
       ClientId: id
     },
-    attributes: ['id', 'data', 'status', 'ClientId', 'UserId'],
     include: [{
       model: db.Client,
       as: 'clientContracts'
-      // attributes: []
     }]
   })
 }
