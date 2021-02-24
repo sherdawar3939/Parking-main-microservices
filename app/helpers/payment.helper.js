@@ -1,12 +1,13 @@
 'use strict'
 const db = require('../config/sequelize.config')
-
+var sequelize = require('sequelize')
+const Op = sequelize.Op
 function addpayment (data) {
   return db.Payment.create(data)
 }
 
 function getpayment (conditions, limit, offset) {
-  const where = {}
+  let where = {}
 
   if (conditions.ClientId) {
     where.ClientId = conditions.ClientId
@@ -18,7 +19,16 @@ function getpayment (conditions, limit, offset) {
   if (conditions.fromDate) {
     where.paymentStatus = conditions.paymentStatus
   }
-  console.log('id', where)
+  // console.log('where', conditions.fromDate.toString(), 'dsdsds', conditions.toDate.toString())
+  if (conditions.fromDate && conditions.toDate) {
+    where = {
+      [Op.or]: [
+        sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '>=', conditions.fromDate),
+        sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '<=', conditions.toDate)
+      ]
+    }
+  }
+  console.log('where', where)
   return db.Payment.findAll({
     where,
     // nest: false,
@@ -27,6 +37,7 @@ function getpayment (conditions, limit, offset) {
       model: db.Client,
       as: 'clientPayments'
     },
+    order: [['createdAt', 'DESC']],
     limit: limit,
     offset: offset
   })
