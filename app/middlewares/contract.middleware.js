@@ -45,6 +45,25 @@ const validateGetContractByClientId = (req, res, done) => {
   done()
 }
 
+const validateGetContract = (req, res, done) => {
+  const errorArray = []
+  if (isNaN(req.params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 80140,
+      message: "Please provide only valid 'id' as number."
+    })
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.getContract')
+  }
+
+  // req.conditions = validateConditions
+  // req.limit = query.limit && query.limit > 0 ? parseInt(query.limit) : 50
+  // req.offset = query.offset && query.offset > 0 ? parseInt(query.offset) : 0
+  done()
+}
+
 const validateCreateContract = (req, res, done) => {
   const errorArray = []
   const body = req.body
@@ -105,4 +124,5 @@ module.exports = {
   validateGetContractList,
   validateVerifyContract,
   validateCreateContract,
-  validateGetContractByClientId }
+  validateGetContractByClientId,
+  validateGetContract }
