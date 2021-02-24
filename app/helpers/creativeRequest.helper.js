@@ -38,8 +38,8 @@ function getRequestList (conditions, limit, offset) {
   }
 
   return db.CreativeRequest.findAndCountAll({
-    raw: true,
-    nest: false,
+    // raw: true,
+    // nest: false,
     where,
     limit: limit,
     offset: offset,

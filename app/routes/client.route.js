@@ -7,4 +7,5 @@ module.exports = function (app, apiVersion) {
   // get client list
   app.get(`${route}/client`, clientMiddleware.validateGetClient, ClientController.getClient)
   app.get(`${route}/client/:id`, clientMiddleware.validateGetClientId, ClientController.getClientById)
+  app.post(`${route}/client`, clientMiddleware.validatePostClient, ClientController.addClient)
 }
