@@ -17,8 +17,9 @@ module.exports = function (sequelize, DataTypes) {
       associate: function (models) {
         ClientZipCode.belongsTo(models.ZipCode, { foreignKey: 'ZipCodeId', as: 'zipCodes' })
         ClientZipCode.belongsTo(models.Client, { foreignKey: 'ClientId' })
-        ClientZipCode.hasMany(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'clientParkingZone' })
+        ClientZipCode.hasMany(models.ParkingZone, { foreignKey: 'ClientZipCodeId', as: 'clientParkingZone' })
       }
-    })
+    }
+  )
   return ClientZipCode
 }
