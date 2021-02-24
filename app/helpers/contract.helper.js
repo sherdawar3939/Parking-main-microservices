@@ -12,10 +12,26 @@ function getContractList (conditions, limit, offset) {
     raw: true,
     include: {
       model: db.Client,
-      as: 'clientContract'
+      as: 'clientContracts'
     },
     limit: limit,
     offset: offset
+  })
+}
+
+function getContractById (id) {
+  console.log('con', id)
+  return db.Contract.findAll({
+
+    where: {
+      ClientId: id
+    },
+    attributes: ['id', 'data', 'status', 'ClientId', 'UserId'],
+    include: [{
+      model: db.Client,
+      as: 'clientContracts'
+      // attributes: []
+    }]
   })
 }
 
@@ -25,4 +41,5 @@ function verifyContract (id) {
 module.exports = {
   addContract,
   getContractList,
-  verifyContract }
+  verifyContract,
+  getContractById }
