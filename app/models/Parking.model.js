@@ -12,7 +12,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.INTEGER(2)
     },
     status: {
-      type: DataTypes.STRING(20)
+      type: DataTypes.ENUM(['Active', 'InActive']),
+      allowNull: false,
+      defaultValue: 'Active',
+      field: 'status'
     },
     parkingCharges: {
       type: DataTypes.DECIMAL(9, 5)
