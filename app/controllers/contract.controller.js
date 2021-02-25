@@ -34,26 +34,26 @@ const getContractList = function(req, res) {
         })
 }
 
-const getContractByClientid = function (req, res) {
-  return contractHelper.getContractById(req.params.id)
-    .then(function (data) {
-      generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContractByClientid')
-    }).catch(StandardError, function (err) {
-      generalController.errorResponse(res, err, null, 'contract.controller.getContractByClientid', SERVER_RESPONSE.VALIDATION_ERROR)
-    }).catch(function (err) {
-      generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getContractByClientid', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
-    })
+const getContractByClientid = function(req, res) {
+    return contractHelper.getContractById(req.params.id)
+        .then(function(data) {
+            generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContractByClientid')
+        }).catch(StandardError, function(err) {
+            generalController.errorResponse(res, err, null, 'contract.controller.getContractByClientid', SERVER_RESPONSE.VALIDATION_ERROR)
+        }).catch(function(err) {
+            generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getContractByClientid', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+        })
 }
 
-const getContract = function (req, res) {
-  return contractHelper.getContract(req.params.id)
-    .then(function (data) {
-      generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContract')
-    }).catch(StandardError, function (err) {
-      generalController.errorResponse(res, err, null, 'contract.controller.getContract', SERVER_RESPONSE.VALIDATION_ERROR)
-    }).catch(function (err) {
-      generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
-    })
+const getContract = function(req, res) {
+    return contractHelper.getContract(req.params.id)
+        .then(function(data) {
+            generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContract')
+        }).catch(StandardError, function(err) {
+            generalController.errorResponse(res, err, null, 'contract.controller.getContract', SERVER_RESPONSE.VALIDATION_ERROR)
+        }).catch(function(err) {
+            generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+        })
 }
 
 const verificationOfContract = (req, res) => {
@@ -68,16 +68,9 @@ const verificationOfContract = (req, res) => {
 }
 
 module.exports = {
-<<<<<<< HEAD
     addContract,
     getContractList,
-    verificationOfContract
+    verificationOfContract,
+    getContractByClientid,
+    getContract
 }
-=======
-  addContract,
-  getContractList,
-  verificationOfContract,
-  getContractByClientid,
-  getContract
-}
->>>>>>> 63e6763ef451f7265a49979c62741fd37e224885

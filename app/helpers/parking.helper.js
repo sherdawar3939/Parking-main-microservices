@@ -39,6 +39,12 @@ function ActiveParkingListHelper(conditions, limit, offset) {
             required: true
         })
     }
+    return db.Parking.findAll({
+        where: parkingWhere,
+        limit: limit,
+        offset: offset,
+        include: includes
+    })
 }
 
 module.exports = {

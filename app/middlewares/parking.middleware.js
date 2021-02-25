@@ -14,11 +14,11 @@ const validateCreateParking = (req, res, done) => {
             message: 'Please provide only valid \'status\' as string.'
         })
     }
-    if (!body.totalSeconds) {
+    if (!body.totalSeconds || !isInteger(body.totalSeconds)) {
         errorArray.push({
             field: 'totalSeconds',
             error: 26,
-            message: 'Please provide only valid \'totalSeconds\' as string.'
+            message: 'Please provide only valid \'totalSeconds\' as Decimal'
         })
     }
     if (!body.quantity || !isInteger(body.quantity)) {
