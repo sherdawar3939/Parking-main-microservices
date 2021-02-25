@@ -58,7 +58,6 @@ const validateGetCreativeRequest = (req, res, done) => {
 
   let limit = 50
   let offset = 0
-
   if (query.hasOwnProperty('search') && query.search) {
     validatedConditions.search = query.search
   }

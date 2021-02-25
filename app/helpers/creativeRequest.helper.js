@@ -28,12 +28,11 @@ function getRequestList (conditions, limit, offset) {
   if (conditions.status) {
     where.status = conditions.status
   }
-
   if (conditions.search) {
-    where[[Op.or]] = {
-      qty: {
-        [Op.like]: '%' + conditions.search + '%'
-      }
+    where[Op.or] = {
+      uid: { [Op.like]: '%' + conditions.search + '%' },
+      status: { [Op.like]: '%' + conditions.search + '%' },
+      qty: { [Op.like]: '%' + conditions.search + '%' }
     }
   }
 
