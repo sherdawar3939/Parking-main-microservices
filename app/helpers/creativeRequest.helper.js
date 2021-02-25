@@ -6,7 +6,7 @@ const db = require('../config/sequelize.config')
 // const _ = require('lodash')
 
 /** Create Creative Requests */
-function createRequest(data) {
+function createRequest (data) {
   return db.CreativeRequest.findOne()
     .then((result) => {
       let foundUid = result.uid
@@ -35,11 +35,11 @@ function getCreatives (id) {
 }
 
 /** Fetch Creative Request List */
-function getRequestList(conditions, limit, offset) {
+function getRequestList (conditions, limit, offset) {
   const where = {}
 
   if (conditions.ClientId) {
-    where.ClientId = conditions.ClientId
+    where.ClientId = conditions.ClientIdp
   }
 
   if (conditions.status) {
