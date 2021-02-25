@@ -11,12 +11,12 @@ const validateGetClient = (req, res, done) => {
   }
 
   // validating as optional number field
-  if (query.hasOwnProperty('zipcode') && query.ClientId && !isNaN(query.ClientId)) {
-    validatedConditions.zipcode = query.zipcode
+  if (query.hasOwnProperty('zipCode') && query.zipCode && !isNaN(query.zipCode)) {
+    validatedConditions.zipCode = query.zipCode
   }
 
   // validating as optional number field
-  if (query.hasOwnProperty('status') && query.CityId && !isNaN(query.CityId)) {
+  if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
   if (!_.isEmpty(errorArray)) {

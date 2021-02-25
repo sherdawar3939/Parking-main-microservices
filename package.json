@@ -7,7 +7,8 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "export NODE_ENV=testing && mocha app/**/*.test.js",
-    "test-watch": "nodemon --exec \"npm test\""
+    "test-watch": "nodemon --exec \"npm test\"",
+    "debug": "ndb app.js"
   },
   "author": "Locopixel Pvt Ltd",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "compression": "^1.7.4",
     "core-util-is": "^1.0.2",
     "cors": "^2.8.5",
+    "debug": "^2.6.9",
     "express": "^4.17.1",
     "express-validator": "^5.3.1",
     "firebase-admin": "^9.4.2",
