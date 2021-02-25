@@ -1,40 +1,61 @@
 'use strict'
-
+// const { any } = require('bluebird')
+const _ = require('lodash')
 var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
+const generalMiddleware = require('../middlewares/general.middleware')
+
 const getClientList = (conditions) => {
   const where = {}
-
-  if (conditions.zipcode) {
-    where.zipcode = conditions.zipcode
+  const contractWhere = {}
+  const zipCodeWhere = {}
+  if (conditions.zipCode) {
+    zipCodeWhere.zipCode = conditions.zipCode
   }
 
   if (conditions.status) {
-    where.status = conditions.status
+    contractWhere.status = conditions.status
   }
 
   if (conditions.search) {
-    where[[Op.or]] = {
-      companyName: {
-        [Op.like]: '%' + conditions.search + '%'
-      }
+    where[Op.or] = {
+      companyName: { [Op.like]: '%' + conditions.companyName + '%' },
+      phone: { [Op.like]: '%' + conditions.search + '%' },
+      email: { [Op.like]: '%' + conditions.search + '%' }
     }
   }
+  console.log(zipCodeWhere)
   return db.Client.findAll({
     where,
     order: [
       ['id', 'ASC']
     ],
-    // attributes: ['id', 'companyName', 'address', 'phone'],
-    include: [{
-      model: db.Contract,
-      as: 'clientContracts',
-      attributes: ['id', 'data', 'status']
-    }]
+    include: [
+      {
+        model: db.ClientZipCode,
+        as: 'clientZipCodes',
+        where: {
+          isDeleted: false
+        },
+        include: [{
+          where: zipCodeWhere,
+          model: db.ZipCode,
+          as: 'zipCodes'
+        }]
+
+      },
+      {
+        where: contractWhere,
+        model: db.Contract,
+        as: 'clientContracts',
+        attributes: ['id', 'data', 'status']
+      }
+    ]
 
   })
 }
+
 const getClientDetail = (id) => {
   return db.Client.findOne({
 
@@ -73,8 +94,46 @@ const getClientDetail = (id) => {
 
   })
 }
-const postClient = (body) => {
-  return db.Client.create(body)
+const postClient = async (body, res, next) => {
+  const errorsArray = []
+  const client = await db.Client.findOne({
+    where: {
+      [Op.or]: [
+        {
+          email: body.email
+        }, {
+          phone: body.phone
+        }
+      ]
+    }
+  })
+
+  if (!client) {
+    return db.Client.create(body)
+  } else {
+    if (client.phone === body.phone) {
+      // user phone already exist.
+
+      errorsArray.push({
+        field: 'phone',
+        error: 1500,
+        message: 'phone already exist'
+      })
+    }
+
+    if (client.email === body.email) {
+      // user email already exist.
+      errorsArray.push({
+        field: 'email',
+        error: 1505,
+        message: 'email already exist'
+      })
+    }
+    if (!_.isEmpty(errorsArray)) {
+      return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient')
+    }
+  }
+  next()
 }
 
 module.exports = {
