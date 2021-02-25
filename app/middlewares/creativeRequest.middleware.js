@@ -66,7 +66,7 @@ const validateGetCreativeRequest = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
-  if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
+  if (query.hasOwnProperty('ClientId') && !isInteger(query.ClientId)) {
     validatedConditions.ClientId = query.ClientId
   }
 

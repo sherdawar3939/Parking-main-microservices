@@ -1,5 +1,6 @@
 'use strict'
 const db = require('../config/sequelize.config')
+const Sequelize = require('sequelize')
 
 function addContract (data) {
   return db.Contract.create(data)
@@ -24,17 +25,27 @@ function getContract (id) {
 }
 
 function getContractById (id) {
-  console.log('con', id)
+  let includes = [{
+    model: db.ClientZipCode,
+    as: 'clientZipCodes',
+    attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientZipCodes.ClientId')), 'ZipCodeCount']],
+    where: {
+      isDeleted: false
+    }
+  }]
   return db.Contract.findAll({
-
     where: {
       ClientId: id
     },
+    includes: includes,
     include: [{
       model: db.Client,
       as: 'clientContracts'
-    }]
-  })
+      // attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientContracts.id')), 'clientCount']]
+    }],
+    group: ['ClientId']
+  }
+  )
 }
 
 function verifyContract (id) {
