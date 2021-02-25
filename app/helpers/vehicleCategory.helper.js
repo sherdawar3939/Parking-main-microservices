@@ -16,7 +16,11 @@ function deleteVehicleCategory (id) {
   })
 }
 
+function createCategoryVehicle (data) {
+  return db.VehicleCategory.create(data)
+}
 module.exports = {
   getVehicleCategory,
-  deleteVehicleCategory
+  deleteVehicleCategory,
+  createCategoryVehicle
 }

@@ -7,7 +7,7 @@ const generalController = require('./general.controller')
 const getUserVehicle = function (req, res) {
   return UserVehicleHelper.getUserVehicle(req.conditions)
     .then(function (data) {
-      generalController.successResponse(res, 'User Vehicle fetched successfully.', data, 'Banner.controller.getUserVehicle')
+      generalController.successResponse(res, 'User Vehicle fetched successfully.', data, 'userVehicle.controller.getUserVehicle')
     }).catch(StandardError, function (err) {
       generalController.errorResponse(res, err, null, 'UserVehicle.controller.getUserVehicle', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {

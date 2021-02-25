@@ -16,20 +16,21 @@ function ActiveParkingListHelper(conditions, limit, offset) {
     let includes = [{
         model: db.ParkingZone,
         as: 'parkingZone',
-        attributes: ['zip', 'fee']
+        attributes: ['uid', 'zip', 'fee']
     }]
 
     if (conditions.ParkingZoneId) {
         parkingWhere.ParkingZoneId = conditions.ParkingZoneId
     }
 
-    if (conditions.status) {
+    if (conditions.status === 'Active') {
         parkingWhere.status = conditions.status
     }
 
     if (conditions.VehicleCategoryId) {
         includes.push({
             model: db.UserVehicle,
+            as: 'parkingUserVehicle',
             attributes: [],
             where: {
                 VehicleCategoryId: conditions.VehicleCategoryId,
@@ -38,16 +39,9 @@ function ActiveParkingListHelper(conditions, limit, offset) {
             required: true
         })
     }
-
-    return db.Parking.findAll({
-        where: parkingWhere,
-        limit: limit,
-        offset: offset,
-        include: includes
-    })
 }
 
 module.exports = {
     createParkingHelper,
-    ActiveParkingListHelper,
+    ActiveParkingListHelper
 }

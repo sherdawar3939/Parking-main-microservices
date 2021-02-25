@@ -38,18 +38,19 @@ function getRequestList (conditions, limit, offset) {
   }
 
   return db.CreativeRequest.findAndCountAll({
-    raw: true,
-    nest: false,
+    // raw: true,
+    // nest: false,
     where,
     limit: limit,
     offset: offset,
     include: [{
       model: db.Client,
-      as: 'creativeReequestClient'
+      as: 'creativeRequestClient'
     }]
   })
 }
 
 module.exports = {
   createRequest,
-  getRequestList }
+  getRequestList
+}

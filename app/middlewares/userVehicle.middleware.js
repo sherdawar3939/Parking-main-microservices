@@ -1,42 +1,29 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
+const { isInteger } = require('lodash')
 
 const validateGetUserVehicle = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
   if (query.hasOwnProperty('UserId') && query.UserId) {
-    if (isNaN(query.UserId)) {
+    if (!isInteger(query.UserId)) {
       errorArray.push({
         field: 'UserId',
         error: 25,
-        message: 'Please provide only valid \'UserId\' as numeric.'
+        message: 'Please provide only valid \'UserId\' as integer.'
       })
     }
     validatedConditions.UserId = query.UserId
   }
-
-  // validating as optional string field
-  if (query.hasOwnProperty('VehicleCategoryId') && query.VehicleCategoryId) {
-    if (isNaN(query.VehicleCategoryId)) {
-      errorArray.push({
-        field: 'VehicleCategoryId',
-        error: 26,
-        message: 'Please provide only valid \'VehicleCategoryId\' as numeric.'
-      })
-      validatedConditions.VehicleCategoryId = query.VehicleCategoryId
-    }
-  }
-
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetUserVehicle')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'uservehicle.middleware.validateUpdateUserVehiceId')
   }
 
   req.conditions = validatedConditions
   done()
 }
-
 const validatePostUserVehicle = (req, res, done) => {
   const errorArray = []
   const body = req.body
@@ -51,22 +38,22 @@ const validatePostUserVehicle = (req, res, done) => {
     })
   }
   // quantity must be required required  Validating as not empty, valid integer.
-  if (!body.quantity || isNaN(body.quantity)) {
+  if (!body.quantity || !isInteger(body.quantity)) {
     errorArray.push({
       field: 'quantity',
       error: 26,
       message: 'Please provide only valid \'quantity\' as numeric, length must be between 0 and 2.'
     })
   }
-  // VehicleCategoryId must be required required  Validating as not empty, valid integer.
-  if (!body.VehicleCategoryId || isNaN(body.VehicleCategoryId)) {
+  // VehicleCategoryId must be required required  Validating as not empty, valid interger.
+  if (!body.VehicleCategoryId || !isInteger(body.VehicleCategoryId)) {
     errorArray.push({
       field: 'VehicleCategoryId',
       error: 26,
       message: 'Please provide only valid \'VehicleCategoryId\' as numeric,.'
     })
   }
-  // UserId must be required required  Validating as not empty, valid integer.
+  // UserId must be required required  Validating as not empty, valid interger.
   if (!body.UserId || isNaN(body.UserId)) {
     errorArray.push({
       field: 'UserId',

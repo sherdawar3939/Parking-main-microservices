@@ -51,6 +51,7 @@ module.exports = function(sequelize, DataTypes) {
         associate: function(models) {
             Parking.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'parkingZone' })
             Parking.belongsTo(models.User, { foreignKey: 'UserId', as: 'userParking' })
+            Parking.belongsTo(models.UserVehicle, { foreignKey: 'UserVehicleId', as: 'parkingUserVehicle' })
         }
     })
     return Parking

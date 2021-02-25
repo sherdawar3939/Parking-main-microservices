@@ -49,6 +49,13 @@
         },
         "exchange": "ZaqootaExchange",
         "queue": "mainServiceQueue",
+<<<<<<< HEAD
         "binding_keys": ["productImages", "supplierImage"]
+=======
+        "binding_keys": [
+            "productImages",
+            "supplierImage"
+        ]
+>>>>>>> 63e6763ef451f7265a49979c62741fd37e224885
     }
 }

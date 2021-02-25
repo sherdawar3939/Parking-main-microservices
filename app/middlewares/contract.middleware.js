@@ -29,6 +29,22 @@ const validateGetContractList = (req, res, done) => {
     done()
 }
 
+const validateGetContractByClientId = (req, res, done) => {
+    const errorArray = []
+        // const validateConditions = {}
+    if (!isNaN(req.params.id)) {
+        // validateConditions.ClientId = clientId
+    }
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.getContractList')
+    }
+
+    // req.conditions = validateConditions
+    // req.limit = query.limit && query.limit > 0 ? parseInt(query.limit) : 50
+    // req.offset = query.offset && query.offset > 0 ? parseInt(query.offset) : 0
+    done()
+}
+
 const validateCreateContract = (req, res, done) => {
     const errorArray = []
     const body = req.body
@@ -88,5 +104,6 @@ const validateVerifyContract = (req, res, done) => {
 module.exports = {
     validateGetContractList,
     validateVerifyContract,
-    validateCreateContract
+    validateCreateContract,
+    validateGetContractByClientId
 }

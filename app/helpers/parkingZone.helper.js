@@ -30,6 +30,10 @@ function getparkingZone (conditions, limit, offset) {
     order: [
       ['id', 'DESC']
     ],
+    include: [{
+      model: db.Client,
+      as: 'parkingZoneClient'
+    }],
     limit: limit,
     offset: offset
   })

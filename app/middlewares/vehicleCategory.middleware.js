@@ -74,3 +74,9 @@ module.exports = {
     validateDeleteVehicleCategoryId,
     createVehicleCategory
 }
+
+module.exports = {
+    validateGetVehicleCategory,
+    validateDeleteVehicleCategoryId,
+    createVehicleCategory
+}
