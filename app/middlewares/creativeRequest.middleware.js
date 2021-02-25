@@ -86,7 +86,23 @@ const validateGetCreativeRequest = (req, res, done) => {
   done()
 }
 
+const validateGetCreatives = (req, res, done) => {
+  const errorArray = []
+  if (isNaN(req.params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 80140,
+      message: "Please provide only valid 'id' as number."
+    })
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.getContract')
+  }
+  done()
+}
+
 module.exports = {
   validateCreateRequest,
-  validateGetCreativeRequest
+  validateGetCreativeRequest,
+  validateGetCreatives
 }

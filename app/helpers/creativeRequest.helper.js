@@ -17,6 +17,23 @@ function createRequest (data) {
     })
 }
 
+function getCreatives (id) {
+  return db.Contract.findOne({
+    where: {
+      id
+    },
+    include: [{
+      model: db.Client,
+      as: 'clientContracts',
+      include: [{
+        model: db.ParkingZone,
+        as: 'clientParkingZones'
+      }]
+    }]
+
+  })
+}
+
 /** Fetch Creative Request List */
 function getRequestList (conditions, limit, offset) {
   const where = {}
@@ -37,8 +54,6 @@ function getRequestList (conditions, limit, offset) {
   }
 
   return db.CreativeRequest.findAndCountAll({
-    // raw: true,
-    // nest: false,
     where,
     limit: limit,
     offset: offset,
@@ -51,5 +66,6 @@ function getRequestList (conditions, limit, offset) {
 
 module.exports = {
   createRequest,
-  getRequestList
+  getRequestList,
+  getCreatives
 }
