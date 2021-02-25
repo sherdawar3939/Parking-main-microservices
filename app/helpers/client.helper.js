@@ -21,47 +21,17 @@ const getClientList = (conditions) => {
       }
     }
   }
-  // return db.Client.findAndCountAll({
-  //   attributes: ['id', 'companyName', 'address',
-  //     [Sequelize.fn('count', Sequelize.col('clientZipCodes.ClientId')), 'zipCodeCount'],
-  //     [Sequelize.fn('count', Sequelize.col('clientParkingZones.ClientZipCodeId')), 'parkingZoneCount']
-  //   ],
-  //   include: [
-  //     {
-  //       attributes: [],
-  //       model: db.ClientZipCode,
-  //       as: 'clientZipCodes'
-  //     },
-  //     {
-  //       attributes: [],
-  //       model: db.ParkingZone,
-  //       as: 'clientParkingZones'
-  //     }],
-  //   group: ['id']
-  // })
   return db.Client.findAll({
     where,
     order: [
       ['id', 'ASC']
     ],
-    attributes: ['id', 'companyName', 'address']
-    // include: [{
-    //   model: db.ClientZipCode,
-    //   as: 'clientZipCodes',
-    //   attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientZipCodes.ClientId')), 'ZipCodeCount']],
-    //   where: {
-    //     isDeleted: false
-    //   }
-
-    // },
-    // {
-    //   model: db.ParkingZone,
-    //   as: 'clientParkingZones',
-    //   attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientParkingZones.ClientZipCodeId')), 'ZoneCount']]
-
-    // }
-    // ],
-    // group: ['id']
+    // attributes: ['id', 'companyName', 'address', 'phone'],
+    include: [{
+      model: db.Contract,
+      as: 'clientContracts',
+      attributes: ['id', 'data', 'status']
+    }]
 
   })
 }
@@ -103,7 +73,12 @@ const getClientDetail = (id) => {
 
   })
 }
+const postClient = (body) => {
+  return db.Client.create(body)
+}
+
 module.exports = {
   getClientList,
-  getClientDetail
+  getClientDetail,
+  postClient
 }
