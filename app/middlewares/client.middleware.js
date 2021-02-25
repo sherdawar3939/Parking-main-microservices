@@ -52,7 +52,7 @@ const validatePostClient = (req, res, done) => {
       message: 'The field is required with 3 min and 20 max characters.'
     })
   }
-  if (_.isEmpty(body.email) || !_.isString(body.email) || body.email.length < 5 || body.email.length > 100 || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(body.email))) {
+  if (_.isEmpty(body.email) || !_.isString(body.email) || body.email.length < 5 || body.email.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.email))) {
     errorArray.push({
       field: 'email',
       error: 1006,
@@ -75,7 +75,7 @@ const validatePostClient = (req, res, done) => {
       message: 'The field is required with 3 min and 20 max characters.'
     })
   }
-  if (_.isEmpty(body.secondaryEmail) || !_.isString(body.secondaryEmail) || body.secondaryEmail.length < 5 || body.secondaryEmail.length > 100 || !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(body.secondaryEmail))) {
+  if (_.isEmpty(body.secondaryEmail) || !_.isString(body.secondaryEmail) || body.secondaryEmail.length < 5 || body.secondaryEmail.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.secondaryEmail))) {
     errorArray.push({
       field: 'email',
       error: 1006,

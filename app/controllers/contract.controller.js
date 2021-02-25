@@ -45,6 +45,17 @@ const getContractByClientid = function (req, res) {
     })
 }
 
+const getContract = function (req, res) {
+  return contractHelper.getContract(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContract')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'contract.controller.getContract', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
 const verificationOfContract = (req, res) => {
     return contractHelper.verifyContract(req.validatedBody)
         .then((data) => {
@@ -66,6 +77,7 @@ module.exports = {
   addContract,
   getContractList,
   verificationOfContract,
-  getContractByClientid
+  getContractByClientid,
+  getContract
 }
 >>>>>>> 63e6763ef451f7265a49979c62741fd37e224885
