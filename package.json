@@ -4,7 +4,7 @@
   "description": "Boilerplate for Node.js service.",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "dev": "nodemon app.js",
     "test": "export NODE_ENV=testing && mocha app/**/*.test.js",
     "test-watch": "nodemon --exec \"npm test\"",
@@ -49,7 +49,7 @@
     "expect": "^24.7.1",
     "logger": "0.0.1",
     "mocha": "^6.1.4",
-    "nodemon": "^1.18.9",
+    "nodemon": "^1.19.4",
     "supertest": "^4.0.2",
     "winston": "^2.3.1"
   },
