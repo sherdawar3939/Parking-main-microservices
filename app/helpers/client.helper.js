@@ -20,7 +20,7 @@ const getClientList = (conditions) => {
 
   if (conditions.search) {
     where[Op.or] = {
-      companyName: { [Op.like]: '%' + conditions.companyName + '%' },
+      companyName: { [Op.like]: '%' + conditions.search + '%' },
       phone: { [Op.like]: '%' + conditions.search + '%' },
       email: { [Op.like]: '%' + conditions.search + '%' }
     }
