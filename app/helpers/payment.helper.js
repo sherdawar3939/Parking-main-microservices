@@ -28,7 +28,6 @@ function getpayment (conditions, limit, offset) {
       ]
     }
   }
-  console.log('where', where)
   return db.Payment.findAll({
     where,
     // nest: false,

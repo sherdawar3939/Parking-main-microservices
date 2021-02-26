@@ -17,29 +17,43 @@ function createRequest (data) {
     })
 }
 
+function getCreatives (id) {
+  return db.Contract.findOne({
+    where: {
+      id
+    },
+    include: [{
+      model: db.Client,
+      as: 'clientContracts',
+      include: [{
+        model: db.ParkingZone,
+        as: 'clientParkingZones'
+      }]
+    }]
+
+  })
+}
+
 /** Fetch Creative Request List */
 function getRequestList (conditions, limit, offset) {
   const where = {}
 
   if (conditions.ClientId) {
-    where.ClientId = conditions.ClientId
+    where.ClientId = conditions.ClientIdp
   }
 
   if (conditions.status) {
     where.status = conditions.status
   }
-
   if (conditions.search) {
-    where[[Op.or]] = {
-      qty: {
-        [Op.like]: '%' + conditions.search + '%'
-      }
+    where[Op.or] = {
+      uid: { [Op.like]: '%' + conditions.search + '%' },
+      status: { [Op.like]: '%' + conditions.search + '%' },
+      qty: { [Op.like]: '%' + conditions.search + '%' }
     }
   }
 
   return db.CreativeRequest.findAndCountAll({
-    // raw: true,
-    // nest: false,
     where,
     limit: limit,
     offset: offset,
@@ -52,5 +66,6 @@ function getRequestList (conditions, limit, offset) {
 
 module.exports = {
   createRequest,
-  getRequestList
+  getRequestList,
+  getCreatives
 }

@@ -58,7 +58,6 @@ const validateGetCreativeRequest = (req, res, done) => {
 
   let limit = 50
   let offset = 0
-
   if (query.hasOwnProperty('search') && query.search) {
     validatedConditions.search = query.search
   }
@@ -66,7 +65,7 @@ const validateGetCreativeRequest = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
-  if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
+  if (query.hasOwnProperty('ClientId') && !isInteger(query.ClientId)) {
     validatedConditions.ClientId = query.ClientId
   }
 
@@ -87,7 +86,23 @@ const validateGetCreativeRequest = (req, res, done) => {
   done()
 }
 
+const validateGetCreatives = (req, res, done) => {
+  const errorArray = []
+  if (isNaN(req.params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 80140,
+      message: "Please provide only valid 'id' as number."
+    })
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.getContract')
+  }
+  done()
+}
+
 module.exports = {
   validateCreateRequest,
-  validateGetCreativeRequest
+  validateGetCreativeRequest,
+  validateGetCreatives
 }

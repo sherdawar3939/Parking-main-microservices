@@ -1,6 +1,6 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { createRequest, getRequestList } = require('../helpers/creativeRequest.helper')
+const { createRequest, getRequestList, getCreatives } = require('../helpers/creativeRequest.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
@@ -25,6 +25,18 @@ const getCreativeRequestList = function (req, res) {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'creativeRequest.controller.getCreativeRequestList', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+
+const getCreative = function (req, res) {
+  return getCreatives(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'CreateiveRequest fetched successfully.', data, 'creativeRequest.controller.getCreatives')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'creativeRequest.controller.getCreatives', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'creativeRequest.controller.getCreatives', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
   createCreativeRequest,
-  getCreativeRequestList }
+  getCreativeRequestList,
+  getCreative }
