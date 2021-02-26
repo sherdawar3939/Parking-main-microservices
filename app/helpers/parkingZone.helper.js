@@ -22,7 +22,7 @@ function getparkingZone (conditions, limit, offset) {
 
     }
   }
-  
+
   return db.ParkingZone.findAll({
     where,
     order: [

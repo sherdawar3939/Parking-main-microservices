@@ -136,8 +136,80 @@ const postClient = async (body, res, next) => {
   next()
 }
 
+const updateClient = async (id, body, res, next) => {
+  const errorsArray = []
+  console.log(id, '   ', body)
+  const client = await db.Client.findOne({
+    where: {
+      id: {
+        [Op.ne]: id
+      },
+      [Op.or]: [
+        {
+          email: body.email
+        }, {
+          phone: body.phone
+        },
+        {
+          secondaryEmail: body.secondaryEmail
+        },
+        {
+          secondaryPhone: body.secondaryPhone
+        }
+      ]
+    }
+  })
+  console.log(client)
+  if (!client) {
+    return db.Client.update(body, {
+      where: { id }
+    })
+  } else {
+    if (client.phone === body.phone) {
+      // user phone already exist.
+
+      errorsArray.push({
+        field: 'phone',
+        error: 1500,
+        message: 'phone already exist'
+      })
+    }
+
+    if (client.email === body.email) {
+      // user email already exist.
+      errorsArray.push({
+        field: 'email',
+        error: 1505,
+        message: 'email already exist'
+      })
+    }
+
+    if (client.secondaryEmail === body.secondaryEmail) {
+      // user email already exist.
+      errorsArray.push({
+        field: 'secondaryEmail',
+        error: 1506,
+        message: 'secondaryEmail already exist'
+      })
+    }
+
+    if (client.secondaryPhone === body.secondaryPhone) {
+      // user email already exist.
+      errorsArray.push({
+        field: 'secondaryPhone',
+        error: 1506,
+        message: 'secondaryPhone already exist'
+      })
+    }
+  }
+  if (!_.isEmpty(errorsArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient')
+  }
+  next()
+}
 module.exports = {
   getClientList,
   getClientDetail,
-  postClient
+  postClient,
+  updateClient
 }
