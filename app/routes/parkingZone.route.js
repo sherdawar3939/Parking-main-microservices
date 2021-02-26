@@ -9,4 +9,5 @@ module.exports = function (app, apiVersion) {
   // get parking zones
   app.get(`${route}/parking-zone`, parkingZoneMiddleware.validateGetParkingZone, ParkingZoneController.getParkingZone)
   app.get(`${route}/parking-zone/:id`, parkingZoneMiddleware.validateGetParkingZoneId, ParkingZoneController.getParkingZoneById)
+  app.put(`${route}/parking-zone/:id`, parkingZoneMiddleware.validateUpdateParkingZone, ParkingZoneController.updateParkingZone)
 }
