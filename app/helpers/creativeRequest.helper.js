@@ -39,7 +39,7 @@ function getRequestList (conditions, limit, offset) {
   const where = {}
 
   if (conditions.ClientId) {
-    where.ClientId = conditions.ClientIdp
+    where.ClientId = conditions.ClientId
   }
 
   if (conditions.status) {
