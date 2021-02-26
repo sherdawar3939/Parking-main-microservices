@@ -108,7 +108,7 @@ const validateUpdateParkingZone = (req, res, done) => {
         errorArray.push({
             field: 'polygons',
             error: 26,
-            message: 'Please provide only valid \'polygons\' as numeric, length must be between 0 and 2.'
+            message: 'Please provide only valid \'polygons\' as numeric.'
         })
     }
     if (!_.isEmpty(errorArray)) {
