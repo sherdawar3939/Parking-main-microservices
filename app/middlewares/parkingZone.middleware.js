@@ -106,9 +106,9 @@ const validateUpdateParkingZone = (req, res, done) => {
   // polygones must be required required  Validating as not empty, valid integer.
   if (!body.polygons || isNaN(body.polygons)) {
     errorArray.push({
-      field: 'polygones',
+      field: 'polygons',
       error: 26,
-      message: 'Please provide only valid \'polygones\' as numeric, length must be between 0 and 2.'
+      message: 'Please provide only valid \'polygons\' as numeric.'
     })
   }
   if (!_.isEmpty(errorArray)) {
