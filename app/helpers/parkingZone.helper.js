@@ -4,7 +4,7 @@ var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 
-function getparkingZone(conditions, limit, offset) {
+function getParkingZone(conditions, limit, offset) {
     const where = {}
     const cityIdWhere = {}
     if (conditions.ClientId) {
@@ -84,7 +84,7 @@ function updateParkingZone(id, data) {
 
 
 module.exports = {
-    getparkingZone,
+    getParkingZone,
     getParkingZoneId,
     updateParkingZone
 }
