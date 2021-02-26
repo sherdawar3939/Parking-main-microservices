@@ -22,7 +22,7 @@ function getparkingZone (conditions, limit, offset) {
 
     }
   }
-  
+
   return db.ParkingZone.findAll({
     where,
     order: [
@@ -69,7 +69,16 @@ const getParkingZoneId = (id) => {
     ]
   })
 }
+
+function updateParkingZone (id, data) {
+  return db.ParkingZone.update(data, {
+    where: {
+      id
+    }
+  })
+}
 module.exports = {
   getparkingZone,
-  getParkingZoneId
+  getParkingZoneId,
+  updateParkingZone
 }
