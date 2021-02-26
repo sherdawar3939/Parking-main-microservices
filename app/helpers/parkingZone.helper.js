@@ -6,15 +6,14 @@ const db = require('../config/sequelize.config')
 
 function getparkingZone(conditions, limit, offset) {
     const where = {}
-
+    const cityIdWhere = {}
     if (conditions.ClientId) {
         where.ClientId = conditions.ClientId
     }
 
     if (conditions.CityId) {
-        where.CityId = conditions.CityId
+        cityIdWhere.CityId = conditions.CityId
     }
-
     if (conditions.search) {
         where[Op.or] = {
             days: {
@@ -22,9 +21,14 @@ function getparkingZone(conditions, limit, offset) {
             },
             zip: {
                 [Op.like]: '%' + conditions.search + '%'
+            },
+            uid: {
+                [Op.like]: '%' + conditions.search + '%'
             }
+
         }
     }
+
     return db.ParkingZone.findAll({
         where,
         order: [
@@ -33,6 +37,17 @@ function getparkingZone(conditions, limit, offset) {
         include: [{
             model: db.Client,
             as: 'parkingZoneClient'
+        }, {
+            model: db.ClientZipCode,
+            as: 'clientParkingZone',
+            where: {
+                isDeleted: false
+            },
+            include: [{
+                where: cityIdWhere,
+                model: db.ZipCode,
+                as: 'zipCodes'
+            }]
         }],
         limit: limit,
         offset: offset
@@ -58,7 +73,18 @@ const getParkingZoneId = (id) => {
         ]
     })
 }
+
+function updateParkingZone(id, data) {
+    return db.ParkingZone.update(data, {
+        where: {
+            id
+        }
+    })
+}
+
+
 module.exports = {
     getparkingZone,
-    getParkingZoneId
+    getParkingZoneId,
+    updateParkingZone
 }

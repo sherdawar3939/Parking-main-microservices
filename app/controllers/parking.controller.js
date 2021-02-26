@@ -29,7 +29,8 @@ const getActiveParkingList = function(req, res) {
 
 
 }
+
 module.exports = {
     createParking,
-    getActiveParkingList,
+    getActiveParkingList
 }

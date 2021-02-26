@@ -4,9 +4,10 @@ const ParkingZoneController = require('../controllers/parkingZone.controller')
 
 // const passport = require('../config/passport')
 
-module.exports = function (app, apiVersion) {
-  const route = apiVersion
-  // get parking zones
-  app.get(`${route}/parking-zone`, parkingZoneMiddleware.validateGetParkingZone, ParkingZoneController.getParkingZone)
-  app.get(`${route}/parking-zone/:id`, parkingZoneMiddleware.validateGetParkingZoneId, ParkingZoneController.getParkingZoneById)
+module.exports = function(app, apiVersion) {
+    const route = apiVersion
+        // get parking zones
+    app.get(`${route}/parking-zone`, parkingZoneMiddleware.validateGetParkingZone, ParkingZoneController.getParkingZone)
+    app.get(`${route}/parking-zone/:id`, parkingZoneMiddleware.validateGetParkingZoneId, ParkingZoneController.getParkingZoneById)
+    app.put(`${route}/parking-zone/:id`, parkingZoneMiddleware.validateUpdateParkingZone, ParkingZoneController.updateParkingZone)
 }
