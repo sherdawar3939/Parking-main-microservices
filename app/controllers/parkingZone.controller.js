@@ -5,7 +5,7 @@ const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
 const getParkingZone = function(req, res) {
-    return ParkingZoneHelper.getparkingZone(req.conditions, req.limit, req.offset)
+    return ParkingZoneHelper.getParkingZone(req.conditions, req.limit, req.offset)
         .then(function(data) {
             generalController.successResponse(res, 'Parking zone fetched successfully.', data, 'Parking zone.controller.getparkingzone')
         }).catch(StandardError, function(err) {
@@ -27,7 +27,7 @@ const getParkingZoneById = (req, res) => {
 const updateParkingZone = (req, res) => {
     return ParkingZoneHelper.updateParkingZone(req.params.id, req.body)
         .then((data) => {
-            generalController.successResponse(res, 'ParkingZone Updated successfully.', data, 'userVehicle.controller.updateParkingZone')
+            generalController.successResponse(res, 'ParkingZone Updated successfully.', data, 'parkingZone.controller.updateParkingZone')
         }).catch(StandardError, (err) => {
             generalController.errorResponse(res, err, null, 'parkingZone.controller.updateParkingZone', SERVER_RESPONSE.VALIDATION_ERROR)
         }).catch((err) => {
