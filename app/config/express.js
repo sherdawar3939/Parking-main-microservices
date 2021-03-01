@@ -8,6 +8,7 @@ const expressValidator = require('express-validator')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const compression = require('compression')
+const winston = require('winston')
 
 module.exports = function (app, passport) {
   winston.info(process.NODE_ENV)
