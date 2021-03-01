@@ -6,8 +6,27 @@ const db = require('../config/sequelize.config')
 // const _ = require('lodash')
 
 /** Create Creative Requests */
-function createParkingHelper (data) {
-  return db.Parking.create(data)
+const createParkingHelper = async (data) => {
+  const parkingCreatedData = {}
+  const UserVehicle = await db.UserVehicle.findOne({
+    where: {
+      id: data.UserVehicleId
+    }
+  })
+  const parkingZone = await db.ParkingZone.findOne({
+    where: {
+      id: data.ParkingZoneId
+    }
+  })
+  parkingCreatedData.licensePlate = UserVehicle.dataValues.licensePlate
+  parkingCreatedData.quantity = UserVehicle.dataValues.quantity
+  parkingCreatedData.parkingCharges = parkingZone.dataValues.fee
+  parkingCreatedData.status = 'Started'
+  parkingCreatedData.startedOn = new Date()
+  parkingCreatedData.UserVehicleId = data.UserVehicleId
+  parkingCreatedData.ParkingZoneId = data.ParkingZoneId
+
+  return db.Parking.create(parkingCreatedData)
 }
 /** Fetch Creative Request List */
 function ActiveParkingListHelper (conditions, limit, offset) {
@@ -45,6 +64,7 @@ function ActiveParkingListHelper (conditions, limit, offset) {
     })
   }
 
+  console.log('include', includes)
   return db.Parking.findAll({
     where: parkingWhere,
     limit: limit,
