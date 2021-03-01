@@ -112,7 +112,7 @@ const validateUpdateParkingZone = (req, res, done) => {
         })
     }
     if (!_.isEmpty(errorArray)) {
-        return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateCreateUserVehicle')
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
     }
     validatedBody.uid = body.uid
     validatedBody.days = body.days
