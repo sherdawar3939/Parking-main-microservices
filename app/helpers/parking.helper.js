@@ -47,7 +47,7 @@ function ActiveParkingListHelper (conditions, limit, offset) {
     parkingWhere.ParkingZoneId = conditions.ParkingZoneId
   }
 
-  if (conditions.status === 'Active') {
+  if (conditions.status) {
     parkingWhere.status = conditions.status
   }
 
