@@ -5,6 +5,6 @@ const { createParking, getActiveParkingList } = require('../controllers/parking.
 module.exports = function (app, apiVersion) {
   const route = apiVersion
 
-  app.post(route + '/parking', validateCreateParking, createParking)
+  app.post(route + '/parking-start', validateCreateParking, createParking)
   app.get(route + '/parking', validateGetParkingList, getActiveParkingList)
 }
