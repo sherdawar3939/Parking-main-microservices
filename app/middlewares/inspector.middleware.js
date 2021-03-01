@@ -8,13 +8,18 @@ const validatePostInspector = (req, res, done) => {
     const errorArray = []
     const validatedData = {}
         // fName is required, validating it as not empty, valid String and length range.
-    if (_.isEmpty(body.fName) || !_.isString(body.fName) || body.fName.length > 50) {
-        errorArray.push({
-            field: 'fName',
-            error: 1000,
-            message: '\'fName\' is required as string, length must be between 2 and 100.'
-        })
+    if (body.hasOwnProperty('fName') && body.fName) {
+
+        if (_.isEmpty(body.fName) || !_.isString(body.fName) || body.fName.length > 50) {
+            errorArray.push({
+                field: 'fName',
+                error: 1000,
+                message: '\'fName\' is required as string, length must be between 2 and 100.'
+            })
+        }
+        validatedData.fName = body.fName
     }
+
 
     // lName is an optional string property, if it is given than validate it.
     if (body.hasOwnProperty('lName') && body.lName) {
