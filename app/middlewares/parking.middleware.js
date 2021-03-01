@@ -131,7 +131,9 @@ const validateGetParkingList = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
-
+  if (query.hasOwnProperty('ClientId') && query.ClientId) {
+    validatedConditions.ClientId = query.ClientId
+  }
   if (query.hasOwnProperty('VehicleCategoryId') && query.VehicleCategoryId) {
     validatedConditions.VehicleCategoryId = query.VehicleCategoryId
   }
