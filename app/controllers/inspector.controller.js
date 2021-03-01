@@ -1,6 +1,6 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { createInspector } = require('../helpers/inspector.helper')
+const { createInspector, updateInspector } = require('../helpers/inspector.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
@@ -15,4 +15,15 @@ const addinspector = (req, res, next) => {
     })
 }
 
-module.exports = { addinspector }
+const updateInspectorById = (req, res) => {
+  return updateInspector(req.params.id, req.body)
+    .then((data) => {
+      generalController.successResponse(res, 'updateInspector Updated successfully.', data, 'updateInspector.controller.updateInspectorById')
+    }).catch(StandardError, (err) => {
+      generalController.errorResponse(res, err, null, 'updateInspector.controller.updateInspectorById', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch((err) => {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'updateInspector.controller.updateInspectorById', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
+module.exports = { addinspector, updateInspectorById }

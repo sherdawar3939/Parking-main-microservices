@@ -60,4 +60,35 @@ const validatePostInspector = (req, res, done) => {
   req.validatedBody = validatedData
   done()
 }
-module.exports = { validatePostInspector }
+
+const validateUpdateInspector = (req, res, done) => {
+  const errorArray = []
+  const body = req.body
+  const validatedBody = {}
+
+  // days must be required required  Validating as not empty, valid String and length range.
+  if (!_.isString(body.fName) || body.fName.length > 10) {
+    errorArray.push({
+      field: 'fName',
+      error: 25,
+      message: 'Please provide only valid \'fName\' as string,'
+    })
+  }
+  // fee must be required required  Validating as not empty, valid String and length range.
+  if (!_.isString(body.lName) || body.lName.length > 10) {
+    errorArray.push({
+      field: 'lName',
+      error: 25,
+      message: 'Please provide only valid \'lName\' as string, length must be between 2 and 20.'
+    })
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
+  }
+  validatedBody.fName = body.fName
+  validatedBody.lName = body.lName
+
+  req.validatedBody = validatedBody
+  done()
+}
+module.exports = { validatePostInspector, validateUpdateInspector }

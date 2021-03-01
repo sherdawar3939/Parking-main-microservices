@@ -23,4 +23,12 @@ const createInspector = async (body) => {
     })
 }
 
-module.exports = { createInspector }
+function updateInspector (id, data) {
+  return db.Inspector.update(data, {
+    where: {
+      id
+    }
+  })
+}
+
+module.exports = { createInspector, updateInspector }
