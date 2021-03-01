@@ -48,11 +48,14 @@ function getRequestList(conditions, limit, offset) {
     if (conditions.search) {
         where[Op.or] = {
             uid: {
-                [Op.like]: '%' + conditions.search + '%' },
+                [Op.like]: '%' + conditions.search + '%'
+            },
             status: {
-                [Op.like]: '%' + conditions.search + '%' },
+                [Op.like]: '%' + conditions.search + '%'
+            },
             qty: {
-                [Op.like]: '%' + conditions.search + '%' }
+                [Op.like]: '%' + conditions.search + '%'
+            }
         }
     }
 

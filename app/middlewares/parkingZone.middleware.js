@@ -71,7 +71,7 @@ const validateUpdateParkingZone = (req, res, done) => {
             message: 'Please provide only valid \'uid\' as string, length must be between 5 and 10.'
         })
     }
-    // days must be required   Validating as not empty, valid String and length range.
+    // days must be required required  Validating as not empty, valid String and length range.
     if (!_.isString(body.days) || body.days.length < 2 || body.days.length > 20) {
         errorArray.push({
             field: 'days',
@@ -103,8 +103,8 @@ const validateUpdateParkingZone = (req, res, done) => {
             message: 'Please provide only valid \'zip\' as numeric, length must be between 0 and 5.'
         })
     }
-    // polygons must be required required  Validating as not empty, valid integer.
-    if (!body.polygons || !isNaN(body.polygons)) {
+    // polygones must be required required  Validating as not empty, valid integer.
+    if (!body.polygons || isNaN(body.polygons)) {
         errorArray.push({
             field: 'polygons',
             error: 26,

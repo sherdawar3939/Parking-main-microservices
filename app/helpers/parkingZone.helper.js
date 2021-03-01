@@ -82,7 +82,13 @@ function updateParkingZone(id, data) {
     })
 }
 
-
+function updateParkingZone(id, data) {
+    return db.ParkingZone.update(data, {
+        where: {
+            id
+        }
+    })
+}
 module.exports = {
     getParkingZone,
     getParkingZoneId,
