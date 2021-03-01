@@ -17,32 +17,39 @@ function getPayment(conditions, limit, offset) {
     if (conditions.paymentStatus) {
         where.paymentStatus = conditions.paymentStatus
     }
-    if (conditions.fromDate) {
-        where.paymentStatus = conditions.paymentStatus
-    }
+
     // console.log('where', conditions.fromDate.toString(), 'dsdsds', conditions.toDate.toString())
     if (conditions.fromDate && conditions.toDate) {
         where = {
-            [Op.or]: [
-                sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '>=', conditions.fromDate),
-                sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '<=', conditions.toDate)
-            ]
+                [Op.or]: [
+                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '>=', conditions.fromDate),
+                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '<=', conditions.toDate)
+                ]
+            }
+            // console.log('where', conditions.fromDate.toString(), 'dsdsds', conditions.toDate.toString())
+        if (conditions.fromDate && conditions.toDate) {
+            where = {
+                [Op.or]: [
+                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '>=', conditions.fromDate),
+                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '<=', conditions.toDate)
+                ]
+            }
         }
+        return db.Payment.findAll({
+            where,
+            // nest: false,
+            // raw: true,
+            include: {
+                model: db.Client,
+                as: 'clientPayments'
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ],
+            limit: limit,
+            offset: offset
+        })
     }
-    return db.Payment.findAll({
-        where,
-        // nest: false,
-        // raw: true,
-        include: {
-            model: db.Client,
-            as: 'clientPayments'
-        },
-        order: [
-            ['createdAt', 'DESC']
-        ],
-        limit: limit,
-        offset: offset
-    })
 }
 module.exports = {
     addPayment,

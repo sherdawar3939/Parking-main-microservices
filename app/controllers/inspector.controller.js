@@ -40,7 +40,7 @@ const deleteInspectorUser = function(req, res) {
 const getInspectorUser = function(req, res) {
     return getInspector(req.params.id)
         .then((data) => {
-            generalController.successResponse(res, 'Inspector deleted successfully.', data, 'inspector.controller.getInspectorUser')
+            generalController.successResponse(res, 'Inspector fetched successfully.', data, 'inspector.controller.getInspectorUser')
         }).catch(StandardError, (err) => {
             generalController.errorResponse(res, err, null, 'inspector.controller.getInspectorUser', SERVER_RESPONSE.VALIDATION_ERROR)
         }).catch((err) => {
