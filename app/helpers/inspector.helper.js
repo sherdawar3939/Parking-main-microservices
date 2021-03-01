@@ -3,9 +3,9 @@ const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
-const createInspector = async (body) => {
+const createInspector = async (userData, inspectorData) => {
   return db.User.findOne({
-    where: { [Op.or]: [{ email: body.email }] }
+    where: { [Op.or]: [{ email: userData.email }] }
   })
     .then((user) => {
       if (user) {
@@ -16,19 +16,41 @@ const createInspector = async (body) => {
         })
       }
 
-      return db.User.create(body)
+      return db.User.create(userData)
     })
     .then((user) => {
-      return db.Inspector.create({ fName: user.fName, lName: user.lName, UserId: user.id })
+      inspectorData.UserId = user.id
+      return db.Inspector.create({ inspectorData })
     })
 }
 
 function updateInspector (id, data) {
-  return db.Inspector.update(data, {
+  return db.User.update(data, {
     where: {
       id
     }
   })
 }
 
-module.exports = { createInspector, updateInspector }
+function deleteInspector (id) {
+  return db.User.update({ isDeleted: true }, {
+    where: {
+      id
+    }
+  })
+}
+
+function getInspector (id) {
+  return db.Inspector.findAll({
+    where: {
+      id
+    },
+    include: [{
+      model: db.User,
+      as: 'userInspector',
+      where: { isDeleted: false }
+    }]
+  })
+}
+
+module.exports = { createInspector, updateInspector, deleteInspector, getInspector }

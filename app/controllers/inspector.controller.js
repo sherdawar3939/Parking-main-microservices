@@ -1,11 +1,11 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { createInspector, updateInspector } = require('../helpers/inspector.helper')
+const { createInspector, updateInspector, deleteInspector, getInspector } = require('../helpers/inspector.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
-const addinspector = (req, res, next) => {
-  return createInspector(req.validatedBody, res, next)
+const addinspector = (req, res) => {
+  return createInspector(req.validatedUserData, req.validatedInspectorData)
     .then(function (data) {
       generalController.successResponse(res, 'Inspector add successfully.', data, 'inpector.controller.addinspector')
     }).catch(StandardError, function (err) {
@@ -26,4 +26,25 @@ const updateInspectorById = (req, res) => {
     })
 }
 
-module.exports = { addinspector, updateInspectorById }
+const deleteInspectorUser = function (req, res) {
+  return deleteInspector(req.params.id)
+    .then((data) => {
+      generalController.successResponse(res, 'Inspector deleted successfully.', data, 'inspector.controller.deleteInspectorUser')
+    }).catch(StandardError, (err) => {
+      generalController.errorResponse(res, err, null, 'inspector.controller.deleteInspectorUser', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch((err) => {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'inspector.controller.deleteInspectorUser', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
+const getInspectorUser = function (req, res) {
+  return getInspector(req.params.id)
+    .then((data) => {
+      generalController.successResponse(res, 'Inspector deleted successfully.', data, 'inspector.controller.getInspectorUser')
+    }).catch(StandardError, (err) => {
+      generalController.errorResponse(res, err, null, 'inspector.controller.getInspectorUser', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch((err) => {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'inspector.controller.getInspectorUser', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+module.exports = { addinspector, updateInspectorById, deleteInspectorUser, getInspectorUser }

@@ -115,6 +115,7 @@ const validatePostClient = (req, res, done) => {
         })
     }
     // validating as required number field
+
     if (!body.UserId || isNaN(body.UserId)) {
         errorArray.push({
             field: 'UserId',
@@ -270,5 +271,4 @@ module.exports = {
     validateGetClientId,
     validatePostClient,
     validatePutClient
-
 }
