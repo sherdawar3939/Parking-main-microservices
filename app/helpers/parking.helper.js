@@ -1,9 +1,9 @@
 'use strict'
 
-var Sequelize = require('sequelize')
-const Op = Sequelize.Op
+// var Sequelize = require('sequelize')
+// const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
-const _ = require('lodash')
+// const _ = require('lodash')
 
 /** Create Creative Requests */
 function createParkingHelper (data) {
@@ -28,7 +28,7 @@ function ActiveParkingListHelper (conditions, limit, offset) {
     parkingWhere.ParkingZoneId = conditions.ParkingZoneId
   }
 
-  if (conditions.status === 'Active') {
+  if (conditions.status) {
     parkingWhere.status = conditions.status
   }
 

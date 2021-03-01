@@ -7,7 +7,7 @@ module.exports = function (app, apiVersion) {
 
   // get categories of vehicle
   app.post(route + '/inspector', validatePostInspector, addinspector)
-  app.get(route + '/inspector', validateGetInspectorUser, getInspectorUser)
+  app.get(route + '/inspector/:id', validateGetInspectorUser, getInspectorUser)
   app.put(route + '/inspector/:id', validateUpdateInspector, updateInspectorById)
   app.delete(route + '/inspector/:id', validateInspectorUser, deleteInspectorUser)
 }

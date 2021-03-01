@@ -7,7 +7,7 @@ const validatePostInspector = (req, res, done) => {
   // get all the errors in an array
   const errorArray = []
   const validatedUserData = {}
-  // const validatedInspectorData = {}
+  const validatedInspectorData = {}
 
   // fName is required, validating it as not empty, valid String and length range.
   if (_.isEmpty(body.fName) || !_.isString(body.fName) || body.fName.length < 2 || body.fName.length > 100) {
@@ -51,6 +51,7 @@ const validatePostInspector = (req, res, done) => {
   validatedUserData.email = body.email
 
   req.validatedUserData = validatedUserData
+  req.validatedInspectorData = validatedInspectorData
   done()
 }
 
@@ -75,11 +76,25 @@ const validateUpdateInspector = (req, res, done) => {
       message: 'Please provide only valid \'lName\' as string, length must be between 2 and 20.'
     })
   }
+
+  // email is an required string property, if it is given than validate it.
+  if (body.hasOwnProperty('email') && body.email) {
+    if (_.isEmpty(body.email) || !_.isString(body.email) || body.email.length < 5 || body.email.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.email))) {
+      errorArray.push({
+        field: 'email',
+        error: 1006,
+        message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
+      })
+    }
+    validatedBody.email = body.email
+  }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
   validatedBody.fName = body.fName
   validatedBody.lName = body.lName
+  validatedBody.email = body.email
 
   req.validatedBody = validatedBody
   done()

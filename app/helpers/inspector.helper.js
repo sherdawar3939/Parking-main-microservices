@@ -3,7 +3,7 @@ const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
-const createInspector = async (userData, inspectorData) => {
+const createInspector = (userData) => {
   return db.User.findOne({
     where: { [Op.or]: [{ email: userData.email }] }
   })
@@ -19,17 +19,27 @@ const createInspector = async (userData, inspectorData) => {
       return db.User.create(userData)
     })
     .then((user) => {
-      inspectorData.UserId = user.id
-      return db.Inspector.create({ inspectorData })
+      return db.Inspector.create({ UserId: user.id })
     })
 }
 
-function updateInspector (id, data) {
-  return db.User.update(data, {
-    where: {
-      id
-    }
-  })
+const updateInspector = (id, data) => {
+  return db.Inspector.findOne({ where: { id } })
+    .then((foundInspector) => {
+      if (!foundInspector) {
+        return generalHelpingMethods.rejectPromise({
+          field: 'id',
+          error: 3456,
+          message: 'No Record Exists.'
+        })
+      }
+
+      return db.User.update(data, {
+        where: {
+          id: foundInspector.UserId
+        }
+      })
+    })
 }
 
 function deleteInspector (id) {
@@ -42,12 +52,13 @@ function deleteInspector (id) {
 
 function getInspector (id) {
   return db.Inspector.findAll({
-    where: {
-      id
-    },
+    // where: {
+    //   id
+    // },
     include: [{
       model: db.User,
       as: 'userInspector',
+      attributes: ['fName', 'lName', 'email', 'isVerified', 'isActive', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
       where: { isDeleted: false }
     }]
   })

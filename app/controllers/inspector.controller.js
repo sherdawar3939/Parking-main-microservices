@@ -4,8 +4,8 @@ const { createInspector, updateInspector, deleteInspector, getInspector } = requ
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
-const addinspector = (req, res) => {
-  return createInspector(req.validatedUserData, req.validatedInspectorData)
+const addinspector = (req, res, next) => {
+  return createInspector(req.validatedUserData, req.validatedInspectorData, next)
     .then(function (data) {
       generalController.successResponse(res, 'Inspector add successfully.', data, 'inpector.controller.addinspector')
     }).catch(StandardError, function (err) {
@@ -40,7 +40,7 @@ const deleteInspectorUser = function (req, res) {
 const getInspectorUser = function (req, res) {
   return getInspector(req.params.id)
     .then((data) => {
-      generalController.successResponse(res, 'Inspector deleted successfully.', data, 'inspector.controller.getInspectorUser')
+      generalController.successResponse(res, 'Inspector Fetched successfully.', data, 'inspector.controller.getInspectorUser')
     }).catch(StandardError, (err) => {
       generalController.errorResponse(res, err, null, 'inspector.controller.getInspectorUser', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch((err) => {
