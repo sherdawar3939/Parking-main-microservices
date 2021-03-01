@@ -91,4 +91,34 @@ const validateUpdateInspector = (req, res, done) => {
     req.validatedBody = validatedBody
     done()
 }
-module.exports = { validatePostInspector, validateUpdateInspector }
+
+const validateInspectorUser = (req, res, done) => {
+    const errorArray = []
+    if (!isNaN(req.params.id)) {
+        errorArray.push({
+            field: 'id',
+            error: 80140,
+            message: "Please provide only valid 'id' as number."
+        })
+    }
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'inspector.middleware.validateIspectorUser')
+    }
+    done()
+}
+
+const validateGetInspectorUser = (req, res, done) => {
+    const errorArray = []
+    if (isNaN(req.params.id)) {
+        errorArray.push({
+            field: 'id',
+            error: 80140,
+            message: "Please provide only valid 'id' as number."
+        })
+    }
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'inspector.middleware.validateGetInspectorUser')
+    }
+    done()
+}
+module.exports = { validatePostInspector, validateUpdateInspector, validateInspectorUser, validateGetInspectorUser }

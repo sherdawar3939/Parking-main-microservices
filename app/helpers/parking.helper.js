@@ -1,7 +1,7 @@
 'use strict'
 
-// var Sequelize = require('sequelize')
-// const Op = Sequelize.Op
+var Sequelize = require('sequelize')
+const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
     // const _ = require('lodash')
 
@@ -9,15 +9,24 @@ const db = require('../config/sequelize.config')
 function createParkingHelper(data) {
     return db.Parking.create(data)
 }
-
 /** Fetch Creative Request List */
 function ActiveParkingListHelper(conditions, limit, offset) {
     let parkingWhere = {}
+    const parkingZoneWhere = {}
     let includes = [{
+        where: parkingZoneWhere,
         model: db.ParkingZone,
         as: 'parkingZone',
-        attributes: ['uid', 'zip', 'fee']
+        attributes: ['uid', 'fee', 'zip']
     }]
+
+    if (conditions.ClientId) {
+        parkingZoneWhere.ClientId = conditions.ClientId
+    }
+
+    if (conditions.ParkingZoneId) {
+        parkingWhere.ParkingZoneId = conditions.ParkingZoneId
+    }
 
     if (conditions.ParkingZoneId) {
         parkingWhere.ParkingZoneId = conditions.ParkingZoneId
