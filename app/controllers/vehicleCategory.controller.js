@@ -27,6 +27,8 @@ const deleteVehicleCategory = function (req, res) {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'vehicleCategory.controller.deleteVehicleCategory', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+
+// Create Vehicle Category
 const createVehicleCategory = function (req, res) {
   return vehicleCategoryHelper.createCategoryVehicle(req.validatedBody)
     .then(function (data) {
