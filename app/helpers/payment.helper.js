@@ -40,11 +40,8 @@ function getpayment (conditions, limit, offset) {
     where.paymentStatus = conditions.paymentStatus
   }
 
-  // console.log('where', conditions.fromDate.toString(), 'dsdsds', conditions.toDate.toString())
   if (conditions.fromDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Payment.createdAt')), '>=', conditions.fromDate)]
-    // sequelize.where(sequelize.fn('date', sequelize.col('Payment.createdAt')), '<=', conditions.toDate)
-    // ]
   } else if (conditions.toDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Payment.createdAt')), '<=', conditions.toDate)]
   } else if (conditions.fromDate && conditions.toDate) {

@@ -72,8 +72,28 @@ const validateGetParkingList = (req, res, done) => {
   req.offset = offset
   done()
 }
+const validateEndParking = (req, res, done) => {
+  const errorArray = []
+  const body = req.body
+  const validatedBody = {}
 
+  if (!body.id || !isInteger(body.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 26,
+      message: 'Please provide only valid \'ParkinId\' as Integer.'
+    })
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateCreateParking')
+  }
+
+  validatedBody.id = body.id
+  req.validatedBody = validatedBody
+  done()
+}
 module.exports = {
   validateCreateParking,
-  validateGetParkingList
+  validateGetParkingList,
+  validateEndParking
 }
