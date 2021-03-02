@@ -52,9 +52,9 @@ function deleteInspector (id) {
 
 function getInspector (id) {
   return db.Inspector.findAll({
-    // where: {
-    //   id
-    // },
+    where: {
+      id
+    },
     include: [{
       model: db.User,
       as: 'userInspector',
@@ -64,4 +64,27 @@ function getInspector (id) {
   })
 }
 
-module.exports = { createInspector, updateInspector, deleteInspector, getInspector }
+function getInspectorList (conditions, limit, offset) {
+  const where = {}
+
+  if (conditions.search) {
+    where[Op.or] = {
+      fName: { [Op.like]: '%' + conditions.search + '%' },
+      lName: { [Op.like]: '%' + conditions.search + '%' },
+      email: { [Op.like]: '%' + conditions.search + '%' }
+    }
+  }
+
+  return db.Inspector.findAll({
+    where,
+    limit: limit,
+    offset: offset,
+    include: [{
+      model: db.User,
+      as: 'userInspector',
+      attributes: ['fName', 'lName', 'email', 'isVerified', 'isActive', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
+      where: { isDeleted: false }
+    }]
+  })
+}
+module.exports = { createInspector, updateInspector, deleteInspector, getInspector, getInspectorList }

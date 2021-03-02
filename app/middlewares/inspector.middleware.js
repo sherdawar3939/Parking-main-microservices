@@ -129,4 +129,45 @@ const validateGetInspectorUser = (req, res, done) => {
   }
   done()
 }
-module.exports = { validatePostInspector, validateUpdateInspector, validateInspectorUser, validateGetInspectorUser }
+
+const validateInspectorsList = (req, res, done) => {
+  const errorArray = []
+  const query = req.query
+  const validatedConditions = {}
+
+  let limit = 50
+  let offset = 0
+  if (query.hasOwnProperty('fName') && query.fName) {
+    validatedConditions.search = query.search
+  }
+
+  if (query.hasOwnProperty('lName') && query.lName) {
+    validatedConditions.lName = query.lName
+  }
+
+  if (query.hasOwnProperty('status') && query.status) {
+    validatedConditions.status = query.status
+  }
+
+  if (query.hasOwnProperty('email') && query.email) {
+    validatedConditions.email = query.email
+  }
+
+  if (query.limit && query.limit > 0) {
+    limit = parseInt(query.limit)
+  }
+
+  if (query.offset && query.offset > 0) {
+    offset = parseInt(query.offset)
+  }
+
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateGetCreativeRequest')
+  }
+  req.conditions = validatedConditions
+  req.limit = limit
+  req.offset = offset
+  done()
+}
+
+module.exports = { validatePostInspector, validateUpdateInspector, validateInspectorUser, validateGetInspectorUser, validateInspectorsList }
