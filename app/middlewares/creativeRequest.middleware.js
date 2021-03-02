@@ -6,24 +6,17 @@ const validateCreateRequest = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-  // amount must be required required  Validating as not empty, valid integer.
-  if (!body.uid || !isNaN(body.uid)) {
-    errorArray.push({
-      field: 'uid',
-      error: 26,
-      message: 'Please provide only valid \'uid\' as string.'
-    })
-  }
+
   // qty must be required required  Validating as not empty, valid integer.
   if (!body.qty || !isInteger(body.qty)) {
     errorArray.push({
       field: 'qty',
-      error: 'cr-5',
+      error: 'cr-9',
       message: 'Please provide only valid \'qty\' as numeric,.'
     })
   }
 
-  // ParkingZoneId must be required required  Validating as not empty, valid integer.
+  // status must be required required  Validating as not empty, valid integer.
   if (!body.status || !isNaN(body.status)) {
     errorArray.push({
       field: 'status',
@@ -32,21 +25,21 @@ const validateCreateRequest = (req, res, done) => {
     })
   }
 
-  // ClientId must be required required  Validating as not empty, valid integer.
-  if (!body.ClientId || isNaN(body.ClientId)) {
+  // ParkingZoneId must be required required  Validating as not empty, valid integer.
+  if (!body.ParkingZoneId || isNaN(body.ParkingZoneId)) {
     errorArray.push({
-      field: 'ClientId',
-      error: 'cr-10',
-      message: 'Please provide only valid \'ClientId\' as numeric,.'
+      field: 'ParkingZoneId',
+      error: 'cr-11',
+      message: 'Please provide only valid \'ParkingZoneId\' as numeric,.'
     })
   }
 
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateCreateRequest')
   }
-  validatedBody.uid = body.uid
   validatedBody.qty = body.qty
   validatedBody.status = body.status
+  validatedBody.ParkingZoneId = body.ParkingZoneId
   req.validatedBody = validatedBody
   done()
 }
@@ -101,8 +94,49 @@ const validateGetCreatives = (req, res, done) => {
   done()
 }
 
+const validateUpdateRequest = (req, res, done) => {
+  const errorArray = []
+  const body = req.body
+  const params = req.params
+  const validatedBody = {}
+  if (isNaN(params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 80140,
+      message: "Please provide only valid 'id' as number."
+    })
+  }
+
+  // qty must be required required  Validating as not empty, valid integer.
+  if (!body.qty || !isInteger(body.qty)) {
+    errorArray.push({
+      field: 'qty',
+      error: 'cr-9',
+      message: 'Please provide only valid \'qty\' as numeric,.'
+    })
+  }
+
+  // status must be required required  Validating as not empty, valid integer.
+  if (!body.status || !isNaN(body.status)) {
+    errorArray.push({
+      field: 'status',
+      error: 'cr-10',
+      message: 'Please provide only valid \'status\' as numeric,.'
+    })
+  }
+
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateCreateRequest')
+  }
+  validatedBody.qty = body.qty
+  validatedBody.status = body.status
+  req.validatedBody = validatedBody
+  done()
+}
+
 module.exports = {
   validateCreateRequest,
   validateGetCreativeRequest,
-  validateGetCreatives
+  validateGetCreatives,
+  validateUpdateRequest
 }

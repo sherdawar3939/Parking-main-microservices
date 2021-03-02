@@ -9,9 +9,9 @@ var StandardError = require('standard-error')
 var fs = require('fs')
 const winston = require('../config/winston')
 const config = require('../config/config')
-    // const AWS = require('aws-sdk')
-
-// Check if user has permission or not
+const AWS = require('aws-sdk')
+const db = require('../config/sequelize.config')
+    // Check if user has permission or not
 function checkIfUserHasPermission(permissionName, permissionsArray) {
     for (let i = 0; i < permissionsArray.length; i++) {
         if (permissionName === permissionsArray[i].moduleName) {
@@ -77,10 +77,40 @@ function uploadImageToS3(imageFile) {
     })
 }
 
+function getUid(Model, field, where = {}, uidStartAlphabets = '') {
+    return db[Model].findOne({
+            attributes: [field],
+            where,
+            order: [
+                ['id', 'DESC']
+            ]
+        })
+        .then((result) => {
+            if (!result) {
+                if (uidStartAlphabets) {
+                    uidStartAlphabets = uidStartAlphabets + '-'
+                }
+
+                return uidStartAlphabets + '0001'
+            }
+
+            let splittedString = result[field].split('-')
+            let newNumber = (parseInt(splittedString[splittedString.length - 1]) + 1).toString()
+            let zerosToAdd = 4 - newNumber.length
+            for (let i = 0; i < zerosToAdd; i++) {
+                newNumber = '0' + newNumber
+            }
+            splittedString[splittedString.length - 1] = newNumber
+
+            return splittedString.join('-')
+        })
+}
+
 module.exports = {
     checkIfUserHasPermission,
     rejectPromise,
     catchException,
     putS3Object,
-    uploadImageToS3
+    uploadImageToS3,
+    getUid
 }

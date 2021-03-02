@@ -4,6 +4,13 @@ var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 
+const addParkingZone = (data) => {
+  data.days = data.days.join(', ')
+  data.uid = data.fee + data.maxTime + data.zip + Math.floor(Math.random() * (100 - 1 + 1) + 1)
+  data.polygons = JSON.stringify(data.polygons)
+  return db.ParkingZone.create(data)
+}
+
 function getparkingZone (conditions, limit, offset) {
   const where = {}
   const cityIdWhere = {}
@@ -49,6 +56,7 @@ function getparkingZone (conditions, limit, offset) {
     offset: offset
   })
 }
+
 const getParkingZoneId = (id) => {
   return db.ParkingZone.findAll({
     where: {
@@ -78,6 +86,7 @@ function updateParkingZone (id, data) {
   })
 }
 module.exports = {
+  addParkingZone,
   getparkingZone,
   getParkingZoneId,
   updateParkingZone

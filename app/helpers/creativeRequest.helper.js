@@ -3,18 +3,12 @@
 var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
-// const _ = require('lodash')
+const generalHelper = require('./general.helper')
 
 /** Create Creative Requests */
-function createRequest (data) {
-  return db.CreativeRequest.findOne()
-    .then((result) => {
-      let foundUid = result.uid
-
-      data.uid = foundUid + 1
-
-      return db.createRequest.create(data)
-    })
+const createRequest = async (data) => {
+  data.uid = await generalHelper.getUid('CreativeRequest', 'uid', {}, 'CR')
+  return db.CreativeRequest.create(data)
 }
 
 function getCreatives (id) {
@@ -64,8 +58,17 @@ function getRequestList (conditions, limit, offset) {
   })
 }
 
+const updateCreativeRequest = (id, data) => {
+  return db.CreativeRequest.update(data, {
+    where: {
+      id
+    }
+  })
+}
+
 module.exports = {
   createRequest,
   getRequestList,
-  getCreatives
+  getCreatives,
+  updateCreativeRequest
 }
