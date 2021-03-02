@@ -6,15 +6,15 @@ const validateCreateParkingZone = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-
   // days must be required required  Validating as not empty, valid String and length range.
-  if (!_.isString(body.days) || body.days.length < 2 || body.days.length > 20) {
+  if (!body.days || !body.days.length) {
     errorArray.push({
       field: 'days',
       error: 25,
       message: 'Please provide only valid \'days\' as string, length must be between 2 and 20.'
     })
   }
+
   // fee must be required required  Validating as not empty, valid String and length range.
   if (!_.isString(body.fee) || body.fee.length < 2 || body.fee.length > 20) {
     errorArray.push({
@@ -50,7 +50,7 @@ const validateCreateParkingZone = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
-  validatedBody.days = body.days
+  validatedBody.days = body.days.join(', ')
   validatedBody.fee = body.fee
   validatedBody.maxTime = body.maxTime
   validatedBody.zip = body.zip
