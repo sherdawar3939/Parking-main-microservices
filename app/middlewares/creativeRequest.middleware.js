@@ -16,21 +16,12 @@ const validateCreateRequest = (req, res, done) => {
     })
   }
 
-  // ParkingZoneId must be required required  Validating as not empty, valid integer.
+  // status must be required required  Validating as not empty, valid integer.
   if (!body.status || !isNaN(body.status)) {
     errorArray.push({
       field: 'status',
       error: 'cr-10',
       message: 'Please provide only valid \'status\' as numeric,.'
-    })
-  }
-
-  // ClientId must be required required  Validating as not empty, valid integer.
-  if (!body.ClientId || isNaN(body.ClientId)) {
-    errorArray.push({
-      field: 'ClientId',
-      error: 'cr-10',
-      message: 'Please provide only valid \'ClientId\' as numeric,.'
     })
   }
 
@@ -43,12 +34,22 @@ const validateCreateRequest = (req, res, done) => {
     })
   }
 
+  // ClientId must be required required  Validating as not empty, valid integer.
+  if (!body.ClientId || isNaN(body.ClientId)) {
+    errorArray.push({
+      field: 'ClientId',
+      error: 'cr-11',
+      message: 'Please provide only valid \'ClientId\' as numeric,.'
+    })
+  }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateCreateRequest')
   }
-  validatedBody.uid = body.uid
   validatedBody.qty = body.qty
   validatedBody.status = body.status
+  validatedBody.ParkingZoneId = body.ParkingZoneId
+  validatedBody.ClientId = body.ClientId
   req.validatedBody = validatedBody
   done()
 }
@@ -117,7 +118,7 @@ const validateUpdateRequest = (req, res, done) => {
   }
 
   // qty must be required required  Validating as not empty, valid integer.
-  if (body.qty || !isInteger(body.qty)) {
+  if (!body.qty || !isInteger(body.qty)) {
     errorArray.push({
       field: 'qty',
       error: 'cr-9',
@@ -125,8 +126,8 @@ const validateUpdateRequest = (req, res, done) => {
     })
   }
 
-  // Status must be required required  Validating as not empty, valid String.
-  if (body.status || !isNaN(body.status)) {
+  // status must be required required  Validating as not empty, valid integer.
+  if (!body.status || !isNaN(body.status)) {
     errorArray.push({
       field: 'status',
       error: 'cr-10',
