@@ -1,6 +1,6 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { createParkingHelper, ActiveParkingListHelper } = require('../helpers/parking.helper')
+const { createParkingHelper, ActiveParkingListHelper, endParkingHelper } = require('../helpers/parking.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
@@ -25,6 +25,18 @@ const getActiveParkingList = function (req, res) {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'parking.controller.getActiveParkingList', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+const endParking = function (req, res) {
+  return endParkingHelper(req.validatedBody.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'Parking end successfully.', data, 'parking.controller.endParking')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'parking.controller.endParking', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'parking.controller.endParking', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
   createParking,
-  getActiveParkingList }
+  getActiveParkingList,
+  endParking
+}
