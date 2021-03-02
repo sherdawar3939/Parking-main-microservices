@@ -2,7 +2,7 @@
 const SERVER_RESPONSE = require('../config/serverResponses')
 const { createInspector, updateInspector, deleteInspector, getInspector } = require('../helpers/inspector.helper')
 const StandardError = require('standard-error')
-const generalController = require('./general.controller')
+const generalController = require('./general.controller');
 
 const addinspector = (req, res) => {
     return createInspector(req.validatedBody)
