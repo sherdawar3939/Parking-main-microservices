@@ -40,7 +40,6 @@ const validateCreateRequest = (req, res, done) => {
   validatedBody.qty = body.qty
   validatedBody.status = body.status
   validatedBody.ParkingZoneId = body.ParkingZoneId
-  validatedBody.ClientId = body.ClientId
   req.validatedBody = validatedBody
   done()
 }
