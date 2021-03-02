@@ -1,9 +1,32 @@
 'use strict'
 const db = require('../config/sequelize.config')
 var sequelize = require('sequelize')
+const generalHelpingMethods = require('../helpers/general.helper')
 const Op = sequelize.Op
-function addpayment (data) {
-  return db.Payment.create(data)
+
+const addpayment = (data) => {
+  return db.Client.findOne({
+    raw: true,
+    where: {
+      id: data.ClientId
+    }
+  })
+    .then((client) => {
+      if (data.amount > client.balance) {
+        return generalHelpingMethods.rejectPromise({
+          field: 'amount',
+          error: 3456,
+          message: 'amount greater then client balance.'
+        })
+      }
+      const balance = client.balance - data.amount
+      db.Client.update({ balance: balance }, {
+        where: {
+          id: data.ClientId
+        }
+      })
+      return db.Payment.create(data)
+    })
 }
 
 function getpayment (conditions, limit, offset) {
