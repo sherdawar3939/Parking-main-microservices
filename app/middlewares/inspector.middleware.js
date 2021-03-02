@@ -102,7 +102,7 @@ const validateUpdateInspector = (req, res, done) => {
 
 const validateInspectorUser = (req, res, done) => {
   const errorArray = []
-  if (!isNaN(req.params.id)) {
+  if (isNaN(req.params.id)) {
     errorArray.push({
       field: 'id',
       error: 80140,
