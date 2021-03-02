@@ -35,13 +35,13 @@ const validateCreateRequest = (req, res, done) => {
   }
 
   // ClientId must be required required  Validating as not empty, valid integer.
-  if (!body.ClientId || isNaN(body.ClientId)) {
-    errorArray.push({
-      field: 'ClientId',
-      error: 'cr-11',
-      message: 'Please provide only valid \'ClientId\' as numeric,.'
-    })
-  }
+  // if (!body.ClientId || isNaN(body.ClientId)) {
+  //   errorArray.push({
+  //     field: 'ClientId',
+  //     error: 'cr-11',
+  //     message: 'Please provide only valid \'ClientId\' as numeric,.'
+  //   })
+  // }
 
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateCreateRequest')

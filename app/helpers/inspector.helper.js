@@ -43,11 +43,22 @@ const updateInspector = (id, data) => {
 }
 
 function deleteInspector (id) {
-  return db.User.update({ isDeleted: true }, {
-    where: {
-      id
-    }
-  })
+  return db.Inspector.findOne({ where: { id } })
+    .then((foundInspector) => {
+      if (!foundInspector) {
+        return generalHelpingMethods.rejectPromise({
+          field: 'id',
+          error: 3456,
+          message: 'No Record Exists.'
+        })
+      }
+
+      return db.User.update({ isDeleted: true }, {
+        where: {
+          id: foundInspector.UserId
+        }
+      })
+    })
 }
 
 function getInspector (id) {
