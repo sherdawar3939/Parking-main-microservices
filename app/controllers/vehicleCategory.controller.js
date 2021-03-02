@@ -17,6 +17,7 @@ const getVehicleCategory = function(req, res) {
 }
 
 // Delete Vehicle Category
+<<<<<<< HEAD
 const deleteVehicleCategory = function(req, res) {
         return vehicleCategoryHelper.deleteVehicleCategory(req.params.id)
             .then(function(data) {
@@ -37,6 +38,29 @@ const createVehicleCategory = function(req, res) {
         }).catch(function(err) {
             generalController.errorResponse(res, err, 'Please check originalError for details', 'vehicleCategory.controller.createVehicleCategory', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
+=======
+const deleteVehicleCategory = function (req, res) {
+  return vehicleCategoryHelper.deleteVehicleCategory(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'VehicleCategory deleted successfully.', data, 'vehicleCategory.controller.deleteVehicleCategory')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'vehicleCategory.controller.deleteVehicleCategory', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'vehicleCategory.controller.deleteVehicleCategory', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
+// Create Vehicle Category
+const createVehicleCategory = function (req, res) {
+  return vehicleCategoryHelper.createCategoryVehicle(req.validatedBody)
+    .then(function (data) {
+      generalController.successResponse(res, 'VehicleCategory added successfully.', data, 'vehicleCategory.controller.createVehicleCategory')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'vehicleCategory.controller.createVehicleCategory', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'vehicleCategory.controller.createVehicleCategory', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+>>>>>>> 6c370ee113ee33b4f6e180155c6a5d9d450397e1
 }
 module.exports = {
     getVehicleCategory,
