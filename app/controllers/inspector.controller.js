@@ -1,9 +1,10 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { createInspector, updateInspector, deleteInspector, getInspector } = require('../helpers/inspector.helper')
+const { createInspector, updateInspector, deleteInspector, getInspector, getInspectorList } = require('../helpers/inspector.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller');
 
+<<<<<<< HEAD
 const addinspector = (req, res) => {
     return createInspector(req.validatedBody)
         .then(function(data) {
@@ -13,6 +14,29 @@ const addinspector = (req, res) => {
         }).catch(function(err) {
             generalController.errorResponse(res, err, 'Please check originalError for details', 'Inspector.controller.addinspector', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
         })
+=======
+const addinspector = (req, res, next) => {
+  return createInspector(req.validatedUserData, req.validatedInspectorData, next)
+    .then(function (data) {
+      generalController.successResponse(res, 'Inspector add successfully.', data, 'inpector.controller.addinspector')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'Inspector.controller.addinspector', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'Inspector.controller.addinspector', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+>>>>>>> dev
+}
+
+/* Get Inspectors List **/
+const getInspectorsList = function (req, res) {
+  return getInspectorList(req.conditions, req.limit, req.offset)
+    .then(function (data) {
+      generalController.successResponse(res, 'Inspectors fetched successfully.', data, 'inspector.controller.getInspectorsList')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'inspector.controller.getInspectorsList', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'inspector.controller.getInspectorsList', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
 }
 
 const updateInspectorById = (req, res) => {
@@ -37,6 +61,7 @@ const deleteInspectorUser = function(req, res) {
         })
 }
 
+<<<<<<< HEAD
 const getInspectorUser = function(req, res) {
     return getInspector(req.params.id)
         .then((data) => {
@@ -48,3 +73,16 @@ const getInspectorUser = function(req, res) {
         })
 }
 module.exports = { addinspector, updateInspectorById, deleteInspectorUser, getInspectorUser }
+=======
+const getInspectorUser = function (req, res) {
+  return getInspector(req.params.id)
+    .then((data) => {
+      generalController.successResponse(res, 'Inspector Fetched successfully.', data, 'inspector.controller.getInspectorUser')
+    }).catch(StandardError, (err) => {
+      generalController.errorResponse(res, err, null, 'inspector.controller.getInspectorUser', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch((err) => {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'inspector.controller.getInspectorUser', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+module.exports = { addinspector, updateInspectorById, deleteInspectorUser, getInspectorUser, getInspectorsList }
+>>>>>>> dev

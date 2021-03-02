@@ -1,10 +1,32 @@
 'use strict'
 const db = require('../config/sequelize.config')
 var sequelize = require('sequelize')
+const generalHelpingMethods = require('../helpers/general.helper')
 const Op = sequelize.Op
 
-function addPayment(data) {
-    return db.Payment.create(data)
+const addpayment = (data) => {
+    return db.Client.findOne({
+            raw: true,
+            where: {
+                id: data.ClientId
+            }
+        })
+        .then((client) => {
+            if (data.amount > client.balance) {
+                return generalHelpingMethods.rejectPromise({
+                    field: 'amount',
+                    error: 3456,
+                    message: 'amount greater then client balance.'
+                })
+            }
+            const balance = client.balance - data.amount
+            db.Client.update({ balance: balance }, {
+                where: {
+                    id: data.ClientId
+                }
+            })
+            return db.Payment.create(data)
+        })
 }
 
 function getPayment(conditions, limit, offset) {
@@ -18,39 +40,21 @@ function getPayment(conditions, limit, offset) {
         where.paymentStatus = conditions.paymentStatus
     }
 
-    // console.log('where', conditions.fromDate.toString(), 'dsdsds', conditions.toDate.toString())
-    if (conditions.fromDate && conditions.toDate) {
+    if (conditions.fromDate) {
+        where = [sequelize.where(sequelize.fn('date', sequelize.col('Payment.createdAt')), '>=', conditions.fromDate)]
+    } else if (conditions.toDate) {
+        where = [sequelize.where(sequelize.fn('date', sequelize.col('Payment.createdAt')), '<=', conditions.toDate)]
+    } else if (conditions.fromDate && conditions.toDate) {
         where = {
-                [Op.or]: [
-                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '>=', conditions.fromDate),
-                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '<=', conditions.toDate)
-                ]
-            }
-            // console.log('where', conditions.fromDate.toString(), 'dsdsds', conditions.toDate.toString())
-        if (conditions.fromDate && conditions.toDate) {
-            where = {
-                [Op.or]: [
-                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '>=', conditions.fromDate),
-                    sequelize.where(sequelize.fn('date', sequelize.col('payment.createdAt')), '<=', conditions.toDate)
-                ]
-            }
+            [Op.and]: [
+                [sequelize.where(sequelize.fn('date', sequelize.col('Payment.createdAt')), '>=', conditions.fromDate)],
+                [sequelize.where(sequelize.fn('date', sequelize.col('Payment.createdAt')), '<=', conditions.toDate)]
+
+            ]
         }
-        return db.Payment.findAll({
-            where,
-            // nest: false,
-            // raw: true,
-            include: {
-                model: db.Client,
-                as: 'clientPayments'
-            },
-            order: [
-                ['createdAt', 'DESC']
-            ],
-            limit: limit,
-            offset: offset
-        })
     }
 }
+
 module.exports = {
     addPayment,
     getPayment

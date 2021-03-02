@@ -4,7 +4,13 @@ var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 
-function getParkingZone(conditions, limit, offset) {
+const addParkingZone = (data) => {
+    data.uid = data.fee + data.maxTime + data.zip + Math.floor(Math.random() * (100 - 1 + 1) + 1)
+    data.polygons = JSON.stringify(data.polygons)
+    return db.ParkingZone.create(data)
+}
+
+function getparkingZone(conditions, limit, offset) {
     const where = {}
     const cityIdWhere = {}
     if (conditions.ClientId) {
@@ -17,14 +23,11 @@ function getParkingZone(conditions, limit, offset) {
     if (conditions.search) {
         where[Op.or] = {
             days: {
-                [Op.like]: '%' + conditions.search + '%'
-            },
+                [Op.like]: '%' + conditions.search + '%' },
             zip: {
-                [Op.like]: '%' + conditions.search + '%'
-            },
+                [Op.like]: '%' + conditions.search + '%' },
             uid: {
-                [Op.like]: '%' + conditions.search + '%'
-            }
+                [Op.like]: '%' + conditions.search + '%' }
 
         }
     }
@@ -53,6 +56,7 @@ function getParkingZone(conditions, limit, offset) {
         offset: offset
     })
 }
+
 const getParkingZoneId = (id) => {
     return db.ParkingZone.findAll({
         where: {
@@ -81,16 +85,9 @@ function updateParkingZone(id, data) {
         }
     })
 }
-
-function updateParkingZone(id, data) {
-    return db.ParkingZone.update(data, {
-        where: {
-            id
-        }
-    })
-}
 module.exports = {
-    getParkingZone,
+    addParkingZone,
+    getparkingZone,
     getParkingZoneId,
     updateParkingZone
 }
