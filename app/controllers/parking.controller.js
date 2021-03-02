@@ -28,12 +28,6 @@ const getActiveParkingList = function(req, res) {
 
 
 }
-<<<<<<< HEAD
-
-module.exports = {
-    createParking,
-    getActiveParkingList
-=======
 const endParking = function(req, res) {
     return endParkingHelper(req.validatedBody.id)
         .then(function(data) {
@@ -48,5 +42,4 @@ module.exports = {
     createParking,
     getActiveParkingList,
     endParking
->>>>>>> dev
 }

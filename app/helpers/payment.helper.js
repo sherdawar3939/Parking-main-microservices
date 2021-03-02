@@ -56,6 +56,6 @@ function getPayment(conditions, limit, offset) {
 }
 
 module.exports = {
-    addPayment,
+    addpayment,
     getPayment
 }

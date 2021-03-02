@@ -5,19 +5,10 @@ const { addinspector, updateInspectorById, deleteInspectorUser, getInspectorUser
 module.exports = function(app, apiVersion) {
     const route = apiVersion
 
-<<<<<<< HEAD
     // get categories of vehicle
     app.post(route + '/inspector', validatePostInspector, addinspector)
+    app.get(route + '/inspector', validateInspectorsList, getInspectorsList)
     app.get(route + '/inspector/:id', validateGetInspectorUser, getInspectorUser)
     app.put(route + '/inspector/:id', validateUpdateInspector, updateInspectorById)
     app.delete(route + '/inspector/:id', validateInspectorUser, deleteInspectorUser)
 }
-=======
-  // get categories of vehicle
-  app.post(route + '/inspector', validatePostInspector, addinspector)
-  app.get(route + '/inspector', validateInspectorsList, getInspectorsList)
-  app.get(route + '/inspector/:id', validateGetInspectorUser, getInspectorUser)
-  app.put(route + '/inspector/:id', validateUpdateInspector, updateInspectorById)
-  app.delete(route + '/inspector/:id', validateInspectorUser, deleteInspectorUser)
-}
->>>>>>> dev

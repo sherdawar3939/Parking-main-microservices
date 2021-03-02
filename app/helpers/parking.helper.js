@@ -63,11 +63,8 @@ function ActiveParkingListHelper(conditions, limit, offset) {
             required: true
         })
     }
-<<<<<<< HEAD
-=======
 
     console.log('include', includes)
->>>>>>> dev
     return db.Parking.findAll({
         where: parkingWhere,
         limit: limit,
@@ -75,10 +72,6 @@ function ActiveParkingListHelper(conditions, limit, offset) {
         include: includes
     })
 }
-<<<<<<< HEAD
-
-
-=======
 const endParkingHelper = (id) => {
     let bill = {}
     console.log(id)
@@ -143,7 +136,6 @@ const endParkingHelper = (id) => {
             console.log('Error', error /* error.response.details[0] */ )
         })
 }
->>>>>>> dev
 module.exports = {
     createParkingHelper,
     ActiveParkingListHelper,

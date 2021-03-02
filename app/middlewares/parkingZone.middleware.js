@@ -8,7 +8,7 @@ const validateCreateParkingZone = (req, res, done) => {
     const validatedBody = {}
 
     // days must be required required  Validating as not empty, valid String and length range.
-    if (!_.isString(body.days) || body.days.length < 2 || body.days.length > 20) {
+    if (!body.days || !body.days.length) {
         errorArray.push({
             field: 'days',
             error: 25,
@@ -50,7 +50,7 @@ const validateCreateParkingZone = (req, res, done) => {
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
     }
-    validatedBody.days = body.days
+    validatedBody.days = body.days.join(', ')
     validatedBody.fee = body.fee
     validatedBody.maxTime = body.maxTime
     validatedBody.zip = body.zip

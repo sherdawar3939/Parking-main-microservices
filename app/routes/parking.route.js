@@ -6,9 +6,6 @@ module.exports = function(app, apiVersion) {
     const route = apiVersion
 
     app.post(route + '/parking-start', validateCreateParking, createParking)
-<<<<<<< HEAD
-=======
     app.post(route + '/parking/end', validateEndParking, endParking)
->>>>>>> dev
     app.get(route + '/parking', validateGetParkingList, getActiveParkingList)
 }
