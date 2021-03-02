@@ -12,13 +12,13 @@ const createRequest = async(data) => {
 }
 
 function getCreatives(id) {
-    return db.Contract.findOne({
+    return db.CreativeRequest.findOne({
         where: {
             id
         },
         include: [{
             model: db.Client,
-            as: 'clientContracts',
+            as: 'creativeRequestClient',
             include: [{
                 model: db.ParkingZone,
                 as: 'clientParkingZones'

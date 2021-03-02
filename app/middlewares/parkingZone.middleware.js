@@ -6,8 +6,7 @@ const validateCreateParkingZone = (req, res, done) => {
     const errorArray = []
     const body = req.body
     const validatedBody = {}
-
-    // days must be required required  Validating as not empty, valid String and length range.
+        // days must be required required  Validating as not empty, valid String and length range.
     if (!body.days || !body.days.length) {
         errorArray.push({
             field: 'days',
@@ -15,6 +14,7 @@ const validateCreateParkingZone = (req, res, done) => {
             message: 'Please provide only valid \'days\' as string, length must be between 2 and 20.'
         })
     }
+
     // fee must be required required  Validating as not empty, valid String and length range.
     if (!_.isString(body.fee) || body.fee.length < 2 || body.fee.length > 20) {
         errorArray.push({

@@ -23,11 +23,14 @@ function getparkingZone(conditions, limit, offset) {
     if (conditions.search) {
         where[Op.or] = {
             days: {
-                [Op.like]: '%' + conditions.search + '%' },
+                [Op.like]: '%' + conditions.search + '%'
+            },
             zip: {
-                [Op.like]: '%' + conditions.search + '%' },
+                [Op.like]: '%' + conditions.search + '%'
+            },
             uid: {
-                [Op.like]: '%' + conditions.search + '%' }
+                [Op.like]: '%' + conditions.search + '%'
+            }
 
         }
     }
