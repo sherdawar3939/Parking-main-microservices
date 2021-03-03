@@ -18,6 +18,10 @@ const getClientList = (conditions) => {
     contractWhere.status = conditions.status
   }
 
+  if (conditions.UserId) {
+    where.UserId = conditions.UserId
+  }
+
   if (conditions.search) {
     where[Op.or] = {
       companyName: { [Op.like]: '%' + conditions.search + '%' },
@@ -138,7 +142,6 @@ const postClient = async (body, res, next) => {
 
 const updateClient = async (id, body, res, next) => {
   const errorsArray = []
-  console.log(id, '   ', body)
   const client = await db.Client.findOne({
     where: {
       id: {
@@ -159,7 +162,7 @@ const updateClient = async (id, body, res, next) => {
       ]
     }
   })
-  console.log(client)
+
   if (!client) {
     return db.Client.update(body, {
       where: { id }
@@ -207,9 +210,33 @@ const updateClient = async (id, body, res, next) => {
   }
   next()
 }
+const clientZipCodeHelper = (id) => {
+  return db.Client.findOne({
+    where: {
+      id
+    },
+    attributes: ['id'],
+    include: [{
+      model: db.ClientZipCode,
+      as: 'clientZipCodes',
+      attributes: ['clientId'],
+      where: {
+        isDeleted: false
+      },
+      include: [{
+        model: db.ZipCode,
+        as: 'zipCodes',
+        attributes: ['zipCode']
+      }]
+    }
+    ]
+
+  })
+}
 module.exports = {
   getClientList,
   getClientDetail,
   postClient,
-  updateClient
+  updateClient,
+  clientZipCodeHelper
 }

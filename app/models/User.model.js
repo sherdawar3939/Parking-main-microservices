@@ -68,7 +68,7 @@ module.exports = function (sequelize, DataTypes) {
     if (!password || !salt) {
       return ''
     }
-    salt = new Buffer.From(salt, 'base64')
+    salt = new Buffer.from(salt, 'base64')
     return crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('base64')
   }
 

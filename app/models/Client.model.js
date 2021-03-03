@@ -28,9 +28,6 @@ module.exports = function(sequelize, DataTypes) {
         },
         balance: {
             type: DataTypes.DECIMAL(11, 4)
-        },
-        UserId: {
-            type: DataTypes.INTEGER(11)
         }
     }, {
         associate: function(models) {
@@ -39,6 +36,7 @@ module.exports = function(sequelize, DataTypes) {
             Client.hasMany(models.ClientZipCode, { foreignKey: 'ClientId', as: 'clientZipCodes' })
             Client.hasMany(models.ParkingZone, { foreignKey: 'ClientId', as: 'clientParkingZones' })
             Client.hasMany(models.Contract, { foreignKey: 'ClientId', as: 'clientContracts' })
+            Client.belongsTo(models.User, { foreignKey: 'UserId', as: 'clientUser' })
         }
     })
     return Client
