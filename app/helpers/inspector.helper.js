@@ -6,7 +6,8 @@ const generalHelpingMethods = require('./general.helper')
 const createInspector = (userData) => {
     return db.User.findOne({
             where: {
-                [Op.or]: [{ email: userData.email }] }
+                [Op.or]: [{ email: userData.email }]
+            }
         })
         .then((user) => {
             if (user) {
@@ -63,7 +64,7 @@ function deleteInspector(id) {
                 })
             }
 
-            return db.User.update({ isDeleted: true }, {
+            return db.User.update({ isDeleted: false }, {
                 where: {
                     id: foundInspector.UserId
                 }
@@ -80,7 +81,7 @@ function getInspector(id) {
             model: db.User,
             as: 'userInspector',
             attributes: ['fName', 'lName', 'email', 'isVerified', 'isActive', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
-            where: { isDeleted: false }
+            where: { isDeleted: true }
         }]
     })
 }
@@ -91,11 +92,14 @@ function getInspectorList(conditions, limit, offset) {
     if (conditions.search) {
         where[Op.or] = {
             fName: {
-                [Op.like]: '%' + conditions.search + '%' },
+                [Op.like]: '%' + conditions.search + '%'
+            },
             lName: {
-                [Op.like]: '%' + conditions.search + '%' },
+                [Op.like]: '%' + conditions.search + '%'
+            },
             email: {
-                [Op.like]: '%' + conditions.search + '%' }
+                [Op.like]: '%' + conditions.search + '%'
+            }
         }
     }
 
