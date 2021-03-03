@@ -9,5 +9,5 @@ module.exports = function (app, apiVersion) {
   app.get(`${route}/client/:id`, clientMiddleware.validateGetClientId, ClientController.getClientById)
   app.post(`${route}/client`, passport.authenticate('jwt', { session: false }), clientMiddleware.validatePostClient, ClientController.addClient)
   app.put(`${route}/client/:id`, clientMiddleware.validatePutClient, ClientController.UpDateClientById)
-  app.get(`${route}/client/zipCode/:id`, clientMiddleware.validateGetClientId, ClientController.getClientZipCode)
+  app.get(`${route}/client/:id/zip-code`, clientMiddleware.validateGetClientId, ClientController.getClientZipCode)
 }
