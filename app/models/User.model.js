@@ -4,28 +4,31 @@ let crypto = require('crypto')
 module.exports = function (sequelize, DataTypes) {
   let User = sequelize.define('User', {
     fName: {
-      type: DataTypes.STRING(50)
+      type: DataTypes.STRING(50),
+      allowNull: false
     },
     lName: {
       type: DataTypes.STRING(50)
     },
     email: {
-      type: DataTypes.STRING(50)
+      type: DataTypes.STRING(100),
+      isEmail: true,
+      unique: true,
+      allowNull: false
     },
-    balance: {
-      type: DataTypes.DECIMAL(11, 4)
+    imageUrl: DataTypes.STRING,
+    phone: {
+      type: DataTypes.STRING(11)
     },
+    otp: DataTypes.STRING(40),
+    language: DataTypes.STRING(5),
     otpValidTill: DataTypes.DATE,
-    otp: DataTypes.STRING(5),
     hashedPassword: DataTypes.STRING,
     salt: DataTypes.STRING,
+    RoleId: DataTypes.INTEGER(11),
     isVerified: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    },
-    isActive: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
     },
     isBlocked: {
       type: DataTypes.BOOLEAN,
@@ -33,10 +36,12 @@ module.exports = function (sequelize, DataTypes) {
     },
     isDeleted: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
       defaultValue: false
     }
   }, {
     associate: function (models) {
+      User.belongsTo(models.Role, { foreignKey: 'RoleId' })
       User.hasMany(models.Parking, { foreignKey: 'UserId', as: 'userParking' })
       User.hasMany(models.UserVehicle, { foreignKey: 'UserId', as: 'userVehicle' })
       User.hasMany(models.Payment, { foreignKey: 'UserId', as: 'userPayment' })
