@@ -54,6 +54,9 @@ const validatePostClient = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
   // validating as required string field
+  if (req.user && req.user.RoleId === 2) {
+    validatedBody.UserId = req.user.id
+  }
   if (!body.companyName || body.companyName.length < 3 || body.companyName.length > 30) {
     errorArray.push({
       field: 'companyName',
