@@ -106,23 +106,7 @@ const validatePostClient = (req, res, done) => {
     })
     validatedBody.iban = body.iban
   }
-  // validating as required number field
-  if (!body.balance || isNaN(body.balance)) {
-    errorArray.push({
-      field: 'balance',
-      error: 1009,
-      message: 'The field is required .'
-    })
-  }
-  // validating as required number field
 
-  if (!body.UserId || isNaN(body.UserId)) {
-    errorArray.push({
-      field: 'UserId',
-      error: 1011,
-      message: 'The field is required.'
-    })
-  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient')
   }
@@ -134,8 +118,6 @@ const validatePostClient = (req, res, done) => {
   validatedBody.secondaryPhone = body.secondaryPhone
   validatedBody.address = body.address
   validatedBody.iban = body.iban
-  validatedBody.balance = body.balance
-  validatedBody.UserId = body.UserId
   req.validatedBody = validatedBody
   done()
 }
