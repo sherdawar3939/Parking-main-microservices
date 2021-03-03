@@ -6,6 +6,13 @@ const validateGetClient = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
+
+  if (req.user && req.user.RoleId === 2) {
+    validatedConditions.UserId = req.user.id
+  } else if (query.hasOwnProperty('userId') && query.userId) {
+    validatedConditions.UserId = query.userId
+  }
+
   if (query.hasOwnProperty('search') && query.search) {
     validatedConditions.search = query.search
   }
@@ -19,9 +26,11 @@ const validateGetClient = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetClient')
   }
+
   req.validatedConditions = validatedConditions
   done()
 }
@@ -106,23 +115,7 @@ const validatePostClient = (req, res, done) => {
     })
     validatedBody.iban = body.iban
   }
-  // validating as required number field
-  if (!body.balance || isNaN(body.balance)) {
-    errorArray.push({
-      field: 'balance',
-      error: 1009,
-      message: 'The field is required .'
-    })
-  }
-  // validating as required number field
 
-  if (!body.UserId || isNaN(body.UserId)) {
-    errorArray.push({
-      field: 'UserId',
-      error: 1011,
-      message: 'The field is required.'
-    })
-  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient')
   }
@@ -134,8 +127,6 @@ const validatePostClient = (req, res, done) => {
   validatedBody.secondaryPhone = body.secondaryPhone
   validatedBody.address = body.address
   validatedBody.iban = body.iban
-  validatedBody.balance = body.balance
-  validatedBody.UserId = body.UserId
   req.validatedBody = validatedBody
   done()
 }
