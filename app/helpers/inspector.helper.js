@@ -64,7 +64,7 @@ function deleteInspector(id) {
                 })
             }
 
-            return db.User.update({ isDeleted: false }, {
+            return db.User.update({ isDeleted: true }, {
                 where: {
                     id: foundInspector.UserId
                 }
@@ -81,7 +81,7 @@ function getInspector(id) {
             model: db.User,
             as: 'userInspector',
             attributes: ['fName', 'lName', 'email', 'isVerified', 'isActive', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
-            where: { isDeleted: true }
+            where: { isDeleted: false }
         }]
     })
 }
