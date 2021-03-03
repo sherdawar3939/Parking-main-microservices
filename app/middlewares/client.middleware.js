@@ -6,6 +6,13 @@ const validateGetClient = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
+
+  if (req.user && req.user.RoleId === 2) {
+    validatedConditions.UserId = req.user.id
+  } else if (query.hasOwnProperty('userId') && query.userId) {
+    validatedConditions.UserId = query.userId
+  }
+
   if (query.hasOwnProperty('search') && query.search) {
     validatedConditions.search = query.search
   }
@@ -19,9 +26,11 @@ const validateGetClient = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetClient')
   }
+
   req.validatedConditions = validatedConditions
   done()
 }

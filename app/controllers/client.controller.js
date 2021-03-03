@@ -46,10 +46,20 @@ const UpDateClientById = (req, res, next) => {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'Client.controller.UpDateClientById', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
-
+const getClientZipCode = (req, res) => {
+  return ClientHelper.clientZipCodeHelper(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'Client fetched successfully.', data, 'Banner.controller.getClientById')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'Client.controller.getClientById', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'Client.controller.getClientById', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
   getClient,
   getClientById,
   addClient,
-  UpDateClientById
+  UpDateClientById,
+  getClientZipCode
 }

@@ -41,6 +41,7 @@ module.exports = function (sequelize, DataTypes) {
       User.hasMany(models.UserVehicle, { foreignKey: 'UserId', as: 'userVehicle' })
       User.hasMany(models.Payment, { foreignKey: 'UserId', as: 'userPayment' })
       User.hasOne(models.Inspector, { foreignKey: 'UserId', as: 'inspector' })
+      User.hasOne(models.Client, { foreignKey: 'UserId', as: 'client' })
       User.hasMany(models.Contract, { foreignKey: 'UserId', as: 'userContract' })
       User.hasMany(models.CreativeRequest, { foreignKey: 'UpdatedBy', as: 'userCreativeRequest' })
     }
@@ -68,7 +69,7 @@ module.exports = function (sequelize, DataTypes) {
     if (!password || !salt) {
       return ''
     }
-    salt = new Buffer.From(salt, 'base64')
+    salt = new Buffer.from(salt, 'base64')
     return crypto.pbkdf2Sync(password, salt, 10000, 64, 'sha512').toString('base64')
   }
 
