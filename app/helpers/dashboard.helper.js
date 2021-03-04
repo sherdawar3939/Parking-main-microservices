@@ -1,6 +1,6 @@
 'use strict'
 // const _ = require('lodash')
-// var Sequelize = require('sequelize')
+var Sequelize = require('sequelize')
 // const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 
@@ -19,19 +19,35 @@ const getDashboardDetails = async (conditions) => {
        }
   })
   const parkingZoneCountQuery = await db.ParkingZone.count({ raw: true })
-
-  //   return Promise.all([usersCountQuery, totalActiveStatus, parkingZoneCountQuery, clientCountQuery]).then((values) => {
-  //     return values
-  //   })
-
-  return { data: { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery } }
+  return { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery }
 }
 
 const getDashboardClientCounts = async (id) => {
   const InspectorCountQuery = await db.Inspector.count({ where: { ClientId: id } })
-  //   const ActiveParkingCountQuery = await db.Parking.count({ where: { ClientId: id } })P
 
-  return { data: { InspectorCountQuery: InspectorCountQuery } }
+  const ParkingCounts = await db.ParkingZone.findAll({
+    raw: true,
+    nest: false,
+    where: {
+      ClientId: id
+    },
+    attributes: [
+      [Sequelize.fn('COUNT', Sequelize.col('parkingZoneParkings.status')), 'parkingCounts']
+
+    ],
+    include: [{
+      model: db.Parking,
+      as: 'parkingZoneParkings',
+      attributes: [],
+      where: {
+        status: 'Active'
+      }
+    }
+    ],
+    group: ['ClientId']
+  })
+
+  return { InspectorCountQuery: InspectorCountQuery, parkingCounts: ParkingCounts[0].parkingCounts }
 }
 
 module.exports = {
