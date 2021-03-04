@@ -53,6 +53,24 @@ function getPayment(conditions, limit, offset) {
             ]
         }
     }
+
+    return db.Payment.findAll({
+        where,
+        // nest: false,
+        // raw: true,
+        include: {
+            model: db.Client,
+            as: 'clientPayments',
+            where: {
+                isProfile: true
+            }
+        },
+        order: [
+            ['createdAt', 'DESC']
+        ],
+        limit: limit,
+        offset: offset
+    })
 }
 
 module.exports = {

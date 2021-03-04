@@ -26,6 +26,10 @@ module.exports = function(sequelize, DataTypes) {
         iban: {
             type: DataTypes.STRING(50)
         },
+        isProfile: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
+        },
         balance: {
             type: DataTypes.DECIMAL(11, 4)
         }
