@@ -3,7 +3,7 @@
 module.exports = function (sequelize, DataTypes) {
   let Module = sequelize.define('Module',
     {
-      name: {
+      title: {
         type: DataTypes.INTEGER(20)
       },
       identifier: {
@@ -14,7 +14,11 @@ module.exports = function (sequelize, DataTypes) {
       }
     }, {
       associate: function (models) {
-        Module.hasMany(models.ModuleAction, { foreignKey: 'ModuleId', as: 'ModuleActions' })
+        Module.belongsToMany(models.Action, {
+          as: 'actions',
+          through: 'ModuleAction',
+          foreignKey: 'ModuleId'
+        })
       }
     }
   )
