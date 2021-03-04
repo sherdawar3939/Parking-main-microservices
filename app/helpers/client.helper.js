@@ -1,11 +1,11 @@
 'use strict'
-// const { any } = require('bluebird')
 const _ = require('lodash')
 var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalMiddleware = require('../middlewares/general.middleware')
 
+// Get Client List
 const getClientList = (conditions) => {
   const where = {}
   const contractWhere = {}
@@ -60,6 +60,7 @@ const getClientList = (conditions) => {
   })
 }
 
+// Get Client Details
 const getClientDetail = (id) => {
   return db.Client.findOne({
 
@@ -98,6 +99,8 @@ const getClientDetail = (id) => {
 
   })
 }
+
+// Create Client API
 const postClient = async (body, res, next) => {
   const errorsArray = []
   const client = await db.Client.findOne({
@@ -116,8 +119,6 @@ const postClient = async (body, res, next) => {
     return db.Client.create(body)
   } else {
     if (client.phone === body.phone) {
-      // user phone already exist.
-
       errorsArray.push({
         field: 'phone',
         error: 1500,
@@ -140,6 +141,7 @@ const postClient = async (body, res, next) => {
   next()
 }
 
+// Update Client API
 const updateClient = async (id, body, res, next) => {
   const errorsArray = []
   const client = await db.Client.findOne({
@@ -162,7 +164,6 @@ const updateClient = async (id, body, res, next) => {
       ]
     }
   })
-
   if (!client) {
     return db.Client.update(body, {
       where: { id }
