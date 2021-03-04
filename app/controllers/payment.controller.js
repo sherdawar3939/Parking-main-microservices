@@ -15,7 +15,7 @@ const addPayment = function(req, res) {
         })
 }
 const getPayment = function(req, res) {
-    return paymentHelper.getPayment(req.conditions, req.limit, req.offset)
+    return paymentHelper.getpayment(req.conditions, req.limit, req.offset)
         .then(function(data) {
             generalController.successResponse(res, ' Get Payment  successfully.', data, 'payment.controller.getPayment')
         }).catch(StandardError, function(err) {

@@ -29,7 +29,7 @@ const addpayment = (data) => {
         })
 }
 
-function getPayment(conditions, limit, offset) {
+function getpayment(conditions, limit, offset) {
     let where = {}
 
     if (conditions.ClientId) {
@@ -57,5 +57,5 @@ function getPayment(conditions, limit, offset) {
 
 module.exports = {
     addpayment,
-    getPayment
+    getpayment
 }
