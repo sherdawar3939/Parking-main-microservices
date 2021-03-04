@@ -19,12 +19,7 @@ const getDashboardDetails = async (conditions) => {
        }
   })
   const parkingZoneCountQuery = await db.ParkingZone.count({ raw: true })
-
-  //   return Promise.all([usersCountQuery, totalActiveStatus, parkingZoneCountQuery, clientCountQuery]).then((values) => {
-  //     return values
-  //   })
-
-  return { data: { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery } }
+  return { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery }
 }
 
 const getDashboardClientCounts = async (id) => {
