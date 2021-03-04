@@ -1,6 +1,7 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
+const { isInteger } = require('lodash')
 
 const validateCreateParkingZone = (req, res, done) => {
 <<<<<<< HEAD
@@ -62,6 +63,7 @@ const validateCreateParkingZone = (req, res, done) => {
 =======
   const errorArray = []
   const body = req.body
+  console.log(body)
   const validatedBody = {}
   // days must be required required  Validating as not empty, valid String and length range.
   if (!body.days || !body.days.length) {
@@ -73,19 +75,19 @@ const validateCreateParkingZone = (req, res, done) => {
   }
 
   // fee must be required required  Validating as not empty, valid String and length range.
-  if (!_.isString(body.fee) || body.fee.length < 2 || body.fee.length > 20) {
+  if (!isInteger(body.fee) || body.fee.length < 0 || body.fee.length > 20) {
     errorArray.push({
       field: 'fee',
       error: 25,
-      message: 'Please provide only valid \'fee\' as string, length must be between 2 and 20.'
+      message: 'Please provide only valid \'fee\' as integer, length must be between 2 and 20.'
     })
   }
   // licensePlate must be required required  Validating as not empty, valid String and length range.
-  if (!_.isString(body.maxTime) || body.maxTime.length < 2 || body.maxTime.length > 20) {
+  if (!isInteger(body.maxTime) || body.maxTime.length < 0 || body.maxTime.length > 20) {
     errorArray.push({
       field: 'maxTime',
       error: 25,
-      message: 'Please provide only valid \'maxTime\' as string, length must be between 2 and 20.'
+      message: 'Please provide only valid \'maxTime\' as integer, length must be between 2 and 20.'
     })
   }
   // zip must be required required  Validating as not empty, valid integer.
@@ -97,7 +99,7 @@ const validateCreateParkingZone = (req, res, done) => {
     })
   }
   // polygones must be required required  Validating as not empty, valid integer.
-  if (!body.polygons || isNaN(body.polygons)) {
+  if (!body.polygons) {
     errorArray.push({
       field: 'polygons',
       error: 26,
