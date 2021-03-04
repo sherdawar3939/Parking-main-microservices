@@ -5,7 +5,7 @@ const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
 const addPayment = function(req, res) {
-    return paymentHelper.addPayment(req.validatedBody)
+    return paymentHelper.addpayment(req.validatedBody)
         .then(function(data) {
             generalController.successResponse(res, 'Payment added successfully.', data, 'payment.controller.addPayment')
         }).catch(StandardError, function(err) {
