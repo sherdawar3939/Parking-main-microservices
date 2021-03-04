@@ -22,9 +22,9 @@ const getDashboardDetails = async (conditions) => {
   return { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery }
 }
 
-const getDashboardClientCounts = async (id) => {
+const getDashboardClientCounts = async (id, res, next) => {
   const InspectorCountQuery = await db.Inspector.count({ where: { ClientId: id } })
-
+  // return InspectorCountQuery
   const ParkingCounts = await db.ParkingZone.findAll({
     raw: true,
     nest: false,
@@ -46,11 +46,23 @@ const getDashboardClientCounts = async (id) => {
     ],
     group: ['ClientId']
   })
+  // return ParkingCounts
 
-  return { InspectorCountQuery: InspectorCountQuery, parkingCounts: ParkingCounts[0].parkingCounts }
+  return { InspectorCountQuery: InspectorCountQuery, ParkingCounts: ParkingCounts }
+}
+
+const getClientRevenueDetails = async () => {
+  return db.Client.findAll({
+    attributes: [
+      [Sequelize.literal(`DATE("createdAt")`), 'date'],
+      [Sequelize.literal(`COUNT(*)`), 'count']
+    ],
+    group: ['date']
+  })
 }
 
 module.exports = {
   getDashboardDetails,
-  getDashboardClientCounts
+  getDashboardClientCounts,
+  getClientRevenueDetails
 }
