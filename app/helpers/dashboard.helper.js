@@ -46,8 +46,13 @@ const getDashboardClientCounts = async (id) => {
     ],
     group: ['ClientId']
   })
-
-  return { InspectorCountQuery: InspectorCountQuery, parkingCounts: ParkingCounts[0].parkingCounts }
+  let parkingCount
+  if (ParkingCounts.length === 0) {
+    parkingCount = 0
+  } else {
+    parkingCount = ParkingCounts[0].parkingCounts
+  }
+  return { InspectorCountQuery: InspectorCountQuery, parkingCounts: parkingCount }
 }
 
 module.exports = {
