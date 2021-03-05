@@ -27,7 +27,7 @@ const clientDashboardDetails = function (req, res, next) {
 }
 
 const clientRevenueDetails = function (req, res) {
-  return getClientRevenueDetails(req.query.createdAt, req.query.updatedAt)
+  return getClientRevenueDetails(req.conditions)
     .then(function (data) {
       generalController.successResponse(res, 'Client Revenue Details fetched successfully.', data, 'dashboard.controller.clientRevenueDetails')
     }).catch(StandardError, function (err) {

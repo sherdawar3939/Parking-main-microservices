@@ -1,7 +1,7 @@
 'use strict'
 // const _ = require('lodash')
-var Sequelize = require('sequelize')
-const Op = Sequelize.Op
+var sequelize = require('sequelize')
+// const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 
 const getDashboardDetails = async (conditions) => {
@@ -32,7 +32,7 @@ const getDashboardClientCounts = async (id, res, next) => {
       ClientId: id
     },
     attributes: [
-      [Sequelize.fn('COUNT', Sequelize.col('parkingZoneParkings.status')), 'parkingCounts']
+      [sequelize.fn('COUNT', sequelize.col('parkingZoneParkings.status')), 'parkingCounts']
 
     ],
     include: [{
@@ -55,21 +55,50 @@ const getDashboardClientCounts = async (id, res, next) => {
   return { InspectorCountQuery: InspectorCountQuery, parkingCounts: parkingCount }
 }
 
-const getClientRevenueDetails = (createdAt, updatedAt) => {
-  const where = {
-    [Op.or]: [{
-      from: {
-        [Op.between]: [createdAt, updatedAt]
-      }
-    }, {
-      to: {
-        [Op.between]: [createdAt, updatedAt]
-      }
-    }]
+const getClientRevenueDetails = (conditions) => {
+  // SQL Raw query For finding Profit Sum BY DAE_FORMATE
+  const where = []
+  let query = `SELECT SUM(profit) as profit, 
+  DATE_FORMAT(p.startedOn,'%d %M, %Y') as startedOn FROM Parkings as p
+  INNER JOIN ParkingZones as pz ON pz.id = p.ParkingZoneId`
+
+  if (conditions.ClientId) {
+    where.push(`pz.ClientId = ${conditions.ClientId}`)
   }
-  return db.Client.findAll({
-    where
+  if (conditions.startDate) {
+    where.push(` p.startedOn >= '${conditions.startDate}'`)
+  }
+  if (conditions.endDate) {
+    where.push(` p.startedOn <= '${conditions.endDate}'`)
+  }
+
+  if (where.length) {
+    query = query + ' WHERE ' + where.join(' AND ')
+  }
+
+  query += ` GROUP BY DATE(p.startedOn)
+  ORDER BY DATE(p.startedOn) ASC`
+
+  return db.sequelize.query(query, {
+    type: db.sequelize.QueryTypes.SELECT
   })
+    .then((result) => {
+      const response = {
+        x: [],
+        y: []
+      }
+      if (!result || !result.length) {
+        return response
+      }
+      result.forEach(element => {
+        response.x.push(element.startedOn)
+        response.y.push(element.profit)
+      })
+      return response
+    })
+    .catch((error) => {
+      console.log('Error', error /* error.response.details[0] */)
+    })
 }
 
 module.exports = {
