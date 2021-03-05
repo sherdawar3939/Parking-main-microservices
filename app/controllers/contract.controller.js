@@ -37,7 +37,7 @@ const getContractList = function (req, res) {
 const getContract = function (req, res) {
   return contractHelper.getContract(req.params.id)
     .then(function (data) {
-      generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContract')
+      generalController.successResponse(res, 'Contract fetch successfully ny client id.', data, 'contract.controller.getContract')
     }).catch(StandardError, function (err) {
       generalController.errorResponse(res, err, null, 'contract.controller.getContract', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {
@@ -55,10 +55,20 @@ const verificationOfContract = (req, res) => {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.verificationOfContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
-
+const getApprovedContract = (req, res) => {
+  return contractHelper.getApprovedContract(req.validatedConditions.ClientId)
+    .then((data) => {
+      generalController.successResponse(res, 'Get Contract  successfully.', data, 'contract.controller.getApprovedContract')
+    }).catch(StandardError, (err) => {
+      generalController.errorResponse(res, err, null, 'contract.controller.getApprovedContract', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch((err) => {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getApprovedContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
   addContract,
   getContractList,
   verificationOfContract,
+  getApprovedContract,
   getContract
 }

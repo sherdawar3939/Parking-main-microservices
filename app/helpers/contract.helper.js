@@ -27,8 +27,18 @@ function getContract (id) {
 function verifyContract (id) {
   return db.Contract.update({ status: 'APPROVED' }, { where: id })
 }
+const getApprovedContract = (id) => {
+  console.log('clientId ', id)
+  return db.Contract.findOne({
+    where: {
+      ClientId: id,
+      status: 'APPROVED'
+    }
+  })
+}
 module.exports = {
   addContract,
   getContractList,
   verifyContract,
+  getApprovedContract,
   getContract }
