@@ -1,7 +1,7 @@
 'use strict'
 // const _ = require('lodash')
 var Sequelize = require('sequelize')
-// const Op = Sequelize.Op
+const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 
 const getDashboardDetails = async (conditions) => {
@@ -55,13 +55,20 @@ const getDashboardClientCounts = async (id, res, next) => {
   return { InspectorCountQuery: InspectorCountQuery, parkingCounts: parkingCount }
 }
 
-const getClientRevenueDetails = async () => {
+const getClientRevenueDetails = (createdAt, updatedAt) => {
+  const where = {
+    [Op.or]: [{
+      from: {
+        [Op.between]: [createdAt, updatedAt]
+      }
+    }, {
+      to: {
+        [Op.between]: [createdAt, updatedAt]
+      }
+    }]
+  }
   return db.Client.findAll({
-    attributes: [
-      [Sequelize.literal(`DATE("createdAt")`), 'date'],
-      [Sequelize.literal(`COUNT(*)`), 'count']
-    ],
-    group: ['date']
+    where
   })
 }
 

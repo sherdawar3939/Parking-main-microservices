@@ -5,5 +5,5 @@ module.exports = function (app, apiVersion) {
 
   app.get(route + '/dashboard', adminDashboardDetail)
   app.get(route + '/dashboard/:ClientId', clientDashboardDetails)
-  app.get(route + '/Client-Revnue/:ClientId', clientRevenueDetails)
+  app.get(route + '/Client-Revenue', clientRevenueDetails)
 }
