@@ -18,6 +18,22 @@ const validateGetZipCode = (req, res, done) => {
   req.conditions = validateConditions
   done()
 }
+const validateCityId = (req, res, done) => {
+  const errorArray = []
+  const params = req.params
+  if (!params.id || isNaN(params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 80140,
+      message: 'Please provide only valid \'CityId\' as numeric.'
+    })
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'zipCode.middleware.validateCityId')
+  }
+  done()
+}
 module.exports = {
-  validateGetZipCode
+  validateGetZipCode,
+  validateCityId
 }
