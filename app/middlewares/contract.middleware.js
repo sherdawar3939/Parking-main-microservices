@@ -52,31 +52,32 @@ const validateCreateContract = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-
-  if (!body.data || !isNaN(body.data)) {
+  console.log('hamza aslam', body.zipCode)
+  // validating as required number field
+  if (body.zipCode.length <= 0) {
     errorArray.push({
-      field: 'data',
-      error: 80140,
-      message: "Please provide only valid 'data' as string."
+      field: 'zipCode',
+      error: 233,
+      message: 'The zipCode is required with 1 min  value.'
     })
-    // validatedBody.data = body.data
-  }
-
-  if (!body.status || !isNaN(body.status)) {
-    errorArray.push({
-      field: 'status',
-      error: 80140,
-      message: "Please provide only valid 'status' as string."
+  } else {
+    body.zipCode.forEach((id) => {
+      // validating as required number field
+      if (isNaN(id)) {
+        errorArray.push({
+          field: 'field',
+          error: 2345,
+          message: 'The zipCodes is required with as numeric.'
+        })
+      }
     })
-    // validatedBody.status = body.status
   }
-
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.validateCreateContract')
   }
 
-  validatedBody.data = body.data
-  validatedBody.status = body.status
+  validatedBody.zipCode = body.zipCode
+  validatedBody.UserId = body.UserId
 
   req.validatedBody = validatedBody
   done()
