@@ -120,9 +120,36 @@ const validateVerifyContract = (req, res, done) => {
   done()
 }
 
+const validateContractApproved = (req, res, done) => {
+  const query = req.query
+  const errorArray = []
+  const validatedConditions = {}
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else {
+    // validating as optional number field
+    if (query.hasOwnProperty('clientId') && query.clientId) {
+      if (isNaN(query.clientId) || query.clientId < 1 || query.clientId > 9999999999) {
+        errorArray.push({
+          field: 'clientId',
+          error: 'cmca-5',
+          message: 'The clientId should be number with min 1 and max 9999999999 value.'
+        })
+      }
+      validatedConditions.ClientId = query.clientId
+    }
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validateContractApproved')
+  }
+  req.validatedConditions = validatedConditions
+  done()
+}
 module.exports = {
   validateGetContractList,
   validateVerifyContract,
   validateCreateContract,
   validateGetContractByClientId,
-  validateGetContract }
+  validateGetContract,
+  validateContractApproved
+}
