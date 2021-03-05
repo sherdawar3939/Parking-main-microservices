@@ -37,7 +37,7 @@ const getContractList = function (req, res) {
 const getContract = function (req, res) {
   return contractHelper.getContract(req.params.id)
     .then(function (data) {
-      generalController.successResponse(res, 'Contract fetch successfully ny client id.', data, 'contract.controller.getContract')
+      generalController.successResponse(res, 'Contract fetch successfully.', data, 'contract.controller.getContract')
     }).catch(StandardError, function (err) {
       generalController.errorResponse(res, err, null, 'contract.controller.getContract', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {

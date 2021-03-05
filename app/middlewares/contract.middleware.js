@@ -31,7 +31,7 @@ const validateGetContractList = (req, res, done) => {
 
 const validateGetContract = (req, res, done) => {
   const errorArray = []
-  if (!isNaN(req.params.id)) {
+  if (isNaN(req.params.id)) {
     errorArray.push({
       field: 'id',
       error: 80140,
