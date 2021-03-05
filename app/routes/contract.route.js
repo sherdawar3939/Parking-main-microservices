@@ -1,6 +1,6 @@
 'use strict'
 const contractController = require('../controllers/contract.controller')
-const { validateCreateContract, validateGetContractList, validateVerifyContract, validateGetContractByClientId, validateGetContract } = require('../middlewares/contract.middleware')
+const { validateCreateContract, validateGetContractList, validateVerifyContract, validateGetContract } = require('../middlewares/contract.middleware')
 
 module.exports = function (app, apiVersion) {
   const route = apiVersion
