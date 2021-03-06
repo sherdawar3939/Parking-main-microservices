@@ -1,5 +1,10 @@
 'use strict'
 const db = require('../config/sequelize.config')
+<<<<<<< HEAD
+=======
+const Sequelize = require('sequelize')
+const generalHelpingMethods = require('../helpers/general.helper')
+>>>>>>> HamzaAslam
 const contract = {}
 
 const addContract = (data) => {
@@ -14,7 +19,11 @@ const addContract = (data) => {
     }
   }).then(_client => {
     if (!_client) {
-
+      return generalHelpingMethods.rejectPromise([{
+        field: 'createContract',
+        error: 1540,
+        message: 'no record found'
+      }])
     }
     client = _client
     contract.ClientId = _client.id
