@@ -29,7 +29,7 @@
             "database": "parking_main"
         }
     },
-    "FORCE_DB_SYNC": "true",
+    "FORCE_DB_SYNC": "false",
     "jwtOptions": {
         "secretOrKey": "boilerplate",
         "ignoreExpiration": true,
