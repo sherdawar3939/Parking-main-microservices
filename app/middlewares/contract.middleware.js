@@ -11,8 +11,8 @@ const validateGetContractList = (req, res, done) => {
     validateConditions.id = query.id
   }
 
-  if (query.hasOwnProperty('clientId') && !isNaN(query.clientId)) {
-    validateConditions.ClientId = query.clientId
+  if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
+    validateConditions.ClientId = query.ClientId
   }
 
   if (query.hasOwnProperty('status') && query.status && query.status.length < 20) {

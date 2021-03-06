@@ -1,7 +1,5 @@
 'use strict'
 const db = require('../config/sequelize.config')
-const Sequelize = require('sequelize')
-const { response } = require('express')
 const contract = {}
 
 const addContract = (data) => {
@@ -34,10 +32,18 @@ const addContract = (data) => {
 }
 
 function getContractList (conditions, limit, offset) {
+  let where = {}
+  if (conditions.id) {
+    where.id = conditions.id
+  }
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+  if (conditions.status) {
+    where.status = conditions.status
+  }
   return db.Contract.findAll({
-    where: conditions,
-    nest: false,
-    raw: true,
+    where,
     include: {
       model: db.Client,
       as: 'clientContracts'
