@@ -135,4 +135,5 @@ module.exports = {
   validateVerifyContract,
   validateCreateContract,
   validateContractApproved,
-  validateGetContract }
+  validateGetContract
+}
