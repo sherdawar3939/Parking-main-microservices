@@ -20,6 +20,17 @@ const validateGetClientsRevenue = (req, res, done) => {
     validatedConditions.ClientId = query.ClientId
   }
 
+  if (query.hasOwnProperty('UserId') && query.UserId) {
+    if (isNaN(query.UserId)) {
+      errorArray.push({
+        field: 'UserId',
+        error: 25,
+        message: 'Please provide only valid \'UserId\' as numeric.'
+      })
+    }
+    validatedConditions.UserId = query.UserId
+  }
+
   if (!params.userType || (params.userType !== 'client' && params.userType !== 'admin')) {
     errorArray.push({
       field: 'userType',
