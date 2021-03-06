@@ -6,5 +6,8 @@ module.exports = function (app, apiVersion) {
 
   app.get(route + '/dashboard', adminDashboardDetail)
   app.get(route + '/dashboard/:ClientId', clientDashboardDetails)
-  app.get(route + '/Client-Revenue', validateGetClientsRevenue, clientRevenueDetails)
+  app.get(route + '/dashboard/graph-revenue/:userType/:type', validateGetClientsRevenue, clientRevenueDetails)
+  // app.get(route + '/dashboard/graph-revenue/:userType/:type', validateGetClientsRevenue, clientRevenueDetails)
+
+  // type = profit/revenue
 }

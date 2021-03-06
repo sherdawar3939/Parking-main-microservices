@@ -8,10 +8,9 @@ module.exports = function (sequelize, DataTypes) {
       field: 'data'
     },
     status: {
-      type: DataTypes.ENUM(['PENDING', 'APPROVED', 'REJECTED']),
+      type: DataTypes.ENUM(['PENDING', 'APPROVED', 'CANCELED', 'REJECTED']),
       allowNull: false,
-      defaultValue: 'PENDING',
-      field: 'status'
+      defaultValue: 'PENDING'
     }
   }, {
     associate: function (models) {

@@ -27,9 +27,9 @@ const clientDashboardDetails = function (req, res, next) {
 }
 
 const clientRevenueDetails = function (req, res) {
-  return getClientRevenueDetails(req.conditions)
+  return getClientRevenueDetails(req.conditions, req.field)
     .then(function (data) {
-      generalController.successResponse(res, 'Client Revenue Details fetched successfully.', data, 'dashboard.controller.clientRevenueDetails')
+      generalController.successResponse(res, 'Graph Revenue Details fetched successfully.', data, 'dashboard.controller.clientRevenueDetails')
     }).catch(StandardError, function (err) {
       generalController.errorResponse(res, err, null, 'dashboard.controller.clientRevenueDetails', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {

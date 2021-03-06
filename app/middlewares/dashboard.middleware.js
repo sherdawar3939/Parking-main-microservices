@@ -5,7 +5,9 @@ const _ = require('lodash')
 const validateGetClientsRevenue = (req, res, done) => {
   const errorArray = []
   const query = req.query
+  const params = req.params
   const validatedConditions = {}
+  let field = ''
 
   if (query.hasOwnProperty('ClientId') && query.ClientId) {
     if (isNaN(query.ClientId)) {
@@ -18,6 +20,14 @@ const validateGetClientsRevenue = (req, res, done) => {
     validatedConditions.ClientId = query.ClientId
   }
 
+  if (!params.userType || (params.userType !== 'client' && params.userType !== 'admin')) {
+    errorArray.push({
+      field: 'userType',
+      error: 'DGCR-5',
+      message: 'Please provide user type as client or admin.'
+    })
+  }
+
   if (query.hasOwnProperty('startDate') && query.startDate) {
     validatedConditions.startDate = query.startDate
   }
@@ -27,6 +37,23 @@ const validateGetClientsRevenue = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'dashboard.middleware.validateGetClientsRevenue')
   }
+
+  if (params.type === 'revenue' && params.userType === 'admin') {
+    field = '(adminTax + adminProfit)'
+  } else if (params.type === 'profit' && params.userType === 'admin') {
+    field = 'adminProfit'
+  } else if (params.type === 'tax' && params.userType === 'admin') {
+    field = 'adminTax'
+  }
+
+  if (params.type === 'revenue' && params.userType === 'client') {
+    field = '(clientTax + clientProfit)'
+  } else if (params.type === 'profit' && params.userType === 'client') {
+    field = 'clientProfit'
+  } else if (params.type === 'tax' && params.userType === 'client') {
+    field = 'clientTax'
+  }
+  req.field = field
   req.conditions = validatedConditions
 
   done()

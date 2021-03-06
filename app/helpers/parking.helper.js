@@ -19,12 +19,16 @@ const createParkingHelper = async (data) => {
     }
   })
   parkingCreatedData.licensePlate = UserVehicle.dataValues.licensePlate
-  parkingCreatedData.quantity = UserVehicle.dataValues.quantity
-  parkingCreatedData.parkingCharges = parkingZone.dataValues.fee
+  // parkingCharges from ParkingZone fee
+  parkingCreatedData.parkingCharges = parkingZone.dataValues.fee / 60
+  // Quantity Calculations
+  parkingCreatedData.quantity = UserVehicle.dataValues.quantity * 3600 * parkingCreatedData.parkingCharges
   parkingCreatedData.status = 'Started'
   parkingCreatedData.startedOn = new Date()
   parkingCreatedData.UserVehicleId = data.UserVehicleId
   parkingCreatedData.ParkingZoneId = data.ParkingZoneId
+  // clientProfit = Quantity * Tax
+  parkingCreatedData.clientProfit = parkingCreatedData.quantity * 0.18
 
   return db.Parking.create(parkingCreatedData)
 }

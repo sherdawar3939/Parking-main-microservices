@@ -55,10 +55,10 @@ const getDashboardClientCounts = async (id, res, next) => {
   return { InspectorCountQuery: InspectorCountQuery, parkingCounts: parkingCount }
 }
 
-const getClientRevenueDetails = (conditions) => {
+const getClientRevenueDetails = (conditions, field = 'adminProfit') => {
   // SQL Raw query For finding Profit Sum BY DAE_FORMATE
   const where = []
-  let query = `SELECT SUM(profit) as profit, 
+  let query = `SELECT SUM(${field}) as value, 
   DATE_FORMAT(p.startedOn,'%d %M, %Y') as startedOn FROM Parkings as p
   INNER JOIN ParkingZones as pz ON pz.id = p.ParkingZoneId`
 
@@ -92,7 +92,7 @@ const getClientRevenueDetails = (conditions) => {
       }
       result.forEach(element => {
         response.x.push(element.startedOn)
-        response.y.push(element.profit)
+        response.y.push(element.value)
       })
       return response
     })

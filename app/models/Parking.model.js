@@ -8,19 +8,27 @@ module.exports = function (sequelize, DataTypes) {
     licensePlate: {
       type: DataTypes.STRING(20)
     },
-    quantity: {
-      type: DataTypes.INTEGER(2)
-    },
     status: {
       type: DataTypes.ENUM(['Active', 'InActive']),
       allowNull: false,
-      defaultValue: 'Active',
-      field: 'status'
+      defaultValue: 'Active'
     },
     parkingCharges: {
       type: DataTypes.DECIMAL(9, 5)
     },
-    profit: {
+    quantity: {
+      type: DataTypes.INTEGER(2)
+    },
+    clientProfit: {
+      type: DataTypes.DECIMAL(9, 5)
+    },
+    clientTax: {
+      type: DataTypes.DECIMAL(9, 5)
+    },
+    adminProfit: {
+      type: DataTypes.DECIMAL(9, 5)
+    },
+    adminTax: {
       type: DataTypes.DECIMAL(9, 5)
     },
     total: {

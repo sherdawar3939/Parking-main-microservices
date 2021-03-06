@@ -1,14 +1,15 @@
 'use strict'
 const db = require('../config/sequelize.config')
-const Sequelize = require('sequelize')
+// const Sequelize = require('sequelize')
 const generalHelpingMethods = require('../helpers/general.helper')
-const contract = {}
 
 const addContract = (data) => {
   console.log(data)
   let client = {}
+  const contract = {}
   const whereZipCodes = {}
   whereZipCodes.id = data.zipCode
+
   return db.Client.findOne({
     raw: true,
     where: {
@@ -24,6 +25,7 @@ const addContract = (data) => {
     }
     client = _client
     contract.ClientId = _client.id
+
     return db.ZipCode.findAll({
       where: whereZipCodes
     })
@@ -52,15 +54,7 @@ function getContractList (conditions, limit, offset) {
     where,
     include: [{
       model: db.Client,
-      as: 'clientContracts',
-      include: [{
-        model: db.ClientZipCode,
-        as: 'clientZipCodes',
-        attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientZipCodes.ClientId')), 'ZipCodeCount']],
-        where: {
-          isDeleted: false
-        }
-      }]
+      as: 'clientContracts'
     }],
     limit: limit,
     offset: offset
