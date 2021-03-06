@@ -1,5 +1,7 @@
 'use strict'
 const db = require('../config/sequelize.config')
+const Sequelize = require('sequelize')
+const generalHelpingMethods = require('../helpers/general.helper')
 const contract = {}
 
 const addContract = (data) => {
@@ -14,7 +16,11 @@ const addContract = (data) => {
     }
   }).then(_client => {
     if (!_client) {
-
+      return generalHelpingMethods.rejectPromise([{
+        field: 'createContract',
+        error: 1540,
+        message: 'no record found'
+      }])
     }
     client = _client
     contract.ClientId = _client.id
@@ -44,10 +50,18 @@ function getContractList (conditions, limit, offset) {
   }
   return db.Contract.findAll({
     where,
-    include: {
+    include: [{
       model: db.Client,
-      as: 'clientContracts'
-    },
+      as: 'clientContracts',
+      include: [{
+        model: db.ClientZipCode,
+        as: 'clientZipCodes',
+        attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientZipCodes.ClientId')), 'ZipCodeCount']],
+        where: {
+          isDeleted: false
+        }
+      }]
+    }],
     limit: limit,
     offset: offset
   })

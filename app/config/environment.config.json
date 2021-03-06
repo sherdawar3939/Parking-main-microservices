@@ -1,54 +1,57 @@
 {
-    "db": {
-        "development": {
-            "username": "root",
-            "password": "",
-            "host": "localhost",
-            "port": 2701,
-            "database": "parking_main"
-        },
-        "testing": {
-            "username": "",
-            "password": "",
-            "host": "",
-            "port": 2701,
-            "database": ""
-        },
-        "staging": {
-            "username": "",
-            "password": "",
-            "host": "",
-            "port": 2701,
-            "database": ""
-        },
-        "production": {
-            "username": "root",
-            "password": "",
-            "host": "localhost",
-            "port": 3306,
-            "database": "parking_main"
-        }
+  "db": {
+    "development": {
+      "username": "root",
+      "password": "",
+      "host": "localhost",
+      "port": 2701,
+      "database": "parking_main"
     },
-    "FORCE_DB_SYNC": "false",
-    "jwtOptions": {
-        "secretOrKey": "boilerplate",
-        "ignoreExpiration": true,
-        "passReqToCallback": true
+    "testing": {
+      "username": "",
+      "password": "",
+      "host": "",
+      "port": 2701,
+      "database": ""
     },
-    "awsConfig": {
-        "accessKeyId": "",
-        "secretAccessKey": "",
-        "region": "me-south-1"
+    "staging": {
+      "username": "",
+      "password": "",
+      "host": "",
+      "port": 2701,
+      "database": ""
     },
-    "Bucket": "zaqoota-images",
-    "rabbitMQ": {
-        "connection": {
-            "development": "amqp://cdadmina:iEgdra07V5SFbD5f@5.189.138.111",
-            "staging": "",
-            "production": "amqp://cdadmin:iEgdra07V5SFbD5f@5.189.138.111"
-        },
-        "exchange": "ZaqootaExchange",
-        "queue": "mainServiceQueue",
-        "binding_keys": ["productImages", "supplierImage"]
+    "production": {
+      "username": "root",
+      "password": "",
+      "host": "localhost",
+      "port": 3306,
+      "database": "parking_main"
     }
+  },
+  "FORCE_DB_SYNC": "false",
+  "jwtOptions": {
+    "secretOrKey": "boilerplate",
+    "ignoreExpiration": true,
+    "passReqToCallback": true
+  },
+  "awsConfig": {
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "region": "me-south-1"
+  },
+  "Bucket": "zaqoota-images",
+  "rabbitMQ": {
+    "connection": {
+      "development": "amqp://cdadmina:iEgdra07V5SFbD5f@5.189.138.111",
+      "staging": "",
+      "production": "amqp://cdadmin:iEgdra07V5SFbD5f@5.189.138.111"
+    },
+    "exchange": "ZaqootaExchange",
+    "queue": "mainServiceQueue",
+    "binding_keys": [
+      "productImages",
+      "supplierImage"
+    ]
+  }
 }
