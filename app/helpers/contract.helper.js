@@ -7,14 +7,42 @@ function addContract (data) {
 }
 
 function getContractList (conditions, limit, offset) {
+  // let includes = [{
+  //   model: db.ClientZipCode,
+  //   as: 'clientZipCodes',
+  //   attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientZipCodes.ClientId')), 'ZipCodeCount']],
+  //   where: {
+  //     isDeleted: false
+  //   }
+  // }]
+  // let where = {}
+  // if (conditions.id) {
+  //   where.id = conditions.id
+  // }
+  // if (conditions.ClientId) {
+  //   where.ClientId = conditions.ClientId
+  // }
+  // if (conditions.status) {
+  //   where.status = conditions.status
+  // }
+
   return db.Contract.findAll({
-    where: conditions,
-    nest: false,
-    raw: true,
-    include: {
+    where: { id: conditions.ClientId },
+    // includes: includes,
+    // nest: false,
+    // raw: true,
+    include: [{
       model: db.Client,
-      as: 'clientContracts'
-    },
+      as: 'clientContracts',
+      include: [{
+        model: db.ClientZipCode,
+        as: 'clientZipCodes',
+        attributes: [[Sequelize.fn('COUNT', Sequelize.col('clientZipCodes.ClientId')), 'ZipCodeCount']],
+        where: {
+          isDeleted: false
+        }
+      }]
+    }],
     limit: limit,
     offset: offset
   })
