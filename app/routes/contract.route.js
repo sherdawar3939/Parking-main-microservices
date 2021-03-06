@@ -9,5 +9,5 @@ module.exports = function (app, apiVersion) {
   app.get(`${route}/contract`, validateGetContractList, contractController.getContractList)
   app.get(`${route}/contract/:id`, validateGetContract, contractController.getContract) // To get single contract by id / contract detail
   app.post(`${route}/contract/verify/:id`, validateVerifyContract, contractController.verificationOfContract)
-  app.get(`${route}/contract-approved`, passport.authenticate('jwt', { session: false }), validateContractApproved, contractController.getApprovedContract)
+  app.get(`${route}/contract/approved`, passport.authenticate('jwt', { session: false }), validateContractApproved, contractController.getApprovedContract)
 }
