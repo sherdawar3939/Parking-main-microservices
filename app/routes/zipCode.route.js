@@ -10,4 +10,5 @@ module.exports = function (app, apiVersion) {
   //* ********************/
 
   app.get(route + '/zipcode', zipCodeMiddleware.validateGetZipCode, zipCodeController.getZipCode)
+  app.get(`${route}/zipcode/city/:id`, zipCodeMiddleware.validateCityId, zipCodeController.getZipCodeByCityId)
 }

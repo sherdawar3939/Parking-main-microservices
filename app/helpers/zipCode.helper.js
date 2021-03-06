@@ -6,6 +6,14 @@ function getZipCode (conditions) {
     where: conditions
   })
 }
+const getZipCodeByCityIdHelper = (id) => {
+  return db.ZipCode.findAll({
+    where: {
+      CityId: id
+    }
+  })
+}
 module.exports = {
-  getZipCode
+  getZipCode,
+  getZipCodeByCityIdHelper
 }

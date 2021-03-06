@@ -29,22 +29,6 @@ const validateGetContractList = (req, res, done) => {
     done()
 }
 
-const validateGetContractByClientId = (req, res, done) => {
-    const errorArray = []
-        // const validateConditions = {}
-    if (isNaN(req.params.id)) {
-        // validateConditions.ClientId = clientId
-    }
-    if (!_.isEmpty(errorArray)) {
-        return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.getContractList')
-    }
-
-    // req.conditions = validateConditions
-    // req.limit = query.limit && query.limit > 0 ? parseInt(query.limit) : 50
-    // req.offset = query.offset && query.offset > 0 ? parseInt(query.offset) : 0
-    done()
-}
-
 const validateGetContract = (req, res, done) => {
     const errorArray = []
     if (isNaN(req.params.id)) {
@@ -68,31 +52,32 @@ const validateCreateContract = (req, res, done) => {
     const errorArray = []
     const body = req.body
     const validatedBody = {}
-
-    if (!body.data || !isNaN(body.data)) {
+    console.log('hamza aslam', body.zipCode)
+        // validating as required number field
+    if (body.zipCode.length <= 0) {
         errorArray.push({
-                field: 'data',
-                error: 80140,
-                message: "Please provide only valid 'data' as string."
-            })
-            // validatedBody.data = body.data
+            field: 'zipCode',
+            error: 233,
+            message: 'The zipCode is required with 1 min  value.'
+        })
+    } else {
+        body.zipCode.forEach((id) => {
+            // validating as required number field
+            if (isNaN(id)) {
+                errorArray.push({
+                    field: 'field',
+                    error: 2345,
+                    message: 'The zipCodes is required with as numeric.'
+                })
+            }
+        })
     }
-
-    if (!body.status || !isNaN(body.status)) {
-        errorArray.push({
-                field: 'status',
-                error: 80140,
-                message: "Please provide only valid 'status' as string."
-            })
-            // validatedBody.status = body.status
-    }
-
     if (!_.isEmpty(errorArray)) {
         return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.validateCreateContract')
     }
 
-    validatedBody.data = body.data
-    validatedBody.status = body.status
+    validatedBody.zipCode = body.zipCode
+    validatedBody.UserId = body.UserId
 
     req.validatedBody = validatedBody
     done()
@@ -120,10 +105,35 @@ const validateVerifyContract = (req, res, done) => {
     done()
 }
 
+const validateContractApproved = (req, res, done) => {
+    const query = req.query
+    const errorArray = []
+    const validatedConditions = {}
+    if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+        validatedConditions.ClientId = req.user.employeeId
+    } else {
+        // validating as optional number field
+        if (query.hasOwnProperty('clientId') && query.clientId) {
+            if (isNaN(query.clientId) || query.clientId < 1 || query.clientId > 9999999999) {
+                errorArray.push({
+                    field: 'clientId',
+                    error: 'cmca-5',
+                    message: 'The clientId should be number with min 1 and max 9999999999 value.'
+                })
+            }
+            validatedConditions.ClientId = query.clientId
+        }
+    }
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validateContractApproved')
+    }
+    req.validatedConditions = validatedConditions
+    done()
+}
 module.exports = {
     validateGetContractList,
     validateVerifyContract,
     validateCreateContract,
-    validateGetContractByClientId,
+    validateContractApproved,
     validateGetContract
 }
