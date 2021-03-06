@@ -59,13 +59,19 @@ function getpayment (conditions, limit, offset) {
     // raw: true,
     include: {
       model: db.Client,
-      as: 'clientPayments'
+      as: 'clientPayments',
+      where: {
+        isProfile: true
+      }
     },
-    order: [['createdAt', 'DESC']],
+    order: [
+      ['createdAt', 'DESC']
+    ],
     limit: limit,
     offset: offset
   })
 }
+
 module.exports = {
   addpayment,
   getpayment

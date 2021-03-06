@@ -45,7 +45,7 @@ const validatePostUserVehicle = (req, res, done) => {
       message: 'Please provide only valid \'quantity\' as numeric, length must be between 0 and 2.'
     })
   }
-  // VehicleCategoryId must be required required  Validating as not empty, valid interger.
+  // VehicleCategoryId must be required required  Validating as not empty, valid integer.
   if (!body.VehicleCategoryId || !isInteger(body.VehicleCategoryId)) {
     errorArray.push({
       field: 'VehicleCategoryId',
@@ -53,7 +53,7 @@ const validatePostUserVehicle = (req, res, done) => {
       message: 'Please provide only valid \'VehicleCategoryId\' as numeric,.'
     })
   }
-  // UserId must be required required  Validating as not empty, valid interger.
+  // UserId must be required required  Validating as not empty, valid integer.
   if (!body.UserId || isNaN(body.UserId)) {
     errorArray.push({
       field: 'UserId',

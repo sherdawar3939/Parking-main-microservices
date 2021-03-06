@@ -7,9 +7,11 @@ function getUserVehicle (conditions) {
     where: conditions
   })
 }
+
 function addUserVehicle (data) {
   return db.UserVehicle.create({ licensePlate: data.licensePlate, quantity: data.quantity, VehicleCategoryId: data.VehicleCategoryId })
 }
+
 function updateUserVehicle (id, data) {
   return db.UserVehicle.update(data, {
     where: {
@@ -17,6 +19,7 @@ function updateUserVehicle (id, data) {
     }
   })
 }
+
 function deleteUserVehicle (id) {
   return db.UserVehicle.update({ isDeleted: false }, {
     where: {

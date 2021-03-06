@@ -100,8 +100,7 @@ const endParkingHelper = (id) => {
 
       bill = { status: 'Ended', endedOn: new Date(), parkingCharges, totalSeconds, total, profit }
       db.Parking.update(
-        bill,
-        { where: { id: id } }
+        bill, { where: { id: id } }
       )
 
       // const create_payment_json = JSON.stringify({

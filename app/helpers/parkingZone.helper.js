@@ -22,9 +22,15 @@ function getparkingZone (conditions, limit, offset) {
   }
   if (conditions.search) {
     where[Op.or] = {
-      days: { [Op.like]: '%' + conditions.search + '%' },
-      zip: { [Op.like]: '%' + conditions.search + '%' },
-      uid: { [Op.like]: '%' + conditions.search + '%' }
+      days: {
+        [Op.like]: '%' + conditions.search + '%'
+      },
+      zip: {
+        [Op.like]: '%' + conditions.search + '%'
+      },
+      uid: {
+        [Op.like]: '%' + conditions.search + '%'
+      }
 
     }
   }
@@ -34,23 +40,21 @@ function getparkingZone (conditions, limit, offset) {
     order: [
       ['id', 'DESC']
     ],
-    include: [
-      {
-        model: db.Client,
-        as: 'parkingZoneClient'
-      }, {
-        model: db.ClientZipCode,
-        as: 'clientParkingZone',
-        where: {
-          isDeleted: false
-        },
-        include: [{
-          where: cityIdWhere,
-          model: db.ZipCode,
-          as: 'zipCodes'
-        }]
-      }
-    ],
+    include: [{
+      model: db.Client,
+      as: 'parkingZoneClient'
+    }, {
+      model: db.ClientZipCode,
+      as: 'clientParkingZone',
+      where: {
+        isDeleted: false
+      },
+      include: [{
+        where: cityIdWhere,
+        model: db.ZipCode,
+        as: 'zipCodes'
+      }]
+    }],
     limit: limit,
     offset: offset
   })

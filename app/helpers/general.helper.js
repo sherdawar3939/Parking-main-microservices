@@ -81,7 +81,9 @@ function getUid (Model, field, where = {}, uidStartAlphabets = '') {
   return db[Model].findOne({
     attributes: [field],
     where,
-    order: [['id', 'DESC']]
+    order: [
+      ['id', 'DESC']
+    ]
   })
     .then((result) => {
       if (!result) {
@@ -110,4 +112,5 @@ module.exports = {
   catchException,
   putS3Object,
   uploadImageToS3,
-  getUid }
+  getUid
+}

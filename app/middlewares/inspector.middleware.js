@@ -54,7 +54,7 @@ const validatePostInspector = (req, res, done) => {
   req.validatedInspectorData = validatedInspectorData
   done()
 }
-
+// lName is an optional string property, if it is given than validate
 const validateUpdateInspector = (req, res, done) => {
   const errorArray = []
   const body = req.body

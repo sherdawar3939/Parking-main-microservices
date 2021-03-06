@@ -3,7 +3,7 @@
 module.exports = function (sequelize, DataTypes) {
   let Contract = sequelize.define('Contract', {
     data: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(),
       allowNull: false,
       field: 'data'
     },

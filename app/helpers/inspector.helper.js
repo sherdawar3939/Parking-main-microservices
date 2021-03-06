@@ -5,7 +5,9 @@ const generalHelpingMethods = require('./general.helper')
 
 const createInspector = (userData) => {
   return db.User.findOne({
-    where: { [Op.or]: [{ email: userData.email }] }
+    where: {
+      [Op.or]: [{ email: userData.email }]
+    }
   })
     .then((user) => {
       if (user) {
@@ -15,7 +17,6 @@ const createInspector = (userData) => {
           message: 'Email already exist.'
         })
       }
-
       return db.User.create(userData)
     })
     .then((user) => {
@@ -69,7 +70,7 @@ function getInspector (id) {
     include: [{
       model: db.User,
       as: 'userInspector',
-      attributes: ['fName', 'lName', 'email', 'isVerified', 'isActive', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
+      attributes: ['fName', 'lName', 'email', 'isVerified', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
       where: { isDeleted: false }
     }]
   })
@@ -80,9 +81,15 @@ function getInspectorList (conditions, limit, offset) {
 
   if (conditions.search) {
     where[Op.or] = {
-      fName: { [Op.like]: '%' + conditions.search + '%' },
-      lName: { [Op.like]: '%' + conditions.search + '%' },
-      email: { [Op.like]: '%' + conditions.search + '%' }
+      fName: {
+        [Op.like]: '%' + conditions.search + '%'
+      },
+      lName: {
+        [Op.like]: '%' + conditions.search + '%'
+      },
+      email: {
+        [Op.like]: '%' + conditions.search + '%'
+      }
     }
   }
 
@@ -93,7 +100,7 @@ function getInspectorList (conditions, limit, offset) {
     include: [{
       model: db.User,
       as: 'userInspector',
-      attributes: ['fName', 'lName', 'email', 'isVerified', 'isActive', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
+      attributes: ['fName', 'lName', 'email', 'isVerified', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
       where: { isDeleted: false }
     }]
   })
