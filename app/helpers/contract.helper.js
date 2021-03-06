@@ -38,10 +38,18 @@ const addContract = (data) => {
 }
 
 function getContractList (conditions, limit, offset) {
+  let where = {}
+  if (conditions.id) {
+    where.id = conditions.id
+  }
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+  if (conditions.status) {
+    where.status = conditions.status
+  }
   return db.Contract.findAll({
-    where: conditions,
-    nest: false,
-    raw: true,
+    where,
     include: {
       model: db.Client,
       as: 'clientContracts'
