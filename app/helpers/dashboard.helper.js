@@ -145,7 +145,7 @@ const getReportListing = async (conditions) => {
 
   const list = await db.Parking.findAll({
     where,
-    attributes: ['licensePlate', 'clientProfit', 'clientTax', 'adminProfit', 'adminTax', 'paymentStatus', 'createdAt', 'updatedAt'],
+    attributes: ['licensePlate', 'clientProfit', 'clientTax', 'adminProfit', 'adminTax', 'total', 'paymentStatus', 'createdAt', 'updatedAt'],
     include: [{
       attributes: ['uid'],
       model: db.ParkingZone,
@@ -167,6 +167,7 @@ const getReportListing = async (conditions) => {
       adminTax: data.dataValues.adminTax,
       clientProfit: data.dataValues.clientProfit,
       clientTax: data.dataValues.clientTax,
+      total: data.dataValues.total,
       paymentStatus: data.dataValues.paymentStatus,
       createdAt: data.dataValues.createdAt,
       updatedAt: data.dataValues.updatedAt,
