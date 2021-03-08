@@ -124,10 +124,11 @@ const getParkingCounts = async (conditions) => {
 
 const getReportListing = async (conditions) => {
   let where = {}
-  // let Client = {}
-  // if (conditions.ClientId) {
-  //   Client.ClientId = conditions.ClientId
-  // }
+  let ClientWhere = {}
+  if (conditions.ClientId) {
+    ClientWhere.ClientId = conditions.ClientId
+  }
+
   if (conditions.startDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)]
   } if (conditions.endDate) {
@@ -148,7 +149,7 @@ const getReportListing = async (conditions) => {
       attributes: ['uid'],
       model: db.ParkingZone,
       as: 'parkingZone',
-      // where: { ClientId: Client.ClientId },
+      where: ClientWhere,
       include: [{
         attributes: ['companyName', 'address'],
         model: db.Client,
