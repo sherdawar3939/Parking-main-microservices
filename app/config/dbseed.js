@@ -159,7 +159,7 @@ module.exports = async function dbseed (db, sequelize) {
     iban: '1234-4566',
     isProfile: 'true',
     balance: 12000,
-    UserId: 2
+    UserId: 1
 
   }, {
     companyName: 'infinity',
@@ -172,7 +172,7 @@ module.exports = async function dbseed (db, sequelize) {
     iban: '7788-4566',
     isProfile: 'true',
     balance: 34567,
-    UserId: 3
+    UserId: 2
 
   }, {
     companyName: 'best',
@@ -185,7 +185,7 @@ module.exports = async function dbseed (db, sequelize) {
     iban: '2345-4566',
     isProfile: 'true',
     balance: 78907,
-    UserId: 4
+    UserId: 3
 
   }]
   await db.Client.bulkCreate(client)
@@ -361,12 +361,15 @@ module.exports = async function dbseed (db, sequelize) {
     licensePlate: 'white',
     quantity: 5,
     parkingCharges: 345,
-    profit: 10,
     total: 20,
     PayerID: '2367',
     startedOn: '6-3-2021',
     endedOn: '6-3-2021',
     paymentStatus: 'paid',
+    clientProfit: 25,
+    clientTax: 23,
+    adminProfit: 44,
+    adminTax: 40,
     UserId: 1,
     ParkingZoneId: 1,
     UserVehicleId: 1
@@ -376,12 +379,15 @@ module.exports = async function dbseed (db, sequelize) {
     licensePlate: 'yellow',
     quantity: 4,
     parkingCharges: 400,
-    profit: 13,
     total: 26,
     PayerID: '2399',
     startedOn: '6-3-2021',
     endedOn: '6-3-2021',
     paymentStatus: 'paid',
+    clientProfit: 30,
+    clientTax: 23,
+    adminProfit: 50,
+    adminTax: 42,
     UserId: 2,
     ParkingZoneId: 2,
     UserVehicleId: 2
@@ -391,12 +397,15 @@ module.exports = async function dbseed (db, sequelize) {
     licensePlate: 'Red',
     quantity: 3,
     parkingCharges: 600,
-    profit: 12,
     total: 29,
     PayerID: '2345',
     startedOn: '6-3-2021',
     endedOn: '6-3-2021',
     paymentStatus: 'paid',
+    clientProfit: 28,
+    clientTax: 22,
+    adminProfit: 48,
+    adminTax: 41,
     UserId: 3,
     ParkingZoneId: 3,
     UserVehicleId: 3

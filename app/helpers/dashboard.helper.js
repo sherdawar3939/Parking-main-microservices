@@ -14,9 +14,9 @@ const getDashboardDetails = async (conditions) => {
   })
   const clientCountQuery = await db.Client.count({ raw: true })
   const totalActiveStatus = await db.Parking.count({
-    where:
-       { status: 'Active'
-       }
+    where: {
+      status: 'Active'
+    }
   })
   const parkingZoneCountQuery = await db.ParkingZone.count({ raw: true })
   return { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery }
@@ -42,8 +42,7 @@ const getDashboardClientCounts = async (id, res, next) => {
       where: {
         status: 'Active'
       }
-    }
-    ],
+    }],
     group: ['ClientId']
   })
   let parkingCount
@@ -105,9 +104,11 @@ const getParkingCounts = async (conditions) => {
   let where = {}
   if (conditions.startDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)]
-  } if (conditions.endDate) {
+  }
+  if (conditions.endDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.endDate)]
-  } if (conditions.startDate && conditions.endDate) {
+  }
+  if (conditions.startDate && conditions.endDate) {
     where = {
       [Op.and]: [
         [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)],
