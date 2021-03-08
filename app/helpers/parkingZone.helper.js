@@ -35,7 +35,7 @@ function getparkingZone (conditions, limit, offset) {
     }
   }
 
-  return db.ParkingZone.findAll({
+  return db.ParkingZone.findAndCountAll({
     where,
     order: [
       ['id', 'DESC']
