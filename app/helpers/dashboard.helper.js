@@ -14,9 +14,9 @@ const getDashboardDetails = async (conditions) => {
   })
   const clientCountQuery = await db.Client.count({ raw: true })
   const totalActiveStatus = await db.Parking.count({
-    where:
-       { status: 'Active'
-       }
+    where: {
+      status: 'Active'
+    }
   })
   const parkingZoneCountQuery = await db.ParkingZone.count({ raw: true })
   return { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery }
@@ -42,8 +42,7 @@ const getDashboardClientCounts = async (id, res, next) => {
       where: {
         status: 'Active'
       }
-    }
-    ],
+    }],
     group: ['ClientId']
   })
   let parkingCount
