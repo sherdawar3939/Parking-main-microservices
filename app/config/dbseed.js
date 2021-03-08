@@ -326,67 +326,6 @@ module.exports = async function dbseed (db, sequelize) {
       console.log(error)
     })
 
-<<<<<<< HEAD
-    const parking = [{
-            totalSeconds: 1200,
-            licensePlate: 'white',
-            quantity: 5,
-            parkingCharges: 345,
-            total: 20,
-            PayerID: '2367',
-            startedOn: '6-3-2021',
-            endedOn: '6-3-2021',
-            paymentStatus: 'paid',
-            clientProfit: 25,
-            clientTax: 23,
-            adminProfit: 44,
-            adminTax: 40,
-            UserId: 1,
-            ParkingZoneId: 1,
-            UserVehicleId: 1
-        },
-        {
-            totalSeconds: 1500,
-            licensePlate: 'yellow',
-            quantity: 4,
-            parkingCharges: 400,
-            total: 26,
-            PayerID: '2399',
-            startedOn: '6-3-2021',
-            endedOn: '6-3-2021',
-            paymentStatus: 'paid',
-            clientProfit: 30,
-            clientTax: 23,
-            adminProfit: 50,
-            adminTax: 42,
-            UserId: 2,
-            ParkingZoneId: 2,
-            UserVehicleId: 2
-        },
-        {
-            totalSeconds: 1700,
-            licensePlate: 'Red',
-            quantity: 3,
-            parkingCharges: 600,
-            total: 29,
-            PayerID: '2345',
-            startedOn: '6-3-2021',
-            endedOn: '6-3-2021',
-            paymentStatus: 'paid',
-            clientProfit: 28,
-            clientTax: 22,
-            adminProfit: 48,
-            adminTax: 41,
-            UserId: 3,
-            ParkingZoneId: 3,
-            UserVehicleId: 3
-        }
-    ]
-    await db.Parking.bulkCreate(parking)
-        .catch((error) => {
-            console.log(error);
-        })
-=======
   const userVehicle = [{
     id: 1,
     licensePlate: 'white',
@@ -416,7 +355,6 @@ module.exports = async function dbseed (db, sequelize) {
     .catch((error) => {
       console.log(error)
     })
->>>>>>> Parking
 
   const parking = [{
     totalSeconds: 1200,
