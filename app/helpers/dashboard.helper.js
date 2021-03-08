@@ -122,9 +122,63 @@ const getParkingCounts = async (conditions) => {
 
   return { parkingCount: parkingCount }
 }
+
+const getReportListing = async (conditions) => {
+  let where = {}
+  let ClientWhere = {}
+  if (conditions.ClientId) {
+    ClientWhere.ClientId = conditions.ClientId
+  }
+
+  if (conditions.startDate) {
+    where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)]
+  } if (conditions.endDate) {
+    where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.endDate)]
+  } if (conditions.startDate && conditions.endDate) {
+    where = {
+      [Op.and]: [
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.endDate)]
+      ]
+    }
+  }
+
+  const list = await db.Parking.findAll({
+    where,
+    attributes: ['licensePlate', 'clientProfit', 'clientTax', 'adminProfit', 'adminTax', 'paymentStatus', 'createdAt', 'updatedAt'],
+    include: [{
+      attributes: ['uid'],
+      model: db.ParkingZone,
+      as: 'parkingZone',
+      where: ClientWhere,
+      include: [{
+        attributes: ['companyName', 'address'],
+        model: db.Client,
+        as: 'parkingZoneClient'
+      }]
+    }]
+  })
+  const detail = list.map(data => {
+    return {
+      companyName: data.dataValues.parkingZone.parkingZoneClient.companyName,
+      address: data.dataValues.parkingZone.parkingZoneClient.address,
+      licensePlate: data.dataValues.licensePlate,
+      adminProfit: data.dataValues.adminProfit,
+      adminTax: data.dataValues.adminTax,
+      clientProfit: data.dataValues.clientProfit,
+      clientTax: data.dataValues.clientTax,
+      paymentStatus: data.dataValues.paymentStatus,
+      createdAt: data.dataValues.createdAt,
+      updatedAt: data.dataValues.updatedAt,
+      uid: data.dataValues.parkingZone.uid
+    }
+  })
+  return detail
+}
 module.exports = {
   getDashboardDetails,
   getDashboardClientCounts,
   getClientRevenueDetails,
-  getParkingCounts
+  getParkingCounts,
+  getReportListing
 }
