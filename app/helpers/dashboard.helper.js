@@ -1,7 +1,7 @@
 'use strict'
 // const _ = require('lodash')
 var sequelize = require('sequelize')
-// const Op = Sequelize.Op
+const Op = sequelize.Op
 const db = require('../config/sequelize.config')
 
 const getDashboardDetails = async (conditions) => {
@@ -101,8 +101,29 @@ const getClientRevenueDetails = (conditions, field = 'adminProfit') => {
     })
 }
 
+const getParkingCounts = async (conditions) => {
+  let where = {}
+  if (conditions.startDate) {
+    where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)]
+  } if (conditions.endDate) {
+    where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.endDate)]
+  } if (conditions.startDate && conditions.endDate) {
+    where = {
+      [Op.and]: [
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.endDate)]
+      ]
+    }
+  }
+  const parkingCount = await db.Parking.count({
+    where
+  })
+
+  return { parkingCount: parkingCount }
+}
 module.exports = {
   getDashboardDetails,
   getDashboardClientCounts,
-  getClientRevenueDetails
+  getClientRevenueDetails,
+  getParkingCounts
 }

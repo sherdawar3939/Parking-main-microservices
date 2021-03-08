@@ -20,6 +20,17 @@ const validateGetClientsRevenue = (req, res, done) => {
     validatedConditions.ClientId = query.ClientId
   }
 
+  if (query.hasOwnProperty('UserId') && query.UserId) {
+    if (isNaN(query.UserId)) {
+      errorArray.push({
+        field: 'UserId',
+        error: 25,
+        message: 'Please provide only valid \'UserId\' as numeric.'
+      })
+    }
+    validatedConditions.UserId = query.UserId
+  }
+
   if (!params.userType || (params.userType !== 'client' && params.userType !== 'admin')) {
     errorArray.push({
       field: 'userType',
@@ -59,4 +70,24 @@ const validateGetClientsRevenue = (req, res, done) => {
   done()
 }
 
-module.exports = { validateGetClientsRevenue }
+const validateGetParkingCounts = (req, res, done) => {
+  const errorArray = []
+  const query = req.query
+  const validatedConditions = {}
+
+  if (query.hasOwnProperty('startDate') && query.startDate) {
+    validatedConditions.startDate = query.startDate
+  }
+  if (query.hasOwnProperty('endDate') && query.endDate) {
+    validatedConditions.endDate = query.endDate
+  }
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'dashboard.middleware.validateGetClientsRevenue')
+  }
+
+  req.conditions = validatedConditions
+
+  done()
+}
+
+module.exports = { validateGetClientsRevenue, validateGetParkingCounts }
