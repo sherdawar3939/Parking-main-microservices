@@ -55,8 +55,9 @@ const validateGetClientsRevenue = (req, res, done) => {
     field = 'adminProfit'
   } else if (params.type === 'tax' && params.userType === 'admin') {
     field = 'adminTax'
+  } else if (params.type === 'transaction' && params.userType === 'admin') {
+    field = 'total'
   }
-
   if (params.type === 'revenue' && params.userType === 'client') {
     field = '(clientTax + clientProfit)'
   } else if (params.type === 'profit' && params.userType === 'client') {
@@ -64,6 +65,7 @@ const validateGetClientsRevenue = (req, res, done) => {
   } else if (params.type === 'tax' && params.userType === 'client') {
     field = 'clientTax'
   }
+
   req.field = field
   req.conditions = validatedConditions
 
