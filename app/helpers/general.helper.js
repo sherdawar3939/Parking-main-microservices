@@ -5,11 +5,6 @@
 
 var PromiseReturns = require('bluebird')
 var StandardError = require('standard-error')
-<<<<<<< HEAD
-// var _ = require('lodash')
-=======
-var _ = require('lodash')
->>>>>>> HamzaAslam
 var fs = require('fs')
 const winston = require('../config/winston')
 const config = require('../config/config')
