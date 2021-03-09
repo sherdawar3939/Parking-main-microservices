@@ -9,9 +9,9 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(20)
     },
     status: {
-      type: DataTypes.ENUM(['Active', 'InActive']),
+      type: DataTypes.ENUM(['Started', 'Ended']),
       allowNull: false,
-      defaultValue: 'Active'
+      defaultValue: 'Started'
     },
     parkingCharges: {
       type: DataTypes.DECIMAL(9, 5)
@@ -47,7 +47,9 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATE
     },
     paymentStatus: {
-      type: DataTypes.STRING(20)
+      type: DataTypes.ENUM(['Pending', 'Paid']),
+      allowNull: false,
+      defaultValue: 'Pending'
     },
     ParkingZoneId: {
       type: DataTypes.INTEGER(11)
