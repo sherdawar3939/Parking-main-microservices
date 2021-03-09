@@ -112,6 +112,10 @@ const validateGetReportListing = (req, res, done) => {
   if (query.hasOwnProperty('endDate') && query.endDate) {
     validatedConditions.endDate = query.endDate
   }
+
+  if (query.hasOwnProperty('status') && query.status) {
+    validatedConditions.status = query.status
+  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'dashboard.middleware.validateGetClientsRevenue')
   }

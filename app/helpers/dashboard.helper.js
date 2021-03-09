@@ -143,9 +143,13 @@ const getReportListing = async (conditions) => {
     }
   }
 
+  if (conditions.status === 'Ended') {
+    where.status = 'Ended'
+  }
+
   const list = await db.Parking.findAll({
     where,
-    attributes: ['licensePlate', 'clientProfit', 'clientTax', 'adminProfit', 'adminTax', 'total', 'paymentStatus', 'createdAt', 'updatedAt'],
+    attributes: ['licensePlate', 'clientProfit', 'clientTax', 'status', 'adminProfit', 'adminTax', 'total', 'paymentStatus', 'createdAt', 'updatedAt'],
     include: [{
       attributes: ['uid'],
       model: db.ParkingZone,
@@ -168,6 +172,7 @@ const getReportListing = async (conditions) => {
       clientProfit: data.dataValues.clientProfit,
       clientTax: data.dataValues.clientTax,
       total: data.dataValues.total,
+      status: data.dataValues.status,
       paymentStatus: data.dataValues.paymentStatus,
       createdAt: data.dataValues.createdAt,
       updatedAt: data.dataValues.updatedAt,
