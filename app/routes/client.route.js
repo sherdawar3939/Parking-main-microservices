@@ -5,9 +5,9 @@ const passport = require('../config/passport')
 module.exports = function (app, apiVersion) {
   const route = apiVersion
   // get client list
-  app.get(`${route}/client`, clientMiddleware.validateGetClient, ClientController.getClient)
-  app.get(`${route}/client/:id`, clientMiddleware.validateGetClientId, ClientController.getClientById)
+  app.get(`${route}/client`, passport.authenticate('jwt', { session: false }), clientMiddleware.validateGetClient, ClientController.getClient)
+  app.get(`${route}/client/:id`, passport.authenticate('jwt', { session: false }), clientMiddleware.validateGetClientId, ClientController.getClientById)
   app.post(`${route}/client`, passport.authenticate('jwt', { session: false }), clientMiddleware.validatePostClient, ClientController.addClient)
-  app.put(`${route}/client/:id`, clientMiddleware.validatePutClient, ClientController.UpDateClientById)
-  app.get(`${route}/client/:id/zip-code`, clientMiddleware.validateGetClientId, ClientController.getClientZipCode)
+  app.put(`${route}/client/:id`,passport.authenticate('jwt', { session: false }), clientMiddleware.validatePutClient, ClientController.UpDateClientById)
+  app.get(`${route}/client/:id/zip-code`, passport.authenticate('jwt', { session: false }), clientMiddleware.validateGetClientId, ClientController.getClientZipCode)
 }
