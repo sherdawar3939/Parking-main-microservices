@@ -10,5 +10,5 @@ module.exports = function (app, apiVersion) {
   app.get(`${route}/contract/verify/:id`, passport.authenticate('jwt', { session: false }), validateVerifyContract, contractController.verificationOfContract)
   app.get(`${route}/contract/is-approved`, passport.authenticate('jwt', { session: false }), validateContractApproved, contractController.getApprovedContract)
   app.get(`${route}/contract/:id`, passport.authenticate('jwt', { session: false }), validateGetContract, contractController.getContract) // To get single contract by id / contract detail
-  app.post(`${route}/contracts-upload/:id`, uploadFile.single('file'), contractController.uploadFiles)
+  app.post(`${route}/contract/upload/:id`, uploadFile.single('file'), contractController.uploadFiles)
 }
