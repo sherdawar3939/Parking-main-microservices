@@ -11,6 +11,9 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.ENUM(['PENDING', 'APPROVED', 'CANCELED', 'REJECTED']),
       allowNull: false,
       defaultValue: 'PENDING'
+    },
+    imageUrl: {
+      type: DataTypes.STRING()
     }
   }, {
     associate: function (models) {

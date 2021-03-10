@@ -65,10 +65,21 @@ const getApprovedContract = (req, res) => {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.getApprovedContract', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+const uploadFiles = (req, res) => {
+  return contractHelper.uploadFilesHelper(req.file, req.params.id)
+    .then((data) => {
+      generalController.successResponse(res, 'upload Contract  successfully.', data, 'contract.controller.uploadFiles')
+    }).catch(StandardError, (err) => {
+      generalController.errorResponse(res, err, null, 'contract.controller.uploadFiles', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch((err) => {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'contract.controller.uploadFiles', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
   addContract,
   getContractList,
   verificationOfContract,
   getApprovedContract,
-  getContract
+  getContract,
+  uploadFiles
 }
