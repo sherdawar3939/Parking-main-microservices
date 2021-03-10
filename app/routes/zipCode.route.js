@@ -9,11 +9,6 @@ module.exports = function (app, apiVersion) {
   // get zipCode
   //* ********************/
 
-<<<<<<< HEAD
-  app.get(route + '/zipcode', zipCodeMiddleware.validateGetZipCode, zipCodeController.getZipCode)
-  app.get(`${route}/zipcode/city/:id`, zipCodeMiddleware.validateCityId, zipCodeController.getZipCodeByCityId)
-=======
   app.get(route + '/zipcode', passport.authenticate('jwt', { session: false }), zipCodeMiddleware.validateGetZipCode, zipCodeController.getZipCode)
-  app.get(`${route}/zip-code/:id`, passport.authenticate('jwt', { session: false }), zipCodeMiddleware.validateCityId, zipCodeController.getZipCodeByCityId)
->>>>>>> HamzaAslam
+  app.get(`${route}/zipcode/city/:id`, passport.authenticate('jwt', { session: false }), zipCodeMiddleware.validateCityId, zipCodeController.getZipCodeByCityId)
 }
