@@ -77,10 +77,29 @@ const getApprovedContract = (id) => {
     }
   })
 }
+const uploadFilesHelper = (file, id) => {
+  try {
+    console.log(file)
+
+    if (file === undefined) {
+      return (`You must select a file.`)
+    }
+    return db.Contract.update({ imageUrl: file.path },
+      {
+        where: {
+          id
+        }
+      }
+    )
+  } catch (error) {
+    return (`Error when trying upload images: ${error}`)
+  }
+}
 module.exports = {
   addContract,
   getContractList,
   verifyContract,
   getApprovedContract,
-  getContract
+  getContract,
+  uploadFilesHelper
 }
