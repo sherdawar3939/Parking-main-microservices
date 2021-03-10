@@ -12,6 +12,7 @@ app.get('/admin/api/v1/health', function (req, res) {
   return res.status(200).send('Admin micro-service working 100%... \n 1 September, 2020 - 12:00 AM')
 })
 global.winston = require('./app/config/winston')
+
 // Initialize Express
 require('./app/config/express')(app, passport)
 
@@ -30,7 +31,7 @@ require('./app/config/sequelize.config')
 const port = process.env.PORT || '3000'
 
 app.set('port', port)
-
+app.use('/images', express.static('images'))
 /**
  * Create HTTP server.
  */
