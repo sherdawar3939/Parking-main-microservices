@@ -10,8 +10,9 @@ const validateGetContractList = (req, res, done) => {
   if (query.hasOwnProperty('id') && !isNaN(query.id)) {
     validateConditions.id = query.id
   }
-
-  if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
+  if (req.user && req.user.RoleId === 2) {
+    validateConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
     validateConditions.ClientId = query.ClientId
   }
 
@@ -52,7 +53,6 @@ const validateCreateContract = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-  console.log('hamza aslam', body.zipCode)
   // validating as required number field
   if (body.zipCode.length <= 0) {
     errorArray.push({
@@ -87,6 +87,7 @@ const validateVerifyContract = (req, res, done) => {
   const errorArray = []
   const params = req.params
   const validatedBody = {}
+  console.log(req.params.id)
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
