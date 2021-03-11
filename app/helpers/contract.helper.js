@@ -65,20 +65,20 @@ function getContract (id) {
   return db.Contract.findOne({ where: { id: id } })
 }
 
-const verifyContract = (id) => {
+const verifyContract = async (id) => {
   return db.Contract.update({ status: 'APPROVED' }, { where: { id: id } })
     .then(contract => {
       if (contract) {
         db.Contract.findOne({ raw: true, where: { id: id } })
           .then(con => {
             const data = JSON.parse(con.data)
+            const clientZip = []
             data.zipCodes.map(item => {
-              db.ClientZipCode.create({ ZipCodeId: item.id, ClientId: data.id })
-                .then(res => {
-                  console.log(res)
-                })
-              console.log('zip', item.id, data.id)
+              clientZip.push({ ZipCodeId: item.id, ClientId: data.id })
             })
+            if (clientZip.length > 0) {
+              db.ClientZipCode.bulkCreate(clientZip)
+            }
           })
       }
     })
