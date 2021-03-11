@@ -2,11 +2,14 @@
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
 const { isInteger } = require('lodash')
+
 const validateCreateRequest = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedBody.ClientId = req.user.employeeId
+  }
   // qty must be required required  Validating as not empty, valid integer.
   if (!body.qty || !isInteger(body.qty)) {
     errorArray.push({
@@ -58,7 +61,9 @@ const validateGetCreativeRequest = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
-  if (query.hasOwnProperty('ClientId') && !isInteger(query.ClientId)) {
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && !isInteger(query.ClientId)) {
     validatedConditions.ClientId = query.ClientId
   }
 

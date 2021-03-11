@@ -72,6 +72,7 @@ const getClientDetail = (id) => {
     attributes: ['id', 'companyName', 'email', 'phone', 'iban', 'secondaryPhone', 'secondaryEmail', 'secondaryContactPersonName', 'address', 'balance'],
     include: [{
       model: db.ClientZipCode,
+      required: false,
       as: 'clientZipCodes',
       attributes: ['clientId'],
       where: {
@@ -214,23 +215,18 @@ const updateClient = async (id, body, res, next) => {
   next()
 }
 const clientZipCodeHelper = (id) => {
-  return db.Client.findOne({
+  return db.ClientZipCode.findAll({
+    // raw: true,
     where: {
-      id
+      ClientId: id,
+      isDeleted: false
     },
     attributes: ['id'],
     include: [{
-      model: db.ClientZipCode,
-      as: 'clientZipCodes',
-      attributes: ['clientId'],
-      where: {
-        isDeleted: false
-      },
-      include: [{
-        model: db.ZipCode,
-        as: 'zipCodes',
-        attributes: ['zipCode']
-      }]
+      model: db.ZipCode,
+      as: 'zipCodes',
+      attributes: ['id', 'zipCode']
+
     }
     ]
 

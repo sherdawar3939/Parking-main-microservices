@@ -65,8 +65,23 @@ function getContract (id) {
   return db.Contract.findOne({ where: { id: id } })
 }
 
-function verifyContract (id) {
-  return db.Contract.update({ status: 'APPROVED' }, { where: id })
+const verifyContract = (id) => {
+  return db.Contract.update({ status: 'APPROVED' }, { where: { id: id } })
+    .then(contract => {
+      if (contract) {
+        db.Contract.findOne({ raw: true, where: { id: id } })
+          .then(con => {
+            const data = JSON.parse(con.data)
+            data.zipCodes.map(item => {
+              db.ClientZipCode.create({ ZipCodeId: item.id, ClientId: data.id })
+                .then(res => {
+                  console.log(res)
+                })
+              console.log('zip', item.id, data.id)
+            })
+          })
+      }
+    })
 }
 const getApprovedContract = (id) => {
   console.log('clientId ', id)

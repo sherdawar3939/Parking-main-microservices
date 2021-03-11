@@ -46,7 +46,7 @@ const getContract = function (req, res) {
 }
 
 const verificationOfContract = (req, res) => {
-  return contractHelper.verifyContract(req.validatedBody)
+  return contractHelper.verifyContract(req.params.id)
     .then((data) => {
       generalController.successResponse(res, 'Contract Updated successfully.', data, 'contract.controller.verificationOfContract')
     }).catch(StandardError, (err) => {
