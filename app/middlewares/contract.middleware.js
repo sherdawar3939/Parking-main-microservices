@@ -87,8 +87,6 @@ const validateCreateContract = (req, res, done) => {
 const validateVerifyContract = (req, res, done) => {
   const errorArray = []
   const params = req.params
-  const validatedBody = {}
-  console.log(req.params.id)
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
@@ -96,14 +94,9 @@ const validateVerifyContract = (req, res, done) => {
       message: "Please provide only valid 'id' as numeric."
     })
   }
-
-  if (params.hasOwnProperty('id') && !isNaN(params.id)) {
-    validatedBody.id = params.id
-  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.validateVerifyContract')
   }
-  req.validatedBody = validatedBody
   done()
 }
 

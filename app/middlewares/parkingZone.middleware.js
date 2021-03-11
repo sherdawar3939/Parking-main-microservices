@@ -6,8 +6,10 @@ const { isInteger } = require('lodash')
 const validateCreateParkingZone = (req, res, done) => {
   const errorArray = []
   const body = req.body
-  console.log(body)
   const validatedBody = {}
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedBody.ClientId = req.user.employeeId
+  }
   // days must be required required  Validating as not empty, valid String and length range.
   if (!body.days || !body.days.length) {
     errorArray.push({
@@ -49,6 +51,14 @@ const validateCreateParkingZone = (req, res, done) => {
       message: 'Please provide only valid \'polygons\' as numeric.'
     })
   }
+
+  if (!body.ClientZipCodeId || isNaN(body.ClientZipCodeId)) {
+    errorArray.push({
+      field: 'ClientZipCodeId',
+      error: 26,
+      message: 'Please provide only valid \'ClientZipCodeId\' as numeric'
+    })
+  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
@@ -57,6 +67,7 @@ const validateCreateParkingZone = (req, res, done) => {
   validatedBody.maxTime = body.maxTime
   validatedBody.zip = body.zip
   validatedBody.polygons = body.polygons
+  validatedBody.ClientZipCodeId = body.ClientZipCodeId
 
   req.validatedBody = validatedBody
   done()
