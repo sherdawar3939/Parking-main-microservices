@@ -39,11 +39,13 @@ const getClientList = (conditions) => {
       {
         model: db.ClientZipCode,
         as: 'clientZipCodes',
+        required: false,
         where: {
           isDeleted: false
         },
         include: [{
           where: zipCodeWhere,
+          required: false,
           model: db.ZipCode,
           as: 'zipCodes'
         }]
