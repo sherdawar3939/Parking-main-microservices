@@ -5,7 +5,7 @@ const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
 const addinspector = (req, res) => {
-  return createInspector(req.validatedUserData, req.validatedInspectorData)
+  return createInspector(req.validatedUserData, req.validatedInspectorData.ClientId)
     .then(function (data) {
       generalController.successResponse(res, 'Inspector add successfully.', data, 'inpector.controller.addinspector')
     }).catch(StandardError, function (err) {

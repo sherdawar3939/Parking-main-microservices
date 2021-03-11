@@ -23,7 +23,9 @@ const getDashboardDetails = async (conditions) => {
 }
 
 const getDashboardClientCounts = async (id, res, next) => {
+  console.log('id', id)
   const InspectorCountQuery = await db.Inspector.count({ where: { ClientId: id } })
+  console.log('count', InspectorCountQuery)
   // return InspectorCountQuery
   const ParkingCounts = await db.ParkingZone.findAll({
     raw: true,

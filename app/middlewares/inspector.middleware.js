@@ -8,7 +8,9 @@ const validatePostInspector = (req, res, done) => {
   const errorArray = []
   const validatedUserData = {}
   const validatedInspectorData = {}
-
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedInspectorData.ClientId = req.user.employeeId
+  }
   // fName is required, validating it as not empty, valid String and length range.
   if (_.isEmpty(body.fName) || !_.isString(body.fName) || body.fName.length < 2 || body.fName.length > 100) {
     errorArray.push({

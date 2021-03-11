@@ -20,13 +20,6 @@ const validateCreateRequest = (req, res, done) => {
   }
 
   // status must be required required  Validating as not empty, valid integer.
-  if (!body.status || !isNaN(body.status)) {
-    errorArray.push({
-      field: 'status',
-      error: 'cr-10',
-      message: 'Please provide only valid \'status\' as numeric,.'
-    })
-  }
 
   // ParkingZoneId must be required required  Validating as not empty, valid integer.
   if (!body.ParkingZoneId || isNaN(body.ParkingZoneId)) {
