@@ -19,8 +19,6 @@ module.exports = function (sequelize, DataTypes) {
     // }
   }, {
     associate: function (models) {
-      CreativeRequest.belongsTo(models.User, { foreignKey: 'UpdatedBy', as: 'creativeRequestUser' })
-      CreativeRequest.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'creativeRequestClient' })
       CreativeRequest.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'creativeParkingZone' })
     }
   })
