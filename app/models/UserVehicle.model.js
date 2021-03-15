@@ -11,16 +11,12 @@ module.exports = function (sequelize, DataTypes) {
     isDeleted: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
-    },
-    VehicleCategoryId: {
-      type: DataTypes.INTEGER(11)
-    },
-    UserId: {
-      type: DataTypes.INTEGER(11)
     }
   }, {
     associate: function (models) {
       UserVehicle.hasMany(models.Parking, { foreignKey: 'UserVehicleId', as: 'UserVehicleParking' })
+      UserVehicle.belongsTo(models.User, { foreignKey: 'UserId', as: 'userVehicle' })
+      UserVehicle.belongsTo(models.VehicleCategory, { foreignKey: 'VehicleCategoryId', as: 'userVehicle' })
     }
   })
   return UserVehicle
