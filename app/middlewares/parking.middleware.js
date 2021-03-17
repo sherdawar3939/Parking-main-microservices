@@ -8,7 +8,7 @@ const validateCreateParking = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
 
-  if (!body.ParkingZoneId || !isInteger(body.ParkingZoneId)) {
+  if (!body.ParkingZoneId || isNaN(body.ParkingZoneId)) {
     errorArray.push({
       field: 'ParkingZoneId',
       error: 26,
@@ -16,7 +16,7 @@ const validateCreateParking = (req, res, done) => {
     })
   }
 
-  if (!body.UserVehicleId || !isInteger(body.UserVehicleId)) {
+  if (!body.UserVehicleId || isNaN(body.UserVehicleId)) {
     errorArray.push({
       field: 'UserVehicleId',
       error: 26,
@@ -57,6 +57,10 @@ const validateGetParkingList = (req, res, done) => {
     validatedConditions.ParkingZoneId = query.ParkingZoneId
   }
 
+  if (query.hasOwnProperty('UserId') && query.UserId) {
+    validatedConditions.UserId = query.UserId
+  }
+
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }
@@ -79,7 +83,7 @@ const validateEndParking = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
 
-  if (!body.id || !isInteger(body.id)) {
+  if (!body.id || isNaN(body.id)) {
     errorArray.push({
       field: 'id',
       error: 26,

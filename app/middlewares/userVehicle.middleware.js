@@ -7,8 +7,9 @@ const validateGetUserVehicle = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
+
   if (query.hasOwnProperty('UserId') && query.UserId) {
-    if (!isInteger(query.UserId)) {
+    if (isNaN(query.UserId)) {
       errorArray.push({
         field: 'UserId',
         error: 25,
@@ -17,8 +18,9 @@ const validateGetUserVehicle = (req, res, done) => {
     }
     validatedConditions.UserId = query.UserId
   }
+
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'uservehicle.middleware.validateUpdateUserVehiceId')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validateGetUserVehicle')
   }
 
   req.conditions = validatedConditions
