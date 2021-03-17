@@ -71,14 +71,13 @@ function ActiveParkingListHelper (conditions, limit, offset) {
   console.log('include', includes)
   return db.Parking.findAll({
     where: parkingWhere,
+    include: includes,
     limit: limit,
-    offset: offset,
-    include: includes
+    offset: offset
   })
 }
 const endParkingHelper = (id) => {
   let bill = {}
-  console.log(id)
   // TIMESTAMPDIFF(SECOND, '2012-06-06 13:13:55', '2012-06-06 15:20:18')
   let query = `SELECT *, Parkings.id as ParkingId FROM Parkings
   INNER JOIN ParkingZones ON Parkings.ParkingZoneId = ParkingZones.id
@@ -93,7 +92,7 @@ const endParkingHelper = (id) => {
       if (!result || !result.length) {
         return {}
       }
-      console.log(result)
+
       result = result[0]
 
       let profit = 0.05

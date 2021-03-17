@@ -76,7 +76,7 @@ const attachBodyAndFiles = (req, res, next) => {
   })
 }
 
-var dir = 'images'
+var dir = './../../images'
 if (!fs.existsSync(dir)) {
   fs.mkdirSync(dir)
 }

@@ -18,10 +18,10 @@ function getCreatives (id) {
     },
     include: [{
       model: db.Client,
-      as: 'creativeRequestClient',
+      as: 'CreativeRequestClient',
       include: [{
         model: db.ParkingZone,
-        as: 'clientParkingZones'
+        as: 'parkingZoneClient'
       }]
     }]
 

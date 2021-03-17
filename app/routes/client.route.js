@@ -1,7 +1,7 @@
 'use strict'
 const clientMiddleware = require('../middlewares/client.middleware')
 const ClientController = require('../controllers/client.controller')
-const generalMiddleware = require('./../middlewares/general.middleware')
+// const generalMiddleware = require('./../middlewares/general.middleware')
 const passport = require('../config/passport')
 // const { uploadFile } = require('../helpers/helping.helper')
 module.exports = function (app, apiVersion) {
@@ -12,7 +12,7 @@ module.exports = function (app, apiVersion) {
 
   app.get(`${route}/client/:id`, passport.authenticate('jwt', { session: false }), clientMiddleware.validateGetClientId, ClientController.getClientById)
 
-  app.post(`${route}/client`, passport.authenticate('jwt', { session: false }), generalMiddleware.attachBodyAndFiles, clientMiddleware.validatePostClient, ClientController.addClient)
+  app.post(`${route}/client`, passport.authenticate('jwt', { session: false }), clientMiddleware.uploadFile.fields([{ name: 'files' }]), clientMiddleware.validatePostClient, ClientController.addClient)
 
   app.put(`${route}/client/:id`, passport.authenticate('jwt', { session: false }), clientMiddleware.validatePutClient, ClientController.UpDateClientById)
 

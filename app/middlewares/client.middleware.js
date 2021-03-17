@@ -18,11 +18,6 @@ const validateGetClient = (req, res, done) => {
   }
 
   // validating as optional number field
-  if (query.hasOwnProperty('zipCode') && query.zipCode && !isNaN(query.zipCode)) {
-    validatedConditions.zipCode = query.zipCode
-  }
-
-  // validating as optional number field
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
@@ -51,6 +46,8 @@ const validateGetClientId = (req, res, done) => {
 }
 const validatePostClient = (req, res, done) => {
   const errorArray = []
+  console.log('file', req.files)
+  console.log('body', req.body)
   const body = req.body
   const validatedBody = {}
   var extension = req.files[0].name.split('.')
@@ -267,22 +264,23 @@ const validatePutClient = (req, res, done) => {
   req.validatedBody = validatedBody
   done()
 }
-// var storage = multer.diskStorage({
-//   destination: function (req, files, cb) {
-//     cb(null, 'images/')
-//     console.log('call')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, `${Date.now()}${file.originalname}`)
-//     console.log('call')
-//   }
-// })
 
-// var uploadFile = multer({ storage: storage })
+var storage = multer.diskStorage({
+  destination: function (req, files, cb) {
+    cb(null, 'images')
+    console.log('call')
+  },
+  filename: function (req, file, cb) {
+    cb(null, `${Date.now()}${file.originalname}`)
+    console.log('call')
+  }
+})
+
+var uploadFile = multer({ storage: storage })
 module.exports = {
   validateGetClient,
   validateGetClientId,
   validatePostClient,
-  validatePutClient
-  //  uploadFile
+  validatePutClient,
+  uploadFile
 }

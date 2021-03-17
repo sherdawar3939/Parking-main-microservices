@@ -14,6 +14,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     contractUrl: {
       type: DataTypes.STRING()
+    },
+    uid: {
+      type: DataTypes.STRING(50)
     }
   }, {
     associate: function (models) {

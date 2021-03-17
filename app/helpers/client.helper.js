@@ -9,11 +9,6 @@ const generalMiddleware = require('../middlewares/general.middleware')
 const getClientList = (conditions) => {
   const where = {}
   const contractWhere = {}
-  const zipCodeWhere = {}
-  if (conditions.zipCode) {
-    zipCodeWhere.zipCode = conditions.zipCode
-  }
-
   if (conditions.status) {
     contractWhere.status = conditions.status
   }
@@ -29,28 +24,12 @@ const getClientList = (conditions) => {
       email: { [Op.like]: '%' + conditions.search + '%' }
     }
   }
-  console.log(zipCodeWhere)
   return db.Client.findAll({
     where,
     order: [
       ['id', 'ASC']
     ],
     include: [
-      {
-        model: db.ClientZipCode,
-        as: 'clientZipCodes',
-        required: false,
-        where: {
-          isDeleted: false
-        },
-        include: [{
-          where: zipCodeWhere,
-          required: false,
-          model: db.ZipCode,
-          as: 'zipCodes'
-        }]
-
-      },
       {
         where: contractWhere,
         model: db.Contract,
@@ -70,34 +49,11 @@ const getClientDetail = (id) => {
       id
     },
     attributes: ['id', 'companyName', 'email', 'phone', 'iban', 'secondaryPhone', 'secondaryEmail', 'secondaryContactPersonName', 'address', 'balance'],
-    include: [{
-      model: db.ClientZipCode,
-      required: false,
-      as: 'clientZipCodes',
-      attributes: ['clientId'],
-      where: {
-        isDeleted: false
-      },
-      include: [{
-        model: db.ZipCode,
-        as: 'zipCodes',
-        attributes: ['zipCode'],
-        include: [{
-          model: db.City,
-          as: 'cityZipCodes',
-          attributes: ['name'],
-          include: [{
-            model: db.Country,
-            as: 'countryCities',
-            attributes: ['name']
-          }]
-
-        }]
-      }]
-    }, {
-      model: db.ParkingZone,
-      as: 'clientParkingZones'
-    }
+    include: [
+      {
+        model: db.ParkingZone,
+        as: 'parkingZoneClient'
+      }
     ]
 
   })
@@ -107,7 +63,7 @@ const getClientDetail = (id) => {
 const postClient = (body, files, res, next) => {
   const errorsArray = []
   const contract = {}
-  // console.log('path', files)
+  console.log('path', files)
   return db.Client.findOne({
     where: {
       [Op.or]: [
@@ -142,7 +98,6 @@ const postClient = (body, files, res, next) => {
       return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient')
     }
   }).then(createdClient => {
-    console.log(createdClient.dataValues.id)
     const client = JSON.stringify(createdClient)
     contract.data = client
     contract.UserId = body.UserId

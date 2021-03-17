@@ -37,7 +37,7 @@ const getParkingZoneById = (req, res) => {
 }
 
 const updateParkingZone = (req, res) => {
-  return ParkingZoneHelper.updateParkingZone(req.params.id, req.body)
+  return ParkingZoneHelper.updateParkingZone(req.params.id, req.validatedBody)
     .then((data) => {
       generalController.successResponse(res, 'ParkingZone Updated successfully.', data, 'parkingZone.controller.updateParkingZone')
     }).catch(StandardError, (err) => {
