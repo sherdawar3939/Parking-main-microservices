@@ -59,7 +59,7 @@ function getRequestList (conditions, limit, offset) {
     offset: offset,
     include: [{
       model: db.Client,
-      as: 'creativeRequestClient'
+      as: 'CreativeRequestClient'
     }]
   })
 }

@@ -1,16 +1,16 @@
 'use strict'
 
 module.exports = function (sequelize, DataTypes) {
-  let ParkingZoneHolidays = sequelize.define('City',
+  let ParkingZoneHoliday = sequelize.define('ParkingZoneHoliday',
     {
       holidayDate: {
         type: DataTypes.DATE
       }
     }, {
       associate: function (models) {
-        ParkingZoneHolidays.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'parkingHoliday' })
+        ParkingZoneHoliday.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'parkingHoliday' })
       }
     }
   )
-  return ParkingZoneHolidays
+  return ParkingZoneHoliday
 }

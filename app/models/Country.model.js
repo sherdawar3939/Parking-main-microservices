@@ -15,6 +15,7 @@ module.exports = function (sequelize, DataTypes) {
     }, {
       associate: function (models) {
         Country.hasMany(models.City, { foreignKey: 'CountryId', as: 'countryCities' })
+        Country.hasMany(models.Client, { foreignKey: 'CountryId', as: 'countryClient' })
       }
     }
   )

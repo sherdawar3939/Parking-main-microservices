@@ -1,7 +1,7 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-
+const multer = require('multer')
 const validateGetClient = (req, res, done) => {
   const errorArray = []
   const query = req.query
@@ -53,6 +53,14 @@ const validatePostClient = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
+  var extension = req.files[0].name.split('.')
+  if (req.files[0].type === null || (!req.files[0].type.startsWith('image') && extension[1] !== 'pdf')) {
+    errorArray.push({
+      field: 'files',
+      error: 234,
+      message: 'The files is required  .'
+    })
+  }
   // validating as required string field
   if (req.user && req.user.RoleId === 2) {
     validatedBody.UserId = req.user.id
@@ -117,9 +125,23 @@ const validatePostClient = (req, res, done) => {
       error: 1008,
       message: 'The field is required with 10 min and 50 max characters.'
     })
-    validatedBody.iban = body.iban
   }
-
+  // validating as required string field
+  if (!body.paymentFrequency) {
+    errorArray.push({
+      field: 'paymentFrequency',
+      error: 234,
+      message: 'The paymentFrequency is required.'
+    })
+  }
+  // validating as required number field
+  if (!body.countryId || isNaN(body.countryId)) {
+    errorArray.push({
+      field: 'countryId',
+      error: 345,
+      message: 'The countryId is required .'
+    })
+  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient')
   }
@@ -131,6 +153,8 @@ const validatePostClient = (req, res, done) => {
   validatedBody.secondaryPhone = body.secondaryPhone
   validatedBody.address = body.address
   validatedBody.iban = body.iban
+  validatedBody.paymentFrequency = body.paymentFrequency
+  validatedBody.CountryId = body.countryId
   req.validatedBody = validatedBody
   done()
 }
@@ -243,10 +267,22 @@ const validatePutClient = (req, res, done) => {
   req.validatedBody = validatedBody
   done()
 }
+// var storage = multer.diskStorage({
+//   destination: function (req, files, cb) {
+//     cb(null, 'images/')
+//     console.log('call')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, `${Date.now()}${file.originalname}`)
+//     console.log('call')
+//   }
+// })
 
+// var uploadFile = multer({ storage: storage })
 module.exports = {
   validateGetClient,
   validateGetClientId,
   validatePostClient,
   validatePutClient
+  //  uploadFile
 }

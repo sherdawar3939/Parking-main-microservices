@@ -12,7 +12,7 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'PENDING'
     },
-    imageUrl: {
+    contractUrl: {
       type: DataTypes.STRING()
     }
   }, {

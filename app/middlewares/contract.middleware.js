@@ -125,35 +125,11 @@ const validateContractApproved = (req, res, done) => {
   req.validatedConditions = validatedConditions
   done()
 }
-var dir = 'images'
-
-if (!fs.existsSync(dir)) {
-  fs.mkdirSync(dir)
-}
-const imageFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true)
-  } else {
-    return cb(null, false)
-  }
-}
-
-var storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, dir)
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}${file.originalname}`)
-  }
-})
-
-var uploadFile = multer({ storage: storage, fileFilter: imageFilter })
 
 module.exports = {
   validateGetContractList,
   validateVerifyContract,
   validateCreateContract,
   validateContractApproved,
-  validateGetContract,
-  uploadFile
+  validateGetContract
 }

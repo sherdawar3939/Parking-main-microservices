@@ -6,7 +6,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(20)
     },
     days: {
-      type: DataTypes.STRING(50)
+      type: DataTypes.STRING(100)
     },
     fee: {
       type: DataTypes.DECIMAL(8, 4)
@@ -15,7 +15,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(115)
     },
     holidays: {
-      type: DataTypes.TEXT(50)
+      type: DataTypes.TEXT
     },
     zip: {
       type: DataTypes.STRING(115)
@@ -36,6 +36,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     activeAfter: {
       type: DataTypes.DATE
+    },
+    contractUrl: {
+      type: DataTypes.STRING
     }
   }, {
     associate: function (models) {
@@ -43,7 +46,7 @@ module.exports = function (sequelize, DataTypes) {
       ParkingZone.hasMany(models.Parking, { foreignKey: 'ParkingZoneId', as: 'parkingZoneParkings' })
       ParkingZone.hasMany(models.CreativeRequest, { foreignKey: 'ParkingZoneId', as: 'parkingCreatives' })
       ParkingZone.belongsTo(models.City, { foreignKey: 'CityId', as: 'cityParkingZone' })
-      ParkingZone.hasMany(models.ParkingZoneHolidays, { foreignKey: 'ParkingZoneId', as: 'parkingHoliday' })
+      ParkingZone.hasMany(models.ParkingZoneHoliday, { foreignKey: 'ParkingZoneId', as: 'parkingHoliday' })
     }
   })
   return ParkingZone

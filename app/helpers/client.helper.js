@@ -104,9 +104,11 @@ const getClientDetail = (id) => {
 }
 
 // Create Client API
-const postClient = async (body, res, next) => {
+const postClient = (body, files, res, next) => {
   const errorsArray = []
-  const client = await db.Client.findOne({
+  const contract = {}
+  // console.log('path', files)
+  return db.Client.findOne({
     where: {
       [Op.or]: [
         {
@@ -116,11 +118,10 @@ const postClient = async (body, res, next) => {
         }
       ]
     }
-  })
-
-  if (!client) {
-    return db.Client.create(body)
-  } else {
+  }).then(client => {
+    if (!client) {
+      return db.Client.create(body)
+    }
     if (client.phone === body.phone) {
       errorsArray.push({
         field: 'phone',
@@ -140,8 +141,14 @@ const postClient = async (body, res, next) => {
     if (!_.isEmpty(errorsArray)) {
       return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient')
     }
-  }
-  next()
+  }).then(createdClient => {
+    console.log(createdClient.dataValues.id)
+    const client = JSON.stringify(createdClient)
+    contract.data = client
+    contract.UserId = body.UserId
+    contract.ClientId = createdClient.dataValues.id
+    return db.Contract.create(contract)
+  })
 }
 
 // Update Client API

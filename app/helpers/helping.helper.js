@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken')
 const AWS = require('aws-sdk')
 const formidable = require('formidable')
 const fs = require('fs')
+const multer = require('multer')
 var generator = require('generate-password')
 
 let newConfig = {
@@ -25,7 +26,7 @@ const s3 = new AWS.S3({
   'region': process.env.region || awsConfig.region
 })
 
-function uploadFile (file, defaultName) {
+function uploadFileToS3 (file, defaultName) {
   return new Promise(function (resolve, reject) {
     let stream = fs.createReadStream(file.path)
     let name = Date.now().toString() + '-' + parseInt(Math.random() * 10000)
@@ -75,7 +76,31 @@ const attachBodyAndFiles = (req, res, next) => {
   })
 }
 
+var dir = 'images'
+if (!fs.existsSync(dir)) {
+  fs.mkdirSync(dir)
+}
+const imageFilter = (file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true)
+  } else {
+    return cb(null, false)
+  }
+}
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, dir)
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}${file.originalname}`)
+  }
+})
+
+var uploadFile = multer({ storage: storage, fileFilter: imageFilter })
+
 module.exports.generatePassword = generatePassword
 module.exports.signLoginData = signLoginData
-module.exports.uploadFile = uploadFile // upload using aws javascript sdk
+module.exports.uploadFileToS3 = uploadFileToS3 // upload using aws javascript sdk
 module.exports.attachBodyAndFiles = attachBodyAndFiles
+//module.exports = uploadFile

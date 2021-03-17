@@ -59,6 +59,14 @@ const validateCreateParkingZone = (req, res, done) => {
       message: 'Please provide only valid \'ClientZipCodeId\' as numeric'
     })
   }
+  // validating as required number field
+  if (!body.CityId || isNaN(body.CityId)) {
+    errorArray.push({
+      field: 'CityId',
+      error: 234,
+      message: 'The CityId is required .'
+    })
+  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
@@ -68,7 +76,7 @@ const validateCreateParkingZone = (req, res, done) => {
   validatedBody.zip = body.zip
   validatedBody.polygons = body.polygons
   validatedBody.ClientZipCodeId = body.ClientZipCodeId
-
+  validatedBody.CityId = body.CityId
   req.validatedBody = validatedBody
   done()
 }

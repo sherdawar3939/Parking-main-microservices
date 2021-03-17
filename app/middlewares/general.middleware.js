@@ -1,7 +1,7 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
 const formidable = require('formidable')
-
+const _ = require('lodash')
 function standardErrorResponse (res, err, type, statusCode) {
   let code = SERVER_RESPONSE.VALIDATION_ERROR
   statusCode = parseInt(statusCode)
@@ -19,8 +19,6 @@ function standardErrorResponse (res, err, type, statusCode) {
 // a middleware to attach files and field to form data requests
 const attachBodyAndFiles = (req, res, next) => {
   let form = new formidable.IncomingForm()
-  console.log('Here at general')
-  console.log(req.fields)
   form.parse(req, function (err, fields, files) {
     if (err) {
       return standardErrorResponse(res, {
@@ -29,7 +27,6 @@ const attachBodyAndFiles = (req, res, next) => {
         message: err
       }, 'attachBodyAndFiles.middleware.generalMiddleware')
     }
-
     req.files = []
     for (const key in files) {
       if (files.hasOwnProperty(key)) {

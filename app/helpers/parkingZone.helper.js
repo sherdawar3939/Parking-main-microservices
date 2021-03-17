@@ -40,21 +40,12 @@ function getparkingZone (conditions, limit, offset) {
     order: [
       ['id', 'DESC']
     ],
-    include: [{
-      model: db.Client,
-      as: 'parkingZoneClient'
-    }, {
-      model: db.ClientZipCode,
-      as: 'clientParkingZone',
-      where: {
-        isDeleted: false
-      },
-      include: [{
-        where: cityIdWhere,
-        model: db.ZipCode,
-        as: 'zipCodes'
-      }]
-    }],
+    include: [
+      {
+        model: db.Client,
+        as: 'parkingZoneClient'
+      }
+    ],
     limit: limit,
     offset: offset
   })

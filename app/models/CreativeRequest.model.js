@@ -20,6 +20,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     associate: function (models) {
       CreativeRequest.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'creativeParkingZone' })
+      CreativeRequest.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'CreativeRequestClient' })
     }
   })
   return CreativeRequest
