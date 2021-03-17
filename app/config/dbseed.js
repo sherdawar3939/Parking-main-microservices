@@ -143,10 +143,6 @@ module.exports = async function dbseed (db, sequelize) {
 
   }
   ]
-  await db.ZipCode.bulkCreate(zipCode)
-    .catch((error) => {
-      console.log(error)
-    })
 
   const client = [{
     companyName: 'visionBotix',
@@ -236,10 +232,6 @@ module.exports = async function dbseed (db, sequelize) {
     ClientId: 3
   }
   ]
-  await db.ClientZipCode.bulkCreate(clientZipCode)
-    .catch((error) => {
-      console.log(error)
-    })
 
   const parkingZone = [{
     uid: '34',

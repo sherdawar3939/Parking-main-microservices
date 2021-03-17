@@ -14,13 +14,11 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: 'Pending',
       field: 'status'
     }
-    // UpdatedBy: {
-    //   type: DataTypes.INTEGER(11)
-    // }
   }, {
     associate: function (models) {
       CreativeRequest.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'creativeParkingZone' })
       CreativeRequest.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'CreativeRequestClient' })
+      CreativeRequest.belongsTo(models.User, { foreignKey: 'UpdatedBy', as: 'updatedBy' })
     }
   })
   return CreativeRequest

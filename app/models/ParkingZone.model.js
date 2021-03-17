@@ -6,7 +6,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(20)
     },
     days: {
-      type: DataTypes.STRING(100)
+      type: DataTypes.STRING(245)
     },
     fee: {
       type: DataTypes.DECIMAL(8, 4)
