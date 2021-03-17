@@ -103,4 +103,3 @@ module.exports.generatePassword = generatePassword
 module.exports.signLoginData = signLoginData
 module.exports.uploadFileToS3 = uploadFileToS3 // upload using aws javascript sdk
 module.exports.attachBodyAndFiles = attachBodyAndFiles
-//module.exports = uploadFile

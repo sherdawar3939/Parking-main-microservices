@@ -60,10 +60,10 @@ const getClientDetail = (id) => {
 }
 
 // Create Client API
-const postClient = (body, files, res, next) => {
+const postClient = (body, files, uid, res, next) => {
   const errorsArray = []
   const contract = {}
-  console.log('path', files)
+  console.log(' req uid', files.files[0])
   return db.Client.findOne({
     where: {
       [Op.or]: [
@@ -95,13 +95,15 @@ const postClient = (body, files, res, next) => {
       })
     }
     if (!_.isEmpty(errorsArray)) {
-      return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient')
+      return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient', 404)
     }
   }).then(createdClient => {
     const client = JSON.stringify(createdClient)
     contract.data = client
+    contract.uid = uid
     contract.UserId = body.UserId
     contract.ClientId = createdClient.dataValues.id
+    contract.contractUrl = files.files[0].filename
     return db.Contract.create(contract)
   })
 }

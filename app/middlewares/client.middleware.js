@@ -2,6 +2,10 @@
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
 const multer = require('multer')
+const fs = require('fs')
+const { promisify } = require('util')
+const generalHelper = require('./../helpers/general.helper')
+const unlinkAsync = promisify(fs.unlink)
 const validateGetClient = (req, res, done) => {
   const errorArray = []
   const query = req.query
@@ -44,20 +48,18 @@ const validateGetClientId = (req, res, done) => {
   }
   done()
 }
-const validatePostClient = (req, res, done) => {
+const validatePostClient = async (req, res, done) => {
   const errorArray = []
-  console.log('file', req.files)
-  console.log('body', req.body)
   const body = req.body
   const validatedBody = {}
-  var extension = req.files[0].name.split('.')
-  if (req.files[0].type === null || (!req.files[0].type.startsWith('image') && extension[1] !== 'pdf')) {
-    errorArray.push({
-      field: 'files',
-      error: 234,
-      message: 'The files is required  .'
-    })
-  }
+  // var extension = req.files[0].name.split('.')
+  // if (req.files[0].type === null || (!req.files[0].type.startsWith('image') && extension[1] !== 'pdf')) {
+  //   errorArray.push({
+  //     field: 'files',
+  //     error: 234,
+  //     message: 'The files is required  .'
+  //   })
+  // }
   // validating as required string field
   if (req.user && req.user.RoleId === 2) {
     validatedBody.UserId = req.user.id
@@ -140,7 +142,8 @@ const validatePostClient = (req, res, done) => {
     })
   }
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient')
+    await unlinkAsync(req.files.files[0].path)
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient', 400)
   }
   validatedBody.companyName = body.companyName
   validatedBody.email = body.email
@@ -268,11 +271,11 @@ const validatePutClient = (req, res, done) => {
 var storage = multer.diskStorage({
   destination: function (req, files, cb) {
     cb(null, 'images')
-    console.log('call')
   },
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}${file.originalname}`)
-    console.log('call')
+  filename: async function (req, file, cb) {
+    const uid = await generalHelper.getUid('Contract', 'uid', {}, 'I')
+    req.uid = uid
+    cb(null, `${uid}${file.originalname}`)
   }
 })
 
