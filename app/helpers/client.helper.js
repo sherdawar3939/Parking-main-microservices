@@ -4,7 +4,8 @@ var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalMiddleware = require('../middlewares/general.middleware')
-
+const generalHelpingMethods = require('../helpers/general.helper')
+const fs = require('fs')
 // Get Client List
 const getClientList = (conditions) => {
   const where = {}
@@ -60,10 +61,8 @@ const getClientDetail = (id) => {
 }
 
 // Create Client API
-const postClient = (body, files, uid, res, next) => {
-  const errorsArray = []
+const postClient = (body, files, uid) => {
   const contract = {}
-  console.log(' req uid', files.files[0])
   return db.Client.findOne({
     where: {
       [Op.or]: [
@@ -74,28 +73,26 @@ const postClient = (body, files, uid, res, next) => {
         }
       ]
     }
-  }).then(client => {
+  }).then(async client => {
     if (!client) {
       return db.Client.create(body)
     }
     if (client.phone === body.phone) {
-      errorsArray.push({
+      await fs.unlinkSync(files.files[0].path)
+      return generalHelpingMethods.rejectPromise([{
         field: 'phone',
-        error: 1500,
-        message: 'phone already exist'
-      })
+        error: 1540,
+        message: 'Phone already exist '
+      }])
     }
-
     if (client.email === body.email) {
       // user email already exist.
-      errorsArray.push({
-        field: 'email',
-        error: 1505,
-        message: 'email already exist'
-      })
-    }
-    if (!_.isEmpty(errorsArray)) {
-      return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient', 404)
+      await fs.unlinkSync(files.files[0].path)
+      return generalHelpingMethods.rejectPromise([{
+        field: 'Email',
+        error: 1540,
+        message: 'Email already exist '
+      }])
     }
   }).then(createdClient => {
     const client = JSON.stringify(createdClient)

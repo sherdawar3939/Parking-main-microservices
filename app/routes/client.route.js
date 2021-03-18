@@ -1,9 +1,7 @@
 'use strict'
 const clientMiddleware = require('../middlewares/client.middleware')
 const ClientController = require('../controllers/client.controller')
-// const generalMiddleware = require('./../middlewares/general.middleware')
 const passport = require('../config/passport')
-// const { uploadFile } = require('../helpers/helping.helper')
 module.exports = function (app, apiVersion) {
   const route = apiVersion
 

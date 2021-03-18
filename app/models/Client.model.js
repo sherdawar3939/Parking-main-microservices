@@ -20,6 +20,21 @@ module.exports = function (sequelize, DataTypes) {
     secondaryPhone: {
       type: DataTypes.STRING(20)
     },
+    primaryContactPersonName: {
+      type: DataTypes.STRING(100)
+    },
+    primaryEmail: {
+      type: DataTypes.STRING(50)
+    },
+    primaryPhone: {
+      type: DataTypes.STRING(20)
+    },
+    houseNo: {
+      type: DataTypes.STRING(20)
+    },
+    streetNo: {
+      type: DataTypes.STRING(20)
+    },
     address: {
       type: DataTypes.STRING(100)
     },

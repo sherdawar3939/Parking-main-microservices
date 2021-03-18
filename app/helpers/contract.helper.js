@@ -94,8 +94,6 @@ const getApprovedContract = (id) => {
 }
 const uploadFilesHelper = (file, id) => {
   try {
-    console.log(file)
-
     if (file === undefined) {
       return (`You must select a file.`)
     }
