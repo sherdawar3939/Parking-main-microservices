@@ -17,6 +17,11 @@ module.exports = function (sequelize, DataTypes) {
     },
     uid: {
       type: DataTypes.STRING(50)
+    },
+    type: {
+      type: DataTypes.ENUM(['General', 'ParkingZone']),
+      allowNull: false,
+      defaultValue: 'General'
     }
   }, {
     associate: function (models) {

@@ -77,6 +77,7 @@ const postClient = (body, files, uid) => {
     if (!client) {
       return db.Client.create(body)
     }
+
     if (client.phone === body.phone) {
       await fs.unlinkSync(files.files[0].path)
       return generalHelpingMethods.rejectPromise([{
@@ -103,6 +104,7 @@ const postClient = (body, files, uid) => {
     contract.contractUrl = files.files[0].filename
     return db.Contract.create(contract)
   })
+    .catch(generalHelpingMethods.catchException)
 }
 
 // Update Client API

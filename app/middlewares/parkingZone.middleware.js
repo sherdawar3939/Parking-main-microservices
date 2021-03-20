@@ -21,21 +21,23 @@ const validateCreateParkingZone = (req, res, done) => {
   }
 
   // fee must be required required  Validating as not empty, valid String and length range.
-  if (!isInteger(body.fee) || body.fee.length < 0 || body.fee.length > 20) {
+  if (isNaN(body.fee) || body.fee < 0 || body.fee > 100) {
     errorArray.push({
       field: 'fee',
       error: 25,
       message: 'Please provide only valid \'fee\' as integer, length must be between 2 and 20.'
     })
   }
+
   // licensePlate must be required required  Validating as not empty, valid String and length range.
-  if (!isInteger(body.maxTime) || body.maxTime.length < 0 || body.maxTime.length > 20) {
+  if (isNaN(body.maxTime) || body.maxTime.length < 0) {
     errorArray.push({
       field: 'maxTime',
       error: 25,
       message: 'Please provide only valid \'maxTime\' as integer, length must be between 2 and 20.'
     })
   }
+
   // zip must be required required  Validating as not empty, valid integer.
   if (!body.zip || isNaN(body.zip)) {
     errorArray.push({
@@ -75,6 +77,19 @@ const validateCreateParkingZone = (req, res, done) => {
       message: 'The endTime is required .'
     })
   }
+
+  // validating as optional number field
+  if (body.hasOwnProperty('creativesQuantity') && body.creativesQuantity) {
+    if (isNaN(body.creativesQuantity) || body.creativesQuantity < 1 || body.creativesQuantity > 999999999) {
+      errorArray.push({
+        field: 'creativesQuantity',
+        error: 'CVP-005',
+        message: 'The creativesQuantity should be number with min 1 and max 999999999 value.'
+      })
+    }
+    validatedBody.creativesQuantity = body.creativesQuantity
+  }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }

@@ -30,10 +30,10 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(20)
     },
     houseNo: {
-      type: DataTypes.STRING(20)
+      type: DataTypes.STRING(50)
     },
     streetNo: {
-      type: DataTypes.STRING(20)
+      type: DataTypes.STRING(100)
     },
     address: {
       type: DataTypes.STRING(100)

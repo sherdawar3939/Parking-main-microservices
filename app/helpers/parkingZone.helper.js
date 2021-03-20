@@ -3,11 +3,60 @@
 var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
+const generalHelper = require('./general.helper')
 
 const addParkingZone = (data) => {
-  data.uid = data.fee + data.maxTime + data.zip + Math.floor(Math.random() * (100 - 1 + 1) + 1)
+  data.uid = data.maxTime.toString() + data.zip.toString() + data.fee.toString().split('.').join('')
+  const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
+  if (center) {
+    data.lat = center.lat
+    data.lng = center.lng
+  }
   data.polygons = JSON.stringify(data.polygons)
   return db.ParkingZone.create(data)
+    .then(async (createdParkingZone) => {
+      if (!createdParkingZone) {
+        return null
+      }
+
+      const contractUid = await generalHelper.getUid('Contract', 'uid', {
+        type: 'ParkingZone'
+      }, 'II')
+
+      const contract = {
+        type: 'ParkingZone',
+        status: 'APPROVED',
+        uid: contractUid,
+        contractUrl: `${contractUid}.pdf`,
+        ClientId: createdParkingZone.ClientId
+      }
+
+      const currentDate = new Date()
+
+      const contractData = {
+        created: [],
+        updated: [],
+        deleted: []
+      }
+      contractData.created.push(`${createdParkingZone.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
+
+      await generalHelper.generateParkingZoneContract(contract.uid, JSON.parse(JSON.stringify(contractData.created)))
+      contract.data = JSON.stringify(contractData)
+
+      await db.Contract.create(contract)
+
+      // If creative request quantity then add to system.
+      if (data.creativesQuantity) {
+        db.CreativeRequest.create({
+          uid: await generalHelper.getUid('CreativeRequest', 'uid', {}, 'CR'),
+          qty: data.creativesQuantity,
+          ParkingZoneId: createdParkingZone.id,
+          ClientId: createdParkingZone.ClientId
+        })
+      }
+      return createdParkingZone
+    })
+    .catch(generalHelper.catchException)
 }
 
 function getparkingZone (conditions, limit, offset) {

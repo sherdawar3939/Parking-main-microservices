@@ -134,19 +134,19 @@ const validatePostClient = async (req, res, done) => {
     })
   }
 
-  if (_.isEmpty(body.houseNo) || body.houseNo.length < 3 || body.houseNo.length > 20) {
+  if (!body.houseNo || body.houseNo.length < 1 || body.houseNo.length > 50) {
     errorArray.push({
       field: 'houseNo',
       error: 1006,
-      message: 'Please provide only valid \'houseNo\' as string, length must be between 3 and 20.'
+      message: 'Please provide only valid \'houseNo\' as string, length must be between 1 and 50.'
     })
   }
 
-  if (_.isEmpty(body.streetNo) || body.streetNo.length < 3 || body.streetNo.length > 20) {
+  if (!body.streetNo || body.streetNo.length < 1 || body.streetNo.length > 100) {
     errorArray.push({
       field: 'streetNo',
       error: 1006,
-      message: 'Please provide only valid \'streetNo\' as string, length must be between 3 and 20.'
+      message: 'Please provide only valid \'streetNo\' as string, length must be between 1 and 100.'
     })
   }
   // validating as required string field
@@ -316,22 +316,22 @@ const validatePutClient = (req, res, done) => {
   }
 
   if (body.hasOwnProperty('houseNo') && body.houseNo) {
-    if (_.isEmpty(body.houseNo) || body.houseNo.length < 3 || body.houseNo.length > 20) {
+    if (body.houseNo.length < 1 || body.houseNo.length > 50) {
       errorArray.push({
         field: 'houseNo',
         error: 1006,
-        message: 'Please provide only valid \'houseNo\' as string, length must be between 3 and 20.'
+        message: 'Please provide only valid \'houseNo\' as string, length must be between 1 and 50.'
       })
     }
     validatedBody.houseNo = body.houseNo
   }
 
   if (body.hasOwnProperty('streetNo') && body.streetNo) {
-    if (_.isEmpty(body.streetNo) || body.streetNo.length < 3 || body.streetNo.length > 20) {
+    if (body.streetNo.length < 1 || body.streetNo.length > 100) {
       errorArray.push({
         field: 'streetNo',
         error: 1006,
-        message: 'Please provide only valid \'streetNo\' as string, length must be between 3 and 20.'
+        message: 'Please provide only valid \'streetNo\' as string, length must be between 1 and 100.'
       })
     }
     validatedBody.streetNo = body.streetNo
@@ -399,9 +399,11 @@ var storage = multer.diskStorage({
     cb(null, dir)
   },
   filename: async function (req, file, cb) {
-    const uid = await generalHelper.getUid('Contract', 'uid', {}, 'I')
+    const uid = await generalHelper.getUid('Contract', 'uid', {
+      type: 'General'
+    }, 'I')
     req.uid = uid
-    cb(null, `${uid}${file.originalname}`)
+    cb(null, `${uid}.pdf`)
   }
 })
 
