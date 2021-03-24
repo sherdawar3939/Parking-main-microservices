@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(50)
     },
     type: {
-      type: DataTypes.ENUM(['General', 'ParkingZone']),
+      type: DataTypes.ENUM(['General', 'ParkingZone', 'Voucher']),
       allowNull: false,
       defaultValue: 'General'
     }

@@ -50,6 +50,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     paymentFrequency: {
       type: DataTypes.ENUM('Daily', 'Weekly', 'Monthly')
+    },
+    type: {
+      type: DataTypes.ENUM('Private', 'Government')
     }
 
   }, {
@@ -61,6 +64,7 @@ module.exports = function (sequelize, DataTypes) {
       Client.belongsTo(models.User, { foreignKey: 'UserId', as: 'clientUser' })
       Client.belongsTo(models.Country, { foreignKey: 'CountryId', as: 'countryClient' })
       Client.hasMany(models.CreativeRequest, { foreignKey: 'ClientId', as: 'CreativeRequestClient' })
+      Client.hasMany(models.Voucher, { foreignKey: 'ClientId', as: 'clientVoucher' })
     }
   })
   return Client
