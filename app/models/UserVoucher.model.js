@@ -15,10 +15,15 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.ENUM(['Pending', 'Paid']),
       allowNull: false,
       defaultValue: 'Pending'
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   }, {
     associate: function (models) {
-      UserVoucher.hasMany(models.Voucher, { foreignKey: 'UserVoucherId', as: 'UserVoucher' })
+    //   UserVoucher.hasMany(models.Voucher, { foreignKey: 'UserVoucherId', as: 'UserVoucher' })
     }
   })
   return UserVoucher
