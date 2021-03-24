@@ -2,12 +2,6 @@
 
 module.exports = function (sequelize, DataTypes) {
   let UserVoucher = sequelize.define('UserVoucher', {
-    UserVehicleId: {
-      type: DataTypes.INTEGER(11)
-    },
-    UserId: {
-      type: DataTypes.INTEGER(11)
-    },
     expiryDate: {
       type: DataTypes.DATE
     },
@@ -20,10 +14,21 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false
+    },
+    UserVehicleId: {
+      type: DataTypes.INTEGER(11)
+    },
+    UserId: {
+      type: DataTypes.INTEGER(11)
+    },
+    VoucherId: {
+      type: DataTypes.INTEGER(11)
     }
   }, {
     associate: function (models) {
-    //   UserVoucher.hasMany(models.Voucher, { foreignKey: 'UserVoucherId', as: 'UserVoucher' })
+      UserVoucher.belongsTo(models.Voucher, { foreignKey: 'VoucherId', as: 'UserVouchers' })
+      UserVoucher.belongsTo(models.User, { foreignKey: 'UserId', as: 'UserVouchersUser' })
+      UserVoucher.belongsTo(models.UserVehicle, { foreignKey: 'UserVehicleId', as: 'UserVehicleVouchers' })
     }
   })
   return UserVoucher

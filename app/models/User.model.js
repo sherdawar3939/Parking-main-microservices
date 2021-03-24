@@ -49,6 +49,7 @@ module.exports = function (sequelize, DataTypes) {
       User.hasMany(models.Contract, { foreignKey: 'UserId', as: 'userContract' })
       User.hasOne(models.Client, { foreignKey: 'UserId', as: 'clientUser' })
       User.hasMany(models.CreativeRequest, { foreignKey: 'UpdatedBy', as: 'creativeRequestHandler' })
+      User.hasMany(models.UserVoucher, { foreignKey: 'UserId', as: 'userVouchers' })
     }
   })
 

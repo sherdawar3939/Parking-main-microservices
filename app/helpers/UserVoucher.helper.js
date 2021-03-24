@@ -1,10 +1,8 @@
-// var Sequelize = require('sequelize')
-// const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
 const createUserVoucher = (userData) => {
-  return db.Inspector.create({ userData })
+  return db.UserVoucher.create({ userData })
 }
 
 const updateUserVoucher = (id, data) => {
@@ -49,9 +47,9 @@ function getUserVoucherID (id) {
       id
     },
     include: [{
-      model: db.User,
-      as: 'userInspector',
-      attributes: ['fName', 'lName', 'email', 'isVerified', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
+      model: db.UserVehicle,
+      as: 'UserVehicleVouchers',
+      attributes: ['licensePlate'],
       where: { isDeleted: false }
     }]
   })
@@ -59,7 +57,13 @@ function getUserVoucherID (id) {
 
 function getUserVoucherList (conditions) {
   return db.UserVoucher.findAll({
-    where: { isDeleted: false }
+    where: conditions,
+    include: [{
+      model: db.UserVehicle,
+      as: 'UserVehicleVouchers',
+      attributes: ['licensePlate'],
+      where: { isDeleted: false }
+    }]
   })
 }
 module.exports = { createUserVoucher, updateUserVoucher, deleteUserVoucherID, getUserVoucherID, getUserVoucherList }

@@ -17,6 +17,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     associate: function (models) {
       Voucher.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'clientVoucher' })
+      Voucher.hasMany(models.UserVoucher, { foreignKey: 'VoucherId', as: 'userVouchers' })
     }
   })
   return Voucher

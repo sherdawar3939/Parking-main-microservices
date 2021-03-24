@@ -6,7 +6,7 @@
 var PromiseReturns = require('bluebird')
 var StandardError = require('standard-error')
 var fs = require('fs')
-const pdfMakePrinter = require('pdfmake/src/printer')
+const PdfPrinter = require('pdfmake/src/printer')
 const winston = require('../config/winston')
 const config = require('../config/config')
 const AWS = require('aws-sdk')
@@ -160,7 +160,7 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
         bolditalics: 'assets/fonts/Roboto-Italic.ttf'
       }
     }
-    const printer = new pdfMakePrinter(fontDescriptors)
+    const printer = new PdfPrinter(fontDescriptors)
 
     const doc = printer.createPdfKitDocument(docDefinition)
 

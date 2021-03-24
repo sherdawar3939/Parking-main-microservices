@@ -15,6 +15,7 @@ module.exports = function (sequelize, DataTypes) {
   }, {
     associate: function (models) {
       UserVehicle.hasMany(models.Parking, { foreignKey: 'UserVehicleId', as: 'UserVehicleParking' })
+      UserVehicle.hasMany(models.UserVoucher, { foreignKey: 'UserVehicleId', as: 'UserVehicleVouchers' })
       UserVehicle.belongsTo(models.User, { foreignKey: 'UserId', as: 'userVehicle' })
       UserVehicle.belongsTo(models.VehicleCategory, { foreignKey: 'VehicleCategoryId', as: 'userVehicleCategory' })
     }
