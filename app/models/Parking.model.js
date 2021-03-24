@@ -65,6 +65,7 @@ module.exports = function (sequelize, DataTypes) {
       Parking.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'parkingZone' })
       Parking.belongsTo(models.User, { foreignKey: 'UserId', as: 'userParking' })
       Parking.belongsTo(models.UserVehicle, { foreignKey: 'UserVehicleId', as: 'parkingUserVehicle' })
+      Parking.hasMany(models.Inspection, { foreignKey: 'ParkingId', as: 'parkingInspections' })
     }
   })
   return Parking
