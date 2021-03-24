@@ -19,6 +19,18 @@ const validateGetUserVehicle = (req, res, done) => {
     validatedConditions.UserId = query.UserId
   }
 
+  // validating as optional number field
+  if (query.hasOwnProperty('id') && query.id) {
+    if (isNaN(query.id) || query.id < 1 || query.id > 999999999) {
+      errorArray.push({
+        field: 'id',
+        error: 'VGUV-005',
+        message: 'The id should be number with min 1 and max 999999999 value.'
+      })
+    }
+    validatedConditions.id = query.id
+  }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'userVehicle.middleware.validateGetUserVehicle')
   }
@@ -40,7 +52,7 @@ const validatePostUserVehicle = (req, res, done) => {
     })
   }
   // quantity must be required required  Validating as not empty, valid integer.
-  if (!body.quantity || !isInteger(body.quantity)) {
+  if (!body.quantity || isNaN(body.quantity)) {
     errorArray.push({
       field: 'quantity',
       error: 26,
