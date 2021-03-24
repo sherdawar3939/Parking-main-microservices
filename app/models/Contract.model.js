@@ -12,8 +12,16 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: false,
       defaultValue: 'PENDING'
     },
-    imageUrl: {
+    contractUrl: {
       type: DataTypes.STRING()
+    },
+    uid: {
+      type: DataTypes.STRING(50)
+    },
+    type: {
+      type: DataTypes.ENUM(['General', 'ParkingZone', 'Voucher']),
+      allowNull: false,
+      defaultValue: 'General'
     }
   }, {
     associate: function (models) {

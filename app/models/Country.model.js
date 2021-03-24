@@ -8,10 +8,14 @@ module.exports = function (sequelize, DataTypes) {
       },
       iso: {
         type: DataTypes.STRING(5)
+      },
+      tax: {
+        type: DataTypes.DECIMAL(6, 3)
       }
     }, {
       associate: function (models) {
         Country.hasMany(models.City, { foreignKey: 'CountryId', as: 'countryCities' })
+        Country.hasMany(models.Client, { foreignKey: 'CountryId', as: 'countryClient' })
       }
     }
   )

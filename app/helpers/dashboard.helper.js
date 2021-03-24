@@ -22,10 +22,10 @@ const getDashboardDetails = async (conditions) => {
   return { usersCountQuery: usersCountQuery, clientCountQuery: clientCountQuery, totalActiveStatus: totalActiveStatus, parkingZoneCountQuery: parkingZoneCountQuery }
 }
 
-const getDashboardClientCounts = async (id, res, next) => {
-  console.log('id', id)
+const getDashboardClientCounts = async (id) => {
   const InspectorCountQuery = await db.Inspector.count({ where: { ClientId: id } })
   console.log('count', InspectorCountQuery)
+
   // return InspectorCountQuery
   const ParkingCounts = await db.ParkingZone.findAll({
     raw: true,
@@ -46,11 +46,12 @@ const getDashboardClientCounts = async (id, res, next) => {
       }
     }],
     group: ['ClientId']
+  }).catch((error) => {
+    console.log(error)
   })
-  let parkingCount
-  if (ParkingCounts.length === 0) {
-    parkingCount = 0
-  } else {
+
+  let parkingCount = 0
+  if (ParkingCounts.length) {
     parkingCount = ParkingCounts[0].parkingCounts
   }
   return { InspectorCountQuery: InspectorCountQuery, parkingCounts: parkingCount }

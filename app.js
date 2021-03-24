@@ -8,9 +8,17 @@ const passport = require('./app/config/passport')
 const app = express()
 // Middleware to capture any HTTP responses
 
-app.get('/admin/api/v1/health', function (req, res) {
+app.get('/main/api/v1/health', function (req, res) {
   return res.status(200).send('Admin micro-service working 100%... \n 1 September, 2020 - 12:00 AM')
 })
+
+app.get('/main/images/:name', function (req, res) {
+  var fs = require('fs')
+  var data = fs.readFileSync('./images/' + req.params.name)
+  res.contentType('application/pdf')
+  res.send(data)
+})
+
 global.winston = require('./app/config/winston')
 
 // Initialize Express
@@ -31,7 +39,6 @@ require('./app/config/sequelize.config')
 const port = process.env.PORT || '3000'
 
 app.set('port', port)
-app.use('/images', express.static('images'))
 /**
  * Create HTTP server.
  */

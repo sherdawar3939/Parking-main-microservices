@@ -18,7 +18,7 @@ module.exports = function (sequelize, DataTypes) {
     },
     imageUrl: DataTypes.STRING,
     phone: {
-      type: DataTypes.STRING(11)
+      type: DataTypes.STRING(16)
     },
     otp: DataTypes.STRING(40),
     language: DataTypes.STRING(5),
@@ -47,8 +47,8 @@ module.exports = function (sequelize, DataTypes) {
       User.hasMany(models.Payment, { foreignKey: 'UserId', as: 'userPayment' })
       User.hasOne(models.Inspector, { foreignKey: 'UserId', as: 'userInspector' })
       User.hasMany(models.Contract, { foreignKey: 'UserId', as: 'userContract' })
-      User.hasMany(models.CreativeRequest, { foreignKey: 'UpdatedBy', as: 'userCreativeRequest' })
-      User.hasMany(models.Client, { foreignKey: 'UserId', as: 'clientUser' })
+      User.hasOne(models.Client, { foreignKey: 'UserId', as: 'clientUser' })
+      User.hasMany(models.CreativeRequest, { foreignKey: 'UpdatedBy', as: 'creativeRequestHandler' })
     }
   })
 

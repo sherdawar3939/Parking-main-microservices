@@ -4,16 +4,12 @@ var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalMiddleware = require('../middlewares/general.middleware')
-
+const generalHelpingMethods = require('../helpers/general.helper')
+const fs = require('fs')
 // Get Client List
 const getClientList = (conditions) => {
   const where = {}
   const contractWhere = {}
-  const zipCodeWhere = {}
-  if (conditions.zipCode) {
-    zipCodeWhere.zipCode = conditions.zipCode
-  }
-
   if (conditions.status) {
     contractWhere.status = conditions.status
   }
@@ -29,28 +25,12 @@ const getClientList = (conditions) => {
       email: { [Op.like]: '%' + conditions.search + '%' }
     }
   }
-  console.log(zipCodeWhere)
   return db.Client.findAll({
     where,
     order: [
       ['id', 'ASC']
     ],
     include: [
-      {
-        model: db.ClientZipCode,
-        as: 'clientZipCodes',
-        required: false,
-        where: {
-          isDeleted: false
-        },
-        include: [{
-          where: zipCodeWhere,
-          required: false,
-          model: db.ZipCode,
-          as: 'zipCodes'
-        }]
-
-      },
       {
         where: contractWhere,
         model: db.Contract,
@@ -70,43 +50,20 @@ const getClientDetail = (id) => {
       id
     },
     attributes: ['id', 'companyName', 'email', 'phone', 'iban', 'secondaryPhone', 'secondaryEmail', 'secondaryContactPersonName', 'address', 'balance'],
-    include: [{
-      model: db.ClientZipCode,
-      required: false,
-      as: 'clientZipCodes',
-      attributes: ['clientId'],
-      where: {
-        isDeleted: false
-      },
-      include: [{
-        model: db.ZipCode,
-        as: 'zipCodes',
-        attributes: ['zipCode'],
-        include: [{
-          model: db.City,
-          as: 'cityZipCodes',
-          attributes: ['name'],
-          include: [{
-            model: db.Country,
-            as: 'countryCities',
-            attributes: ['name']
-          }]
-
-        }]
-      }]
-    }, {
-      model: db.ParkingZone,
-      as: 'clientParkingZones'
-    }
+    include: [
+      {
+        model: db.ParkingZone,
+        as: 'parkingZoneClient'
+      }
     ]
 
   })
 }
 
 // Create Client API
-const postClient = async (body, res, next) => {
-  const errorsArray = []
-  const client = await db.Client.findOne({
+const postClient = (body, files, uid) => {
+  const contract = {}
+  return db.Client.findOne({
     where: {
       [Op.or]: [
         {
@@ -116,32 +73,38 @@ const postClient = async (body, res, next) => {
         }
       ]
     }
-  })
-
-  if (!client) {
-    return db.Client.create(body)
-  } else {
-    if (client.phone === body.phone) {
-      errorsArray.push({
-        field: 'phone',
-        error: 1500,
-        message: 'phone already exist'
-      })
+  }).then(async client => {
+    if (!client) {
+      return db.Client.create(body)
     }
 
+    if (client.phone === body.phone) {
+      await fs.unlinkSync(files.files[0].path)
+      return generalHelpingMethods.rejectPromise([{
+        field: 'phone',
+        error: 1540,
+        message: 'Phone already exist '
+      }])
+    }
     if (client.email === body.email) {
       // user email already exist.
-      errorsArray.push({
-        field: 'email',
-        error: 1505,
-        message: 'email already exist'
-      })
+      await fs.unlinkSync(files.files[0].path)
+      return generalHelpingMethods.rejectPromise([{
+        field: 'Email',
+        error: 1540,
+        message: 'Email already exist '
+      }])
     }
-    if (!_.isEmpty(errorsArray)) {
-      return generalMiddleware.standardErrorResponse(res, errorsArray, 'client.helper.postClient')
-    }
-  }
-  next()
+  }).then(createdClient => {
+    const client = JSON.stringify(createdClient)
+    contract.data = client
+    contract.uid = uid
+    contract.UserId = body.UserId
+    contract.ClientId = createdClient.dataValues.id
+    contract.contractUrl = files.files[0].filename
+    return db.Contract.create(contract)
+  })
+    .catch(generalHelpingMethods.catchException)
 }
 
 // Update Client API

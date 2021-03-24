@@ -3,13 +3,19 @@
 const db = require('../config/sequelize.config')
 // fetch banners
 function getUserVehicle (conditions) {
+  conditions.isDeleted = false
   return db.UserVehicle.findAll({
+    include: {
+      model: db.VehicleCategory,
+      as: 'userVehicleCategory',
+      attributes: ['id', 'name']
+    },
     where: conditions
   })
 }
 
 function addUserVehicle (data) {
-  return db.UserVehicle.create({ licensePlate: data.licensePlate, quantity: data.quantity, VehicleCategoryId: data.VehicleCategoryId })
+  return db.UserVehicle.create(data)
 }
 
 function updateUserVehicle (id, data) {
@@ -21,7 +27,7 @@ function updateUserVehicle (id, data) {
 }
 
 function deleteUserVehicle (id) {
-  return db.UserVehicle.update({ isDeleted: false }, {
+  return db.UserVehicle.update({ isDeleted: true }, {
     where: {
       id
     }
