@@ -2,7 +2,7 @@
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
 
-const validatePostInspector = (req, res, done) => {
+const validatePostUserVoucher = (req, res, done) => {
   const body = req.body
   const errorArray = []
   const validatedUserData = {}
@@ -117,4 +117,4 @@ const validateInspectorsList = (req, res, done) => {
   done()
 }
 
-module.exports = { validatePostInspector, validateUpdateInspector, validateInspectorUser, validateGetInspectorUser, validateInspectorsList }
+module.exports = { validatePostUserVoucher, validateUpdateInspector, validateInspectorUser, validateGetInspectorUser, validateInspectorsList }
