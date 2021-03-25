@@ -6,7 +6,7 @@ const generalController = require('./general.controller')
 
 // Get Vehicle Category
 const createVoucher = function (req, res) {
-  return voucherHelper.createVoucherHelper(req.validatedBody)
+  return voucherHelper.createVoucherHelper(req.validatedBody, req.status)
     .then(function (data) {
       generalController.successResponse(res, 'Voucher created successfully.', data, 'Voucher.controller.createVoucher')
     }).catch(StandardError, function (err) {
