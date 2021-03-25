@@ -2,52 +2,83 @@
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
 
-const validatePostInspector = (req, res, done) => {
+const validatePostUserVoucher = (req, res, done) => {
   const body = req.body
   const errorArray = []
   const validatedUserData = {}
-  const validatedInspectorData = {}
-  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
-    validatedInspectorData.ClientId = req.user.employeeId
+
+  // validating UserVehicleId
+  if (!body.UserVehicleId || isNaN(body.UserVehicleId)) {
+    errorArray.push({
+      field: 'UserVehicleId',
+      error: 2345,
+      message: 'The UserVehicleId is required as numeric.'
+    })
+  }
+
+  // validating VoucherId
+  if (!body.VoucherId || isNaN(body.VoucherId)) {
+    errorArray.push({
+      field: 'VoucherId',
+      error: 2345,
+      message: 'The VoucherId is required as numeric.'
+    })
+  }
+
+  // validating expiryDate
+  if (!body.expiryDate) {
+    errorArray.push({
+      field: 'expiryDate',
+      error: 2345,
+      message: 'The expiryDate is required.'
+    })
+  }
+
+  // validating fee
+  if (!body.fee || isNaN(body.fee)) {
+    errorArray.push({
+      field: 'fee',
+      error: 2345,
+      message: 'The fee is required.'
+    })
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'inspector.middleware.validatePostInspector')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'inspector.middleware.validatePostUserVoucher')
   }
-
-  validatedUserData.email = body.email
-
+  validatedUserData.fee = body.fee
+  validatedUserData.expiryDate = body.expiryDate
+  validatedUserData.VoucherId = body.VoucherId
+  validatedUserData.UserVehicleId = body.UserVehicleId
+  validatedUserData.UserId = req.user.id
   req.validatedUserData = validatedUserData
-  req.validatedInspectorData = validatedInspectorData
   done()
 }
 
-const validateUpdateInspector = (req, res, done) => {
+const validateUpdateUserVoucher = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
 
-  // lName must be required required  Validating as not empty, valid String and length range.
-  if (!_.isString(body.lName) || body.lName.length > 50) {
+  // paymentStatus must be required  Validating as not empty, valid String and length range.
+  if (!_.isString(body.paymentStatus) || body.paymentStatus.length > 50) {
     errorArray.push({
-      field: 'lName',
+      field: 'paymentStatus',
       error: 25,
-      message: 'Please provide only valid \'lName\' as string, length must be between 2 and 20.'
+      message: 'Please provide only valid \'paymentStatus\' as string, length must be between 2 and 20.'
     })
   }
 
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
-  validatedBody.fName = body.fName
-  validatedBody.lName = body.lName
-  validatedBody.email = body.email
+  validatedBody.paymentStatus = body.paymentStatus
 
   req.validatedBody = validatedBody
   done()
 }
 
-const validateInspectorUser = (req, res, done) => {
+const validateGetUserVoucher = (req, res, done) => {
   const errorArray = []
   if (isNaN(req.params.id)) {
     errorArray.push({
@@ -77,7 +108,7 @@ const validateGetInspectorUser = (req, res, done) => {
   done()
 }
 
-const validateInspectorsList = (req, res, done) => {
+const validateGetUserVoucherList = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
@@ -117,4 +148,4 @@ const validateInspectorsList = (req, res, done) => {
   done()
 }
 
-module.exports = { validatePostInspector, validateUpdateInspector, validateInspectorUser, validateGetInspectorUser, validateInspectorsList }
+module.exports = { validatePostUserVoucher, validateUpdateUserVoucher, validateGetUserVoucher, validateGetInspectorUser, validateGetUserVoucherList }

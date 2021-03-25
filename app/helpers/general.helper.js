@@ -194,7 +194,70 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
     throw (err)
   }
 };
+function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = ['None'], deletedZipCodes = ['None']) {
+  const docDefinition = {
+    content: [
+      {
+        text: '\nIII. SZÁMÚ MELLÉKLET',
+        style: 'header',
+        alignment: 'center'
+      },
+      {
+        text: 'Verziószám: III.000',
+        style: 'header',
+        alignment: 'center'
+      },
+      {
+        text: 'Jelen melléklet a szerződés elválaszthatatlan részét képezi.\n\n\n',
+        alignment: 'center'
+      },
+      {
+        text: 'ÜGYFÉL a regisztrációja során a következő kódszámú parkolóbérleteket törölte:'
+      },
+      {
+        // text: ['73120007 - 19 March, 2020\n', '73120007 - 19 March, 2020\n']
+        text: deletedZipCodes
+      },
+      {
+        text: '\n\nÜGYFÉL a regisztrációja során a következő kódszámú parkolóbérlet(eket) és a hozzájuk tartozó árakat hozta létre:'
+      },
+      {
+        text: newZipCodes
+      },
+      {
+        text: `\n\nFürstenfeldbruck, ${DATE.now()}`
+      }
+    ]
+  }
 
+  try {
+    const fontDescriptors = {
+      Roboto: {
+        normal: 'assets/fonts/Roboto-Regular.ttf',
+        bold: 'assets/fonts/Roboto-Medium.ttf',
+        italics: 'assets/fonts/Roboto-Italic.ttf',
+        bolditalics: 'assets/fonts/Roboto-Italic.ttf'
+      }
+    }
+    const printer = new PdfPrinter(fontDescriptors)
+
+    const doc = printer.createPdfKitDocument(docDefinition)
+
+    doc.pipe(
+      fs.createWriteStream(`images/${fileName}.pdf`).on('error', (err) => {
+        console.log(err)
+      })
+    )
+
+    doc.on('end', () => {
+      console.log('PDF successfully created and stored')
+    })
+
+    doc.end()
+  } catch (err) {
+    throw (err)
+  }
+};
 module.exports = {
   checkIfUserHasPermission,
   rejectPromise,
@@ -204,5 +267,6 @@ module.exports = {
   getUid,
   getLatLonCenterFromGeometry,
   generateParkingZoneContract,
-  createUid
+  createUid,
+  generateVoucherContract
 }

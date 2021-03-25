@@ -44,6 +44,9 @@ module.exports = function (sequelize, DataTypes) {
     },
     contractUrl: {
       type: DataTypes.STRING
+    },
+    clientCount: {
+      type: DataTypes.INTEGER(3)
     }
   }, {
     associate: function (models) {

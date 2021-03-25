@@ -1,13 +1,11 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-const { isInteger } = require('lodash')
 
 const validateCreateParkingZone = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-  console.log(body)
   if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
     validatedBody.ClientId = req.user.employeeId
   }
