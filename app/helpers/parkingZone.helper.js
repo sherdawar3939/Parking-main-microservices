@@ -4,9 +4,7 @@ var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalHelper = require('./general.helper')
-
 const addParkingZone = (data) => {
-  console.log(data)
   data.uid = data.maxTime.toString() + data.zip.toString() + data.fee.toString().split('.').join('')
   const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
   if (center) {
@@ -14,8 +12,41 @@ const addParkingZone = (data) => {
     data.lng = center.lng
   }
   data.polygons = JSON.stringify(data.polygons)
-  return db.ParkingZone.create(data)
-    .then(async (createdParkingZone) => {
+
+  return db.Client.findAll({ where: { id: data.ClientId } })
+    .then(async client => {
+      if (client[0].dataValues.type === 'Government') {
+        const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0 } })
+        console.log(parkingZone)
+        if (!parkingZone) {
+          data.clientCount = 0
+          return db.ParkingZone.create(data)
+        }
+        return generalHelper.rejectPromise([{
+          field: 'clientCount',
+          error: 1540,
+          message: 'already created parkingZone '
+        }])
+      } else if (client[0].dataValues.type === 'Private') {
+        const parkingZone = await db.ParkingZone.findAll({
+          where: { zip: data.zip, clientCount: { [Op.ne]: 0 } },
+          order: [ ['clientCount', 'ASC'] ]
+        })
+        if (parkingZone.length < 1) {
+          data.clientCount = 9
+          return db.ParkingZone.create(data)
+        } else if (parkingZone[0].dataValues.clientCount === 5) {
+          return generalHelper.rejectPromise([{
+            field: 'clientCount',
+            error: 1540,
+            message: 'You are not created parkingZone'
+          }])
+        } else {
+          data.clientCount = (parkingZone[0].dataValues.clientCount - 1)
+          return db.ParkingZone.create(data)
+        }
+      }
+    }).then(async (createdParkingZone) => {
       if (!createdParkingZone) {
         return null
       }
