@@ -1,11 +1,11 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { ActiveParkingStatusHelper } = require('../helpers/inspection.helper')
+const { ParkingStatusInspection } = require('../helpers/inspection.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 /* Get Active Parking List */
 const getActiveParkingStatus = function (req, res) {
-  return ActiveParkingStatusHelper(req.conditions, req.limit, req.offset)
+  return ParkingStatusInspection(req.conditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'ParkingStatus fetched successfully.', data, 'inspection.controller.getActiveParkingStatus')
     }).catch(StandardError, function (err) {

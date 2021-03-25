@@ -6,8 +6,6 @@ const validateGetParkingStatus = (req, res, done) => {
   const errorArray = []
   const query = req.query
   const validatedConditions = {}
-  let limit = 50
-  let offset = 0
 
   if (query.hasOwnProperty('startedOn') && query.startedOn) {
     validatedConditions.startedOn = query.startedOn
@@ -18,8 +16,7 @@ const validateGetParkingStatus = (req, res, done) => {
   }
 
   req.conditions = validatedConditions
-  req.limit = limit
-  req.offset = offset
+
   done()
 }
 module.exports = validateGetParkingStatus
