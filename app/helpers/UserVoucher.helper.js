@@ -2,7 +2,14 @@ const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
 const createUserVoucher = (userData) => {
-  return db.UserVoucher.create({ userData })
+  // console.log(userData.UserId, userData.UserVehicleId, userData.payemntStatus)
+  console.log(userData)
+  return db.UserVoucher.create({
+    UserVehicleId: userData.UserVehicleId,
+    VoucherId: userData.VoucherId,
+    UserId: userData.UserId,
+    fee: userData.fee,
+    expiryDate: userData.expiryDate })
 }
 
 const updateUserVoucher = (id, data) => {
@@ -15,7 +22,7 @@ const updateUserVoucher = (id, data) => {
           message: 'No Record Exists.'
         })
       }
-      return db.User.update(data, {
+      return db.UserVoucher.update(data, {
         where: {
           id: foundUserVoucher.id
         }
