@@ -394,7 +394,7 @@ var storage = multer.diskStorage({
   destination: function (req, files, cb) {
     var dir = 'images'
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync('dir')
+      fs.mkdirSync('images')
     }
     cb(null, dir)
   },
