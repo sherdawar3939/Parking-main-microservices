@@ -42,9 +42,9 @@ const validatePostVoucher = (req, res, done) => {
   } else if (body.validityDays === 30) {
     req.status = 'monthly'
   } else if (body.validityDays === 90) {
-    req.status = '3 monthly'
+    req.status = '3 month'
   } else if (body.validityDays === 180) {
-    req.status = '6 monthly'
+    req.status = '6 month'
   } else {
     req.status = 'yearly'
   }

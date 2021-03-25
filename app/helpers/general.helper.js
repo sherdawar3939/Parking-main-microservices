@@ -109,6 +109,21 @@ function getUid (Model, field, where = {}, uidStartAlphabets = '') {
     })
 }
 
+const createUid = (num, zip, status) => {
+  if (status === 'daily') {
+    return `${num} 94 ${zip}`
+  } else if (status === 'weekly') {
+    return `${num} 95 ${zip}`
+  } else if (status === 'monthly') {
+    return `${num} 96 ${zip}`
+  } else if (status === '3 month') {
+    return `${num} 97 ${zip}`
+  } else if (status === '6 month') {
+    return `${num} 98 ${zip}`
+  } else if (status === 'yearly') {
+    return `${num} 99 ${zip}`
+  }
+}
 const getLatLonCenterFromGeometry = (coords) => {
   const arrAvg = arr => arr.reduce((a, b) => a + b, 0) / arr.length
 
@@ -188,5 +203,6 @@ module.exports = {
   uploadImageToS3,
   getUid,
   getLatLonCenterFromGeometry,
-  generateParkingZoneContract
+  generateParkingZoneContract,
+  createUid
 }
