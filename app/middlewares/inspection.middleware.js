@@ -7,12 +7,12 @@ const validateGetParkingStatus = (req, res, done) => {
   const query = req.query
   const validatedConditions = {}
 
-  if (query.hasOwnProperty('startedOn') && query.startedOn) {
-    validatedConditions.startedOn = query.startedOn
+  if (query.hasOwnProperty('licensePlate') && query.licensePlate) {
+    validatedConditions.licensePlate = query.licensePlate
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateGetParkingList')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'inspection.middleware.validateGetParkingStatus')
   }
 
   req.conditions = validatedConditions
