@@ -50,19 +50,19 @@ module.exports = async function dbseed (db, sequelize) {
   newUser.hashedPassword = newUser.encryptPassword('newPassword', newUser.salt)
   await newUser.save()
 
-  let newUser1 = db.User.build({
-    fName: 'Parking',
-    lName: 'Admin',
-    email: 'parking@admin.com',
-    imageUrl: 'https://pixabay.com/images/search/nature/',
-    phone: '4484894898989',
-    otp: '3006',
-    RoleId: 2,
-    isVerified: true
-  })
-  newUser1.salt = newUser1.makeSalt()
-  newUser1.hashedPassword = newUser1.encryptPassword('newPassword', newUser1.salt)
-  await newUser1.save()
+  // let newUser1 = db.User.build({
+  //   fName: 'Parking',
+  //   lName: 'Admin',
+  //   email: 'parking@admin.com',
+  //   imageUrl: 'https://pixabay.com/images/search/nature/',
+  //   phone: '4484894898989',
+  //   otp: '3006',
+  //   RoleId: 2,
+  //   isVerified: true
+  // })
+  // newUser1.salt = newUser1.makeSalt()
+  // newUser1.hashedPassword = newUser1.encryptPassword('newPassword', newUser1.salt)
+  // await newUser1.save()
 
   // New Users
   let newUser2 = db.User.build({
@@ -94,8 +94,8 @@ module.exports = async function dbseed (db, sequelize) {
   await newUser3.save()
 
   const country = {
-    name: 'Pakistan',
-    iso: '34-45'
+    name: 'Germany',
+    iso: 'GER'
   }
   await db.Country.create(country)
     .catch((error) => {
@@ -105,45 +105,21 @@ module.exports = async function dbseed (db, sequelize) {
   const city = [{
     id: 1,
     CountryId: 1,
-    name: 'Islamabad'
+    name: 'Berlin'
   },
   {
     id: 2,
     CountryId: 1,
-    name: 'Peshawar'
+    name: 'Munich'
   },
   {
     id: 3,
     CountryId: 1,
-    name: 'Lahore'
+    name: 'Hamburg'
   }
 
   ]
   await db.City.bulkCreate(city)
-    .catch((error) => {
-      console.log(error)
-    })
-
-  const zipCode = [{
-    id: 1,
-    zipCode: 12000,
-    CityId: 1
-
-  },
-  {
-    id: 2,
-    zipCode: 14000,
-    CityId: 2
-
-  },
-  {
-    id: 3,
-    zipCode: 16000,
-    CityId: 3
-
-  }
-  ]
-  await db.ZipCode.bulkCreate(zipCode)
     .catch((error) => {
       console.log(error)
     })
@@ -217,29 +193,25 @@ module.exports = async function dbseed (db, sequelize) {
   ]
   await db.Contract.bulkCreate(contract)
 
-  const clientZipCode = [{
-    id: 1,
-    isDeleted: false,
-    ZipCodeId: 1,
-    ClientId: 1
-  },
-  {
-    id: 2,
-    isDeleted: false,
-    ZipCodeId: 2,
-    ClientId: 2
-  },
-  {
-    id: 3,
-    isDeleted: false,
-    ZipCodeId: 3,
-    ClientId: 3
-  }
-  ]
-  await db.ClientZipCode.bulkCreate(clientZipCode)
-    .catch((error) => {
-      console.log(error)
-    })
+  // const clientZipCode = [{
+  //   id: 1,
+  //   isDeleted: false,
+  //   ZipCodeId: 1,
+  //   ClientId: 1
+  // },
+  // {
+  //   id: 2,
+  //   isDeleted: false,
+  //   ZipCodeId: 2,
+  //   ClientId: 2
+  // },
+  // {
+  //   id: 3,
+  //   isDeleted: false,
+  //   ZipCodeId: 3,
+  //   ClientId: 3
+  // }
+  // ]
 
   const parkingZone = [{
     uid: '34',
@@ -307,17 +279,17 @@ module.exports = async function dbseed (db, sequelize) {
 
   const vehicle = [{
     id: 1,
-    name: 'car',
+    name: 'Car',
     isDeleted: false
   },
   {
     id: 2,
-    name: 'BMW',
+    name: 'Bus',
     isDeleted: false
   },
   {
     id: 3,
-    name: 'Pejaro',
+    name: 'Bike',
     isDeleted: false
   }
   ]
@@ -328,24 +300,24 @@ module.exports = async function dbseed (db, sequelize) {
 
   const userVehicle = [{
     id: 1,
-    licensePlate: 'white',
-    quantity: 5,
+    licensePlate: 'BD-2344',
+    quantity: 1,
     isDeleted: false,
     VehicleCategoryId: 1,
     UserId: 1
   },
   {
     id: 2,
-    licensePlate: 'red',
-    quantity: 5,
+    licensePlate: 'MN-234',
+    quantity: 1,
     isDeleted: false,
     VehicleCategoryId: 2,
     UserId: 2
   },
   {
     id: 3,
-    licensePlate: 'blue',
-    quantity: 5,
+    licensePlate: 'LYK-786',
+    quantity: 1,
     isDeleted: false,
     VehicleCategoryId: 3,
     UserId: 3

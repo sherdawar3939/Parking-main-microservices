@@ -8,8 +8,9 @@ const validateGetClientsRevenue = (req, res, done) => {
   const params = req.params
   const validatedConditions = {}
   let field = ''
-
-  if (query.hasOwnProperty('ClientId') && query.ClientId) {
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && query.ClientId) {
     if (isNaN(query.ClientId)) {
       errorArray.push({
         field: 'ClientId',
@@ -97,7 +98,9 @@ const validateGetReportListing = (req, res, done) => {
   const query = req.query
   const validatedConditions = {}
 
-  if (query.hasOwnProperty('ClientId') && query.ClientId) {
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && query.ClientId) {
     if (isNaN(query.ClientId)) {
       errorArray.push({
         field: 'ClientId',

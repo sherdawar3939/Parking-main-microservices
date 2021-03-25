@@ -37,7 +37,9 @@ const validateGetPayment = (req, res, done) => {
   const validatedConditions = {}
   let limit = 50
   let offset = 0
-  if (query.hasOwnProperty('ClientId') && query.ClientId) {
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && query.ClientId) {
     if (isNaN(query.ClientId)) {
       errorArray.push({
         field: 'ClientId',

@@ -8,7 +8,7 @@ const validateCreateParking = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
 
-  if (!body.ParkingZoneId || !isInteger(body.ParkingZoneId)) {
+  if (!body.ParkingZoneId || isNaN(body.ParkingZoneId)) {
     errorArray.push({
       field: 'ParkingZoneId',
       error: 26,
@@ -16,7 +16,7 @@ const validateCreateParking = (req, res, done) => {
     })
   }
 
-  if (!body.UserVehicleId || !isInteger(body.UserVehicleId)) {
+  if (!body.UserVehicleId || isNaN(body.UserVehicleId)) {
     errorArray.push({
       field: 'UserVehicleId',
       error: 26,
@@ -44,7 +44,9 @@ const validateGetParkingList = (req, res, done) => {
   if (query.hasOwnProperty('status') && query.status) {
     validatedConditions.status = query.status
   }
-  if (query.hasOwnProperty('ClientId') && query.ClientId) {
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && query.ClientId) {
     validatedConditions.ClientId = query.ClientId
   }
   if (query.hasOwnProperty('VehicleCategoryId') && query.VehicleCategoryId) {
@@ -53,6 +55,10 @@ const validateGetParkingList = (req, res, done) => {
 
   if (query.hasOwnProperty('ParkingZoneId') && query.ParkingZoneId) {
     validatedConditions.ParkingZoneId = query.ParkingZoneId
+  }
+
+  if (query.hasOwnProperty('UserId') && query.UserId) {
+    validatedConditions.UserId = query.UserId
   }
 
   if (query.limit && query.limit > 0) {
@@ -77,7 +83,7 @@ const validateEndParking = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
 
-  if (!body.id || !isInteger(body.id)) {
+  if (!body.id || isNaN(body.id)) {
     errorArray.push({
       field: 'id',
       error: 26,

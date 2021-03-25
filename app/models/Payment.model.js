@@ -24,6 +24,7 @@ module.exports = function (sequelize, DataTypes) {
     }, {
       associate: function (models) {
         Payment.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'clientPayments' })
+        Payment.belongsTo(models.User, { foreignKey: 'UserId', as: 'userPayment' })
       }
     }
   )

@@ -5,14 +5,11 @@ module.exports = function (sequelize, DataTypes) {
     {
       name: {
         type: DataTypes.STRING(50)
-      },
-      CountryId: {
-        type: DataTypes.INTEGER(11)
       }
     }, {
       associate: function (models) {
         City.belongsTo(models.Country, { foreignKey: 'CountryId', as: 'countryCities' })
-        City.hasMany(models.ZipCode, { foreignKey: 'CityId', as: 'cityZipCodes' })
+        City.hasMany(models.ParkingZone, { foreignKey: 'CityId', as: 'cityParkingZone' })
       }
     }
   )

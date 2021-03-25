@@ -26,7 +26,7 @@ const getClientById = (req, res) => {
 }
 
 const addClient = (req, res, next) => {
-  return ClientHelper.postClient(req.validatedBody, res, next)
+  return ClientHelper.postClient(req.validatedBody, req.files, req.uid)
     .then(function (data) {
       generalController.successResponse(res, 'Client add successfully.', data, 'Banner.controller.addClient')
     }).catch(StandardError, function (err) {

@@ -6,10 +6,13 @@
 var PromiseReturns = require('bluebird')
 var StandardError = require('standard-error')
 var fs = require('fs')
+const PdfPrinter = require('pdfmake/src/printer')
 const winston = require('../config/winston')
 const config = require('../config/config')
 const AWS = require('aws-sdk')
 const db = require('../config/sequelize.config')
+const _ = require('lodash')
+
 // Check if user has permission or not
 function checkIfUserHasPermission (permissionName, permissionsArray) {
   for (let i = 0; i < permissionsArray.length; i++) {
@@ -79,13 +82,14 @@ function uploadImageToS3 (imageFile) {
 function getUid (Model, field, where = {}, uidStartAlphabets = '') {
   return db[Model].findOne({
     attributes: [field],
+    raw: true,
     where,
     order: [
       ['id', 'DESC']
     ]
   })
     .then((result) => {
-      if (!result) {
+      if (_.isEmpty(result) || !result.hasOwnProperty(field)) {
         if (uidStartAlphabets) {
           uidStartAlphabets = uidStartAlphabets + '-'
         }
@@ -105,11 +109,84 @@ function getUid (Model, field, where = {}, uidStartAlphabets = '') {
     })
 }
 
+const getLatLonCenterFromGeometry = (coords) => {
+  const arrAvg = arr => arr.reduce((a, b) => a + b, 0) / arr.length
+
+  const centerLat = arrAvg(coords.map(c => c.lat))
+  const centerLon = arrAvg(coords.map(c => c.lng))
+
+  if (isNaN(centerLat) || isNaN(centerLon)) { return null } else return { lat: centerLat, lng: centerLon }
+}
+
+function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCodes = ['None'], deletedZipCodes = ['None']) {
+  const docDefinition = {
+    content: [
+      {
+        text: '\nII. SZÁMÚ MELLÉKLET',
+        style: 'header',
+        alignment: 'center'
+      },
+      {
+        text: 'Verziószám: II.000',
+        style: 'header',
+        alignment: 'center'
+      },
+      {
+        text: 'Jelen melléklet a szerződés elválaszthatatlan részét képezi.\n\n\n',
+        alignment: 'center'
+      },
+      {
+        text: 'ÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t törölte:'
+      },
+      {
+        // text: ['73120007 - 19 March, 2020\n', '73120007 - 19 March, 2020\n']
+        text: deletedZipCodes
+      },
+      {
+        text: '\n\nÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t hozta létre:'
+      },
+      {
+        text: newZipCodes
+      }
+    ]
+  }
+
+  try {
+    const fontDescriptors = {
+      Roboto: {
+        normal: 'assets/fonts/Roboto-Regular.ttf',
+        bold: 'assets/fonts/Roboto-Medium.ttf',
+        italics: 'assets/fonts/Roboto-Italic.ttf',
+        bolditalics: 'assets/fonts/Roboto-Italic.ttf'
+      }
+    }
+    const printer = new PdfPrinter(fontDescriptors)
+
+    const doc = printer.createPdfKitDocument(docDefinition)
+
+    doc.pipe(
+      fs.createWriteStream(`images/${fileName}.pdf`).on('error', (err) => {
+        console.log(err)
+      })
+    )
+
+    doc.on('end', () => {
+      console.log('PDF successfully created and stored')
+    })
+
+    doc.end()
+  } catch (err) {
+    throw (err)
+  }
+};
+
 module.exports = {
   checkIfUserHasPermission,
   rejectPromise,
   catchException,
   putS3Object,
   uploadImageToS3,
-  getUid
+  getUid,
+  getLatLonCenterFromGeometry,
+  generateParkingZoneContract
 }

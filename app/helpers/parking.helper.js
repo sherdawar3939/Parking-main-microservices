@@ -22,13 +22,13 @@ const createParkingHelper = async (data) => {
   // parkingCharges from ParkingZone fee
   parkingCreatedData.parkingCharges = parkingZone.dataValues.fee / 60
   // Quantity Calculations
-  parkingCreatedData.quantity = UserVehicle.dataValues.quantity * 3600 * parkingCreatedData.parkingCharges
+  parkingCreatedData.quantity = UserVehicle.dataValues.quantity
   parkingCreatedData.status = 'Started'
   parkingCreatedData.startedOn = new Date()
+  parkingCreatedData.UserId = data.UserId
   parkingCreatedData.UserVehicleId = data.UserVehicleId
   parkingCreatedData.ParkingZoneId = data.ParkingZoneId
   // clientProfit = Quantity * Tax
-  parkingCreatedData.clientProfit = parkingCreatedData.quantity * 0.18
 
   return db.Parking.create(parkingCreatedData)
 }
@@ -40,7 +40,7 @@ function ActiveParkingListHelper (conditions, limit, offset) {
     where: parkingZoneWhere,
     model: db.ParkingZone,
     as: 'parkingZone',
-    attributes: ['uid', 'fee', 'zip']
+    attributes: ['uid', 'fee', 'zip', 'maxTime']
   }]
 
   if (conditions.ClientId) {
@@ -49,6 +49,10 @@ function ActiveParkingListHelper (conditions, limit, offset) {
 
   if (conditions.ParkingZoneId) {
     parkingWhere.ParkingZoneId = conditions.ParkingZoneId
+  }
+
+  if (conditions.UserId) {
+    parkingWhere.UserId = conditions.UserId
   }
 
   if (conditions.status) {
@@ -71,18 +75,17 @@ function ActiveParkingListHelper (conditions, limit, offset) {
   console.log('include', includes)
   return db.Parking.findAll({
     where: parkingWhere,
+    include: includes,
     limit: limit,
-    offset: offset,
-    include: includes
+    offset: offset
   })
 }
 const endParkingHelper = (id) => {
   let bill = {}
-  console.log(id)
   // TIMESTAMPDIFF(SECOND, '2012-06-06 13:13:55', '2012-06-06 15:20:18')
   let query = `SELECT *, Parkings.id as ParkingId FROM Parkings
   INNER JOIN ParkingZones ON Parkings.ParkingZoneId = ParkingZones.id
-  WHERE status='STARTED' AND Parkings.id=${id}`
+  WHERE status='Started' AND Parkings.id=${id}`
 
   console.log(query)
 
@@ -93,7 +96,7 @@ const endParkingHelper = (id) => {
       if (!result || !result.length) {
         return {}
       }
-      console.log(result)
+
       result = result[0]
 
       let profit = 0.05
@@ -126,16 +129,17 @@ const endParkingHelper = (id) => {
       // })
 
       // return getPaypalLink(create_payment_json)
-    })
-    .then((payment) => {
-      let paypalUrl = payment.links.filter(link => link.rel === 'approval_url')
-      if (paypalUrl && paypalUrl.length) {
-        bill.paypalUrl = paypalUrl[0].href
-      } else {
-        bill.paypalUrl = {}
-      }
       return bill
     })
+    // .then((payment) => {
+    //   let paypalUrl = payment.links.filter(link => link.rel === 'approval_url')
+    //   if (paypalUrl && paypalUrl.length) {
+    //     bill.paypalUrl = paypalUrl[0].href
+    //   } else {
+    //     bill.paypalUrl = {}
+    //   }
+    //   return bill
+    // })
     .catch((error) => {
       console.log('Error', error /* error.response.details[0] */)
     })

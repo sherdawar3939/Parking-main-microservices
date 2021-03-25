@@ -1,7 +1,8 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-
+const multer = require('multer')
+const fs = require('fs')
 const validateGetContractList = (req, res, done) => {
   const errorArray = []
   const query = req.query
@@ -10,8 +11,9 @@ const validateGetContractList = (req, res, done) => {
   if (query.hasOwnProperty('id') && !isNaN(query.id)) {
     validateConditions.id = query.id
   }
-
-  if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
+  if (req.user && req.user.RoleId === 2) {
+    validateConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && !isNaN(query.ClientId)) {
     validateConditions.ClientId = query.ClientId
   }
 
@@ -52,7 +54,6 @@ const validateCreateContract = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-  console.log('hamza aslam', body.zipCode)
   // validating as required number field
   if (body.zipCode.length <= 0) {
     errorArray.push({
@@ -86,7 +87,6 @@ const validateCreateContract = (req, res, done) => {
 const validateVerifyContract = (req, res, done) => {
   const errorArray = []
   const params = req.params
-  const validatedBody = {}
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
@@ -94,14 +94,9 @@ const validateVerifyContract = (req, res, done) => {
       message: "Please provide only valid 'id' as numeric."
     })
   }
-
-  if (params.hasOwnProperty('id') && !isNaN(params.id)) {
-    validatedBody.id = params.id
-  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'contract.middleware.validateVerifyContract')
   }
-  req.validatedBody = validatedBody
   done()
 }
 
@@ -130,6 +125,7 @@ const validateContractApproved = (req, res, done) => {
   req.validatedConditions = validatedConditions
   done()
 }
+
 module.exports = {
   validateGetContractList,
   validateVerifyContract,

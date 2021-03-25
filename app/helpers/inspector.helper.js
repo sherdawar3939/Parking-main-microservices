@@ -3,7 +3,7 @@ const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
-const createInspector = (userData) => {
+const createInspector = (userData, ClientId) => {
   return db.User.findOne({
     where: {
       [Op.or]: [{ email: userData.email }]
@@ -20,7 +20,7 @@ const createInspector = (userData) => {
       return db.User.create(userData)
     })
     .then((user) => {
-      return db.Inspector.create({ UserId: user.id })
+      return db.Inspector.create({ UserId: user.id, ClientId })
     })
 }
 

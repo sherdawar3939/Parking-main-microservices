@@ -108,3 +108,7 @@ package-lock.json
 .vs/VSWorkspaceState.json
 .vs/parking-main-microservice/v16/.suo
 .vs
+app/middlewares/parking.middleware.js
+assets/.DS_Store
+Archive.zip
+images/

@@ -65,8 +65,23 @@ function getContract (id) {
   return db.Contract.findOne({ where: { id: id } })
 }
 
-function verifyContract (id) {
-  return db.Contract.update({ status: 'APPROVED' }, { where: id })
+const verifyContract = async (id) => {
+  return db.Contract.update({ status: 'APPROVED' }, { where: { id: id } })
+    .then(contract => {
+      if (contract) {
+        db.Contract.findOne({ raw: true, where: { id: id } })
+          .then(con => {
+            const data = JSON.parse(con.data)
+            const clientZip = []
+            data.zipCodes.map(item => {
+              clientZip.push({ ZipCodeId: item.id, ClientId: data.id })
+            })
+            if (clientZip.length > 0) {
+              db.ClientZipCode.bulkCreate(clientZip)
+            }
+          })
+      }
+    })
 }
 const getApprovedContract = (id) => {
   console.log('clientId ', id)
@@ -77,10 +92,27 @@ const getApprovedContract = (id) => {
     }
   })
 }
+const uploadFilesHelper = (file, id) => {
+  try {
+    if (file === undefined) {
+      return (`You must select a file.`)
+    }
+    return db.Contract.update({ imageUrl: file.path },
+      {
+        where: {
+          id
+        }
+      }
+    )
+  } catch (error) {
+    return (`Error when trying upload images: ${error}`)
+  }
+}
 module.exports = {
   addContract,
   getContractList,
   verifyContract,
   getApprovedContract,
-  getContract
+  getContract,
+  uploadFilesHelper
 }

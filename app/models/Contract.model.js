@@ -3,7 +3,7 @@
 module.exports = function (sequelize, DataTypes) {
   let Contract = sequelize.define('Contract', {
     data: {
-      type: DataTypes.STRING(),
+      type: DataTypes.STRING(1500),
       allowNull: false,
       field: 'data'
     },
@@ -11,6 +11,17 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.ENUM(['PENDING', 'APPROVED', 'CANCELED', 'REJECTED']),
       allowNull: false,
       defaultValue: 'PENDING'
+    },
+    contractUrl: {
+      type: DataTypes.STRING()
+    },
+    uid: {
+      type: DataTypes.STRING(50)
+    },
+    type: {
+      type: DataTypes.ENUM(['General', 'ParkingZone', 'Voucher']),
+      allowNull: false,
+      defaultValue: 'General'
     }
   }, {
     associate: function (models) {
