@@ -12,7 +12,6 @@ const config = require('../config/config')
 const AWS = require('aws-sdk')
 const db = require('../config/sequelize.config')
 const _ = require('lodash')
-const { DATE } = require('sequelize/types')
 
 // Check if user has permission or not
 function checkIfUserHasPermission (permissionName, permissionsArray) {

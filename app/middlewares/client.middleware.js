@@ -52,15 +52,6 @@ const validatePostClient = async (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
-  // var extension = req.files[0].name.split('.')
-  // if (req.files[0].type === null || (!req.files[0].type.startsWith('image') && extension[1] !== 'pdf')) {
-  //   errorArray.push({
-  //     field: 'files',
-  //     error: 234,
-  //     message: 'The files is required  .'
-  //   })
-  // }
-  // validating as required string field
   if (req.user && req.user.RoleId === 2) {
     validatedBody.UserId = req.user.id
     validatedBody.isProfile = true

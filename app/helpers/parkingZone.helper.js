@@ -6,6 +6,7 @@ const db = require('../config/sequelize.config')
 const generalHelper = require('./general.helper')
 
 const addParkingZone = (data) => {
+  console.log(data)
   data.uid = data.maxTime.toString() + data.zip.toString() + data.fee.toString().split('.').join('')
   const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
   if (center) {
