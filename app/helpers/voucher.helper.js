@@ -78,8 +78,49 @@ const getVoucherByIdHelper = (id) => {
     where: { id }
   })
 }
+
+function deleteVoucher (id) {
+  return db.Voucher.findOne({
+    where: {
+      id
+    },
+    raw: true
+  })
+    .then((foundVoucher) => {
+      if (!foundVoucher) {
+        return false
+      }
+
+      db.Contract.findOne({
+        where: {
+          type: 'Voucher',
+          ClientId: foundVoucher.ClientId,
+          RefId: foundVoucher.id
+        }
+      })
+        .then((foundContract) => {
+          const currentDate = new Date()
+          const contractData = JSON.parse(foundContract.dataValues.data)
+          contractData.deleted.push(`${foundVoucher.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}\n`)
+
+          generalHelper.generateVoucherContract(foundContract.dataValues.contractUrl, JSON.parse(JSON.stringify(contractData.created)), JSON.parse(JSON.stringify(contractData.updated)), JSON.parse(JSON.stringify(contractData.deleted)))
+          foundContract.set({
+            data: JSON.stringify(contractData)
+          })
+          return foundContract.save()
+        })
+
+      return db.Voucher.destroy({
+        where: {
+          id
+        }
+      })
+    })
+}
+
 module.exports = {
   createVoucherHelper,
   getVoucherHelper,
-  getVoucherByIdHelper
+  getVoucherByIdHelper,
+  deleteVoucher
 }
