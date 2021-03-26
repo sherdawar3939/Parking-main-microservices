@@ -82,7 +82,7 @@ const postClient = (body, files, uid) => {
       await fs.unlinkSync(files.files[0].path)
       return generalHelpingMethods.rejectPromise([{
         field: 'phone',
-        error: 1540,
+        error: 'HPC-0002',
         message: 'Phone already exist '
       }])
     }
@@ -91,7 +91,7 @@ const postClient = (body, files, uid) => {
       await fs.unlinkSync(files.files[0].path)
       return generalHelpingMethods.rejectPromise([{
         field: 'Email',
-        error: 1540,
+        error: 'HPC-0001',
         message: 'Email already exist '
       }])
     }
@@ -140,7 +140,7 @@ const updateClient = async (id, body, res, next) => {
 
       errorsArray.push({
         field: 'phone',
-        error: 1500,
+        error: 'HUC-0003',
         message: 'phone already exist'
       })
     }
@@ -149,7 +149,7 @@ const updateClient = async (id, body, res, next) => {
       // user email already exist.
       errorsArray.push({
         field: 'email',
-        error: 1505,
+        error: 'HUC-0004',
         message: 'email already exist'
       })
     }
@@ -158,7 +158,7 @@ const updateClient = async (id, body, res, next) => {
       // user email already exist.
       errorsArray.push({
         field: 'secondaryEmail',
-        error: 1506,
+        error: 'HUC-0005',
         message: 'secondaryEmail already exist'
       })
     }
@@ -167,7 +167,7 @@ const updateClient = async (id, body, res, next) => {
       // user email already exist.
       errorsArray.push({
         field: 'secondaryPhone',
-        error: 1506,
+        error: 'HUC-0006',
         message: 'secondaryPhone already exist'
       })
     }

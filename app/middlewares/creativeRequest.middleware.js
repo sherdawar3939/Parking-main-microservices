@@ -82,7 +82,7 @@ const validateGetCreatives = (req, res, done) => {
   if (isNaN(req.params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVGC-8060',
       message: "Please provide only valid 'id' as number."
     })
   }
@@ -100,7 +100,7 @@ const validateUpdateRequest = (req, res, done) => {
   if (isNaN(params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVUR-8060',
       message: "Please provide only valid 'id' as number."
     })
   }

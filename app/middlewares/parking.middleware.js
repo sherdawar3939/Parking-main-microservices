@@ -9,7 +9,7 @@ const validateCreateParking = (req, res, done) => {
   if (!body.ParkingZoneId || isNaN(body.ParkingZoneId)) {
     errorArray.push({
       field: 'ParkingZoneId',
-      error: 26,
+      error: 'MVCP-8060',
       message: 'Please provide only valid \'ParkingZoneId\' as Integer.'
     })
   }

@@ -13,7 +13,7 @@ const createInspector = (userData, ClientId) => {
       if (user) {
         return generalHelpingMethods.rejectPromise({
           field: 'email',
-          error: 3456,
+          error: 'HCIT-0001',
           message: 'Email already exist.'
         })
       }
@@ -30,7 +30,7 @@ const updateInspector = (id, data) => {
       if (!foundInspector) {
         return generalHelpingMethods.rejectPromise({
           field: 'id',
-          error: 3456,
+          error: 'HUIT-0002',
           message: 'No Record Exists.'
         })
       }
@@ -49,7 +49,7 @@ function deleteInspector (id) {
       if (!foundInspector) {
         return generalHelpingMethods.rejectPromise({
           field: 'id',
-          error: 3456,
+          error: 'HDIT-0003',
           message: 'No Record Exists.'
         })
       }

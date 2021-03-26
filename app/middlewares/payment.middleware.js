@@ -9,7 +9,7 @@ const validatePostPayment = (req, res, done) => {
   if (!body.amount || isNaN(body.amount)) {
     errorArray.push({
       field: 'amount',
-      error: 26,
+      error: 'MVPP-8080',
       message: 'Please provide only valid \'amount\' as numeric.'
     })
   }
@@ -17,7 +17,7 @@ const validatePostPayment = (req, res, done) => {
   if (!body.ClientId || isNaN(body.ClientId)) {
     errorArray.push({
       field: 'ClientId',
-      error: 26,
+      error: 'MVPP-8081',
       message: 'Please provide only valid \'ClientId\' as numeric,.'
     })
   }
@@ -43,7 +43,7 @@ const validateGetPayment = (req, res, done) => {
     if (isNaN(query.ClientId)) {
       errorArray.push({
         field: 'ClientId',
-        error: 25,
+        error: 'MVGP-8080',
         message: 'Please provide only valid \'ClientId\' as numeric.'
       })
     }

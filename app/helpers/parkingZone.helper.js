@@ -18,7 +18,7 @@ const addParkingZone = (data) => {
       if (parking) {
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 1540,
+          error: 'HAPZ-0001',
           message: 'This user already Created parkingZone'
         }])
       }
@@ -32,8 +32,8 @@ const addParkingZone = (data) => {
         }
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 1540,
-          message: 'already created parkingZone '
+          error: 'HAPZ-0002',
+          message: 'Already created one Government client parkingZone '
         }])
       } else if (client.type === 'Private') {
         const parkingZone = await db.ParkingZone.findAll({
@@ -47,7 +47,7 @@ const addParkingZone = (data) => {
         } else {
           return generalHelper.rejectPromise([{
             field: 'clientCount',
-            error: 1540,
+            error: 'HAPZ-0003',
             message: 'You are not created parkingZone'
           }])
         }
@@ -79,7 +79,8 @@ const addParkingZone = (data) => {
         status: 'APPROVED',
         uid: contractUid,
         contractUrl: fileName,
-        ClientId: createdParkingZone.ClientId
+        ClientId: createdParkingZone.ClientId,
+        RefId: createdParkingZone.id
       }
 
       const currentDate = new Date()
@@ -186,12 +187,46 @@ const getParkingZoneId = (id) => {
 }
 
 function updateParkingZone (id, data) {
-  return db.ParkingZone.update(data, {
-    where: {
-      id
-    }
-  })
+  return db.ParkingZone.findOne({ where: { id } })
+    .then((parkingZoneDetail) => {
+      if (!parkingZoneDetail) {
+        return generalHelper.rejectPromise({
+          field: 'id',
+          error: 'PZUP-0001',
+          message: 'No Record Exist.'
+        })
+      }
+      return db.ParkingZone.update(data, {
+        where: {
+          id
+        }
+      })
+    })
+    .then(async (parkingZoneDetail) => {
+      const contractUid = await generalHelper.getUid('Contract', 'uid', {
+        type: 'ParkingZone', ClientId: parkingZoneDetail.ClientId
+      }, 'II')
+      const fileName = `${parkingZoneDetail.ClientId}-${contractUid.uid}`
+      const contract = {
+        type: 'ParkingZone',
+        status: 'APPROVED',
+        uid: contractUid,
+        contractUrl: fileName,
+        ClientId: parkingZoneDetail.ClientId,
+        RefId: parkingZoneDetail.id
+      }
+
+      const currentDate = new Date()
+      const contractData = JSON.parse(contract.data)
+      contractData.updated.push(`${parkingZoneDetail.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
+
+      await generalHelper.generateParkingZoneContract(fileName, JSON.parse(JSON.stringify(contractData.updated)))
+      contract.data = JSON.stringify(contractData)
+
+      await db.Contract.save(contract)
+    })
 }
+
 module.exports = {
   addParkingZone,
   getparkingZone,
