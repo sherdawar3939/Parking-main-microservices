@@ -12,6 +12,7 @@ const config = require('../config/config')
 const AWS = require('aws-sdk')
 const db = require('../config/sequelize.config')
 const _ = require('lodash')
+const { DATE } = require('sequelize')
 
 // Check if user has permission or not
 function checkIfUserHasPermission (permissionName, permissionsArray) {
@@ -180,7 +181,7 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
     const doc = printer.createPdfKitDocument(docDefinition)
 
     doc.pipe(
-      fs.createWriteStream(`images/${fileName}.pdf`).on('error', (err) => {
+      fs.createWriteStream(`currents/${fileName}.pdf`).on('error', (err) => {
         console.log(err)
       })
     )

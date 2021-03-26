@@ -383,9 +383,9 @@ const imageFilter = (req, file, cb) => {
 
 var storage = multer.diskStorage({
   destination: function (req, files, cb) {
-    var dir = 'images'
+    var dir = 'currents'
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync('images')
+      fs.mkdirSync('currents')
     }
     cb(null, dir)
   },

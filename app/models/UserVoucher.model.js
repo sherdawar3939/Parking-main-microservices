@@ -5,6 +5,9 @@ module.exports = function (sequelize, DataTypes) {
     expiryDate: {
       type: DataTypes.DATE
     },
+    fee: {
+      type: DataTypes.DECIMAL(8, 2)
+    },
     paymentStatus: {
       type: DataTypes.ENUM(['Pending', 'Paid']),
       allowNull: false,
