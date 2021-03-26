@@ -180,7 +180,7 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
     const doc = printer.createPdfKitDocument(docDefinition)
 
     doc.pipe(
-      fs.createWriteStream(`currents/${fileName}.pdf`).on('error', (err) => {
+      fs.createWriteStream(`contracts/${fileName}.pdf`).on('error', (err) => {
         console.log(err)
       })
     )
@@ -225,7 +225,7 @@ function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = 
         text: newZipCodes
       },
       {
-        text: `\n\nFürstenfeldbruck, ${DATE.now()}`
+        text: `\n\nFürstenfeldbruck, ${new Date()}`
       }
     ]
   }
@@ -244,7 +244,7 @@ function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = 
     const doc = printer.createPdfKitDocument(docDefinition)
 
     doc.pipe(
-      fs.createWriteStream(`images/${fileName}.pdf`).on('error', (err) => {
+      fs.createWriteStream(`contracts/${fileName}.pdf`).on('error', (err) => {
         console.log(err)
       })
     )
