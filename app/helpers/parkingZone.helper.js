@@ -6,29 +6,72 @@ const db = require('../config/sequelize.config')
 const generalHelper = require('./general.helper')
 
 const addParkingZone = (data) => {
-  data.uid = data.maxTime.toString() + data.zip.toString() + data.fee.toString().split('.').join('')
+  data.uid = data.maxTime.toString() + data.fee.toString().split('.').join('') + data.zip.toString()
   const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
   if (center) {
     data.lat = center.lat
     data.lng = center.lng
   }
   data.polygons = JSON.stringify(data.polygons)
-  return db.ParkingZone.create(data)
-    .then(async (createdParkingZone) => {
+  return db.ParkingZone.findOne({ where: { zip: data.zip, ClientId: data.ClientId } })
+    .then(parking => {
+      if (parking) {
+        return generalHelper.rejectPromise([{
+          field: 'clientCount',
+          error: 1540,
+          message: 'This user already Created parkingZone'
+        }])
+      }
+      return parking
+    }).then(parking => {
+      if (!parking) {
+        return db.Client.findOne({ raw: true, where: { id: data.ClientId } })
+      }
+    }).then(async client => {
+      if (client.type === 'Government') {
+        const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0 } })
+        if (!parkingZone) {
+          data.clientCount = 0
+        }
+        return generalHelper.rejectPromise([{
+          field: 'clientCount',
+          error: 1540,
+          message: 'already created parkingZone '
+        }])
+      } else if (client.type === 'Private') {
+        const parkingZone = await db.ParkingZone.findAll({
+          where: { zip: data.zip, clientCount: { [Op.ne]: 0 } },
+          order: [ ['clientCount', 'ASC'] ]
+        })
+        if (parkingZone.length < 1) {
+          data.clientCount = 9
+        } else if (parkingZone[0].dataValues.clientCount > 5) {
+          data.clientCount = (parkingZone[0].dataValues.clientCount - 1)
+        } else {
+          return generalHelper.rejectPromise([{
+            field: 'clientCount',
+            error: 1540,
+            message: 'You are not created parkingZone'
+          }])
+        }
+      }
+
+      return db.ParkingZone.create(data)
+    }).then(async (createdParkingZone) => {
       if (!createdParkingZone) {
         return null
       }
       await db.ParkingZoneHolidays.bulkCreate(data.holidays)
 
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
-        type: 'ParkingZone'
+        ClientId: data.ClientId
       }, 'II')
 
       const contract = {
         type: 'ParkingZone',
         status: 'APPROVED',
         uid: contractUid,
-        contractUrl: `${contractUid}.pdf`,
+        contractUrl: `${data.ClientId}${contractUid}.pdf`,
         ClientId: createdParkingZone.ClientId
       }
 
@@ -40,8 +83,8 @@ const addParkingZone = (data) => {
         deleted: []
       }
       contractData.created.push(`${createdParkingZone.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
-
-      await generalHelper.generateParkingZoneContract(contract.uid, JSON.parse(JSON.stringify(contractData.created)))
+      const fileName = `${data.ClientId}${contract.uid}`
+      await generalHelper.generateParkingZoneContract(fileName, JSON.parse(JSON.stringify(contractData.created)))
       contract.data = JSON.stringify(contractData)
 
       await db.Contract.create(contract)

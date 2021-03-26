@@ -1,8 +1,6 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-const { isInteger } = require('lodash')
-// const { DECIMAL, DOUBLE } = require('sequelize/types')
 const validateCreateParking = (req, res, done) => {
   const errorArray = []
   const body = req.body
