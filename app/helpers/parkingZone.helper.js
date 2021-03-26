@@ -18,6 +18,7 @@ const addParkingZone = (data) => {
       if (!createdParkingZone) {
         return null
       }
+      await db.ParkingZoneHolidays.bulkCreate(data.holidays)
 
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
         type: 'ParkingZone'
