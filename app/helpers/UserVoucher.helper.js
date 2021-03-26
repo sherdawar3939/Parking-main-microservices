@@ -1,18 +1,29 @@
 const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
-const createUserVoucher = async (userData) => {
-  const voucherDetail = await db.Voucher.findOne({ id: userData.VoucherId })
-  console.log(voucherDetail.dataValues)
-  var date = new Date()
-
-  await db.UserVoucher.create({
-    UserVehicleId: userData.UserVehicleId,
-    VoucherId: userData.VoucherId,
-    UserId: userData.UserId,
-    fee: voucherDetail.dataValues.fee,
-    expiryDate: date.setDate(date.getDate() + voucherDetail.dataValues.validityDays)
+const createUserVoucher = (userData) => {
+  return db.Voucher.findOne({
+    where: { id: userData.VoucherId },
+    raw: true
   })
+    .then((foundVoucher) => {
+      if (!foundVoucher) {
+        return generalHelpingMethods.rejectPromise({
+          field: 'VoucherId',
+          error: 3456,
+          message: 'No Record Exists.'
+        })
+      }
+      var date = new Date()
+
+      return db.UserVoucher.create({
+        UserVehicleId: userData.UserVehicleId,
+        VoucherId: userData.VoucherId,
+        UserId: userData.UserId,
+        fee: foundVoucher.fee,
+        expiryDate: date.setDate(date.getDate() + foundVoucher.validityDays)
+      })
+    })
 }
 
 const updateUserVoucher = (id, data) => {
