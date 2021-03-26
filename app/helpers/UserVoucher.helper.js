@@ -18,7 +18,7 @@ const updateUserVoucher = (id, data) => {
       if (!foundUserVoucher) {
         return generalHelpingMethods.rejectPromise({
           field: 'id',
-          error: 3456,
+          error: 'HUUV-0001',
           message: 'No Record Exists.'
         })
       }
@@ -36,7 +36,7 @@ function deleteUserVoucherID (id) {
       if (!foundUserVoucher) {
         return generalHelpingMethods.rejectPromise({
           field: 'id',
-          error: 3456,
+          error: 'HDUV-0002',
           message: 'No Record Exists.'
         })
       }

@@ -18,7 +18,7 @@ const addParkingZone = (data) => {
       if (parking) {
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 1540,
+          error: 'HAPZ-0001',
           message: 'This user already Created parkingZone'
         }])
       }
@@ -32,8 +32,8 @@ const addParkingZone = (data) => {
         }
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 1540,
-          message: 'already created parkingZone '
+          error: 'HAPZ-0002',
+          message: 'Already created one Government client parkingZone '
         }])
       } else if (client.type === 'Private') {
         const parkingZone = await db.ParkingZone.findAll({
@@ -47,7 +47,7 @@ const addParkingZone = (data) => {
         } else {
           return generalHelper.rejectPromise([{
             field: 'clientCount',
-            error: 1540,
+            error: 'HAPZ-0003',
             message: 'You are not created parkingZone'
           }])
         }
@@ -68,7 +68,8 @@ const addParkingZone = (data) => {
         status: 'APPROVED',
         uid: contractUid,
         contractUrl: fileName,
-        ClientId: createdParkingZone.ClientId
+        ClientId: createdParkingZone.ClientId,
+        RefId: createdParkingZone.id
       }
 
       const currentDate = new Date()
