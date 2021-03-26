@@ -1,15 +1,18 @@
 const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
-const createUserVoucher = (userData) => {
-  // console.log(userData.UserId, userData.UserVehicleId, userData.payemntStatus)
-  console.log(userData)
-  return db.UserVoucher.create({
+const createUserVoucher = async (userData) => {
+  const voucherDetail = await db.Voucher.findOne({ id: userData.VoucherId })
+  console.log(voucherDetail.dataValues)
+  var date = new Date()
+
+  await db.UserVoucher.create({
     UserVehicleId: userData.UserVehicleId,
     VoucherId: userData.VoucherId,
     UserId: userData.UserId,
-    fee: userData.fee,
-    expiryDate: userData.expiryDate })
+    fee: voucherDetail.dataValues.fee,
+    expiryDate: date.setDate(date.getDate() + voucherDetail.dataValues.validityDays)
+  })
 }
 
 const updateUserVoucher = (id, data) => {
@@ -63,8 +66,26 @@ function getUserVoucherID (id) {
 }
 
 function getUserVoucherList (conditions) {
+  let where = {}
+
+  if (conditions.UserId) {
+    where.UserId = conditions.UserId
+  }
+
+  if (conditions.UserVehicleId) {
+    where.UserVehicleId = conditions.UserVehicleId
+  }
+
+  if (conditions.VoucherId) {
+    where.VoucherId = conditions.VoucherId
+  }
+
+  if (conditions.paymentStatus) {
+    where.paymentStatus = conditions.paymentStatus
+  }
+
   return db.UserVoucher.findAll({
-    where: conditions,
+    where,
     include: [{
       model: db.UserVehicle,
       as: 'UserVehicleVouchers',

@@ -45,12 +45,14 @@ const validateCreateParkingZone = (req, res, done) => {
     })
   }
   // polygones must be required required  Validating as not empty, valid integer.
-  if (!body.polygons) {
-    errorArray.push({
-      field: 'polygons',
-      error: 26,
-      message: 'Please provide only valid \'polygons\' as numeric.'
-    })
+  if (body.hasOwnProperty('polygons') && body.polygons) {
+    if (!_.isArray(body.polygons) || body.polygons.length < 1) {
+      errorArray.push({
+        field: 'polygons',
+        error: 26,
+        message: 'Please provide only valid \'polygons\' as numeric.'
+      })
+    }
   }
   // validating as required number field
   if (!body.CityId || isNaN(body.CityId)) {
@@ -88,6 +90,17 @@ const validateCreateParkingZone = (req, res, done) => {
     validatedBody.creativesQuantity = body.creativesQuantity
   }
 
+  // validating Holidays Array as optional number field
+  if (body.hasOwnProperty('holidays') && body.holidays) {
+    if (!_.isArray(body.holidays) || body.holidays.length < 1) {
+      errorArray.push({
+        field: 'holidays ',
+        error: 90131,
+        message: 'Please provide only valid \'holidays \' as Array.'
+      })
+    }
+  }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
@@ -98,10 +111,13 @@ const validateCreateParkingZone = (req, res, done) => {
   validatedBody.maxTime = body.maxTime
   validatedBody.zip = body.zip
   validatedBody.polygons = body.polygons
+  validatedBody.lat = body.polygons[0].lat
+  validatedBody.lng = body.polygons[0].lng
   validatedBody.CityId = body.CityId
   validatedBody.startTime = body.startTime
   validatedBody.endTime = body.endTime
   validatedBody.activeAfter = date
+  validatedBody.holidays = body.holidays
   req.validatedBody = validatedBody
   done()
 }
