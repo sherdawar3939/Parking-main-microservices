@@ -22,12 +22,9 @@ const addParkingZone = (data) => {
           message: 'This user already Created parkingZone'
         }])
       }
-      return parking
-    }).then(parking => {
-      if (!parking) {
-        return db.Client.findOne({ raw: true, where: { id: data.ClientId } })
-      }
-    }).then(async client => {
+      return db.Client.findOne({ raw: true, where: { id: data.ClientId } })
+    })
+    .then(async client => {
       if (client.type === 'Government') {
         const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0 } })
         if (!parkingZone) {
@@ -74,14 +71,14 @@ const addParkingZone = (data) => {
       }
 
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
-        ClientId: data.ClientId
+        type: 'ParkingZone', ClientId: data.ClientId
       }, 'II')
-
+      const fileName = `${data.ClientId}-${contractUid.uid}`
       const contract = {
         type: 'ParkingZone',
         status: 'APPROVED',
         uid: contractUid,
-        contractUrl: `${data.ClientId}${contractUid}.pdf`,
+        contractUrl: fileName,
         ClientId: createdParkingZone.ClientId
       }
 
@@ -93,7 +90,7 @@ const addParkingZone = (data) => {
         deleted: []
       }
       contractData.created.push(`${createdParkingZone.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
-      const fileName = `${data.ClientId}${contract.uid}`
+
       await generalHelper.generateParkingZoneContract(fileName, JSON.parse(JSON.stringify(contractData.created)))
       contract.data = JSON.stringify(contractData)
 
