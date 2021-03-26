@@ -60,6 +60,18 @@ const validateGetCreativeRequest = (req, res, done) => {
     validatedConditions.ClientId = query.ClientId
   }
 
+  // validating as optional number field
+  if (query.hasOwnProperty('ParkingZoneId') && query.ParkingZoneId) {
+    if (isNaN(query.ParkingZoneId) || query.ParkingZoneId < 0 || query.ParkingZoneId > 99999999999) {
+      errorArray.push({
+        field: 'ParkingZoneId',
+        error: 'MGCR-005',
+        message: 'The ParkingZoneId should be number with min 0 and max 99999999999 value.'
+      })
+    }
+    validatedConditions.ParkingZoneId = query.ParkingZoneId
+  }
+
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }

@@ -1,6 +1,7 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
+
 const validatePostVoucher = (req, res, done) => {
   const errorArray = []
   const body = req.body
@@ -62,11 +63,13 @@ const validateGetVoucher = (req, res, done) => {
   const validatedConditions = {}
   let limit = 50
   let offset = 0
+
   if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
     validatedConditions.ClientId = req.user.employeeId
   } else if (query.hasOwnProperty('ClientId') && query.ClientId && !isNaN(query.ClientId)) {
     validatedConditions.ClientId = query.ClientId
   }
+
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }
@@ -76,7 +79,7 @@ const validateGetVoucher = (req, res, done) => {
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetParkingZone')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'voucher.middleware.validateGetParkingZone')
   }
 
   req.conditions = validatedConditions

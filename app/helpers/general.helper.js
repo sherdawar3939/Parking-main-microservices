@@ -152,17 +152,23 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
         alignment: 'center'
       },
       {
-        text: 'ÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t törölte:'
-      },
-      {
-        // text: ['73120007 - 19 March, 2020\n', '73120007 - 19 March, 2020\n']
-        text: deletedZipCodes
-      },
-      {
         text: '\n\nÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t hozta létre:'
       },
       {
         text: newZipCodes
+      },
+      {
+        text: '\n\nAVEVŐ frissítette a következő parkolási zónákat:'
+      },
+      {
+        text: updatedZipCodes
+      },
+      {
+        text: '\n\nÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t törölte:'
+      },
+      {
+        // text: ['73120007 - 19 March, 2020\n', '73120007 - 19 March, 2020\n']
+        text: deletedZipCodes
       }
     ]
   }
@@ -180,6 +186,8 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
 
     const doc = printer.createPdfKitDocument(docDefinition)
 
+    console.log(updatedZipCodes)
+
     doc.pipe(
       fs.createWriteStream(`contracts/${fileName}`).on('error', (err) => {
         console.log(err)
@@ -195,6 +203,7 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
     throw (err)
   }
 };
+
 function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = ['None'], deletedZipCodes = ['None']) {
   const docDefinition = {
     content: [

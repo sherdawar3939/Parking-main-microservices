@@ -273,7 +273,6 @@ const validateUpdateParkingZone = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
-  console.log(validatedBody)
   req.validatedBody = validatedBody
   done()
 }
