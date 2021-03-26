@@ -204,9 +204,7 @@ function updateParkingZone (id, data) {
       }
 
       const currentDate = new Date()
-      const contractData = {
-        updated: []
-      }
+      const contractData = JSON.parse(contract.data)
       contractData.updated.push(`${parkingZoneDetail.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
 
       await generalHelper.generateParkingZoneContract(fileName, JSON.parse(JSON.stringify(contractData.updated)))
