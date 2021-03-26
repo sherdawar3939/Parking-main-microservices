@@ -13,7 +13,7 @@ const validateCreateParkingZone = (req, res, done) => {
   if (!body.days || !body.days.length) {
     errorArray.push({
       field: 'days',
-      error: 25,
+      error: 'MVCPZ-8080',
       message: 'Please provide only valid \'days\' as string, length must be between 2 and 20.'
     })
   }
@@ -22,7 +22,7 @@ const validateCreateParkingZone = (req, res, done) => {
   if (isNaN(body.fee) || body.fee < 0 || body.fee > 100) {
     errorArray.push({
       field: 'fee',
-      error: 25,
+      error: 'MVCPZ-8081',
       message: 'Please provide only valid \'fee\' as integer, length must be between 2 and 20.'
     })
   }
@@ -31,7 +31,7 @@ const validateCreateParkingZone = (req, res, done) => {
   if (isNaN(body.maxTime) || body.maxTime.length < 0) {
     errorArray.push({
       field: 'maxTime',
-      error: 25,
+      error: 'MVCPZ-8082',
       message: 'Please provide only valid \'maxTime\' as integer, length must be between 2 and 20.'
     })
   }
@@ -40,7 +40,7 @@ const validateCreateParkingZone = (req, res, done) => {
   if (!body.zip || isNaN(body.zip)) {
     errorArray.push({
       field: 'zip',
-      error: 26,
+      error: 'MVCPZ-8083',
       message: 'Please provide only valid \'zip\' as numeric, length must be between 0 and 5.'
     })
   }
@@ -49,7 +49,7 @@ const validateCreateParkingZone = (req, res, done) => {
     if (!_.isArray(body.polygons) || body.polygons.length < 1) {
       errorArray.push({
         field: 'polygons',
-        error: 26,
+        error: 'MVCPZ-8084',
         message: 'Please provide only valid \'polygons\' as numeric.'
       })
     }
@@ -58,7 +58,7 @@ const validateCreateParkingZone = (req, res, done) => {
   if (!body.CityId || isNaN(body.CityId)) {
     errorArray.push({
       field: 'CityId',
-      error: 234,
+      error: 'MVCPZ-8085',
       message: 'The CityId is required .'
     })
   }
@@ -66,14 +66,14 @@ const validateCreateParkingZone = (req, res, done) => {
   if (!body.startTime) {
     errorArray.push({
       field: 'startTime',
-      error: 3241,
+      error: 'MVCPZ-8086',
       message: 'The startTime is required .'
     })
   }
   if (!body.endTime) {
     errorArray.push({
       field: 'endTime',
-      error: 3241,
+      error: 'MVCPZ-8087',
       message: 'The endTime is required .'
     })
   }
@@ -168,7 +168,7 @@ const validateGetParkingZoneId = (req, res, done) => {
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVGPZ-8080',
       message: 'Please provide only valid \'Parking_Zone id\' as numeric.'
     })
   }
@@ -188,7 +188,7 @@ const validateUpdateParkingZone = (req, res, done) => {
   if (!req.params.id || isNaN(req.params.id)) {
     errorArray.push({
       field: 'id',
-      error: 26,
+      error: 'MVUPZ-8080',
       message: 'Please provide only valid \'id\' as numeric,.'
     })
   }
@@ -197,7 +197,7 @@ const validateUpdateParkingZone = (req, res, done) => {
     if (!body.days) {
       errorArray.push({
         field: 'days',
-        error: 25,
+        error: 'MVUPZ-8081',
         message: 'Please provide only valid \'days\' as string.'
       })
     }
@@ -208,7 +208,7 @@ const validateUpdateParkingZone = (req, res, done) => {
     if (isNaN(body.fee) || body.fee.length < 1 || body.fee.length > 20) {
       errorArray.push({
         field: 'fee',
-        error: 25,
+        error: 'MVUPZ-8082',
         message: 'Please provide only valid \'fee\' as integer, length must be between 2 and 20.'
       })
     }
@@ -219,7 +219,7 @@ const validateUpdateParkingZone = (req, res, done) => {
     if (isNaN(body.maxTime) || body.maxTime.length < 1 || body.maxTime.length > 20) {
       errorArray.push({
         field: 'maxTime',
-        error: 25,
+        error: 'MVUPZ-8083',
         message: 'Please provide only valid \'maxTime\' as integer, length must be between 2 and 20.'
       })
     }
@@ -242,29 +242,18 @@ const validateUpdateParkingZone = (req, res, done) => {
     if (!body.polygons) {
       errorArray.push({
         field: 'polygons',
-        error: 26,
+        error: 'MVUPZ-8085',
         message: 'Please provide only valid \'polygons\' as numeric.'
       })
     }
     validatedBody.polygons = JSON.stringify(body.polygons)
   }
 
-  // if (body.hasOwnProperty('CityId') && body.CityId) {
-  //   if (!body.CityId || isNaN(body.CityId)) {
-  //     errorArray.push({
-  //       field: 'CityId',
-  //       error: 234,
-  //       message: 'The CityId is required .'
-  //     })
-  //   }
-  //   validatedBody.CityId = body.CityId
-  // }
-
   if (body.hasOwnProperty('startTime') && body.startTime) {
     if (!body.startTime) {
       errorArray.push({
         field: 'startTime',
-        error: 3241,
+        error: 'MVUPZ-8087',
         message: 'The startTime is required .'
       })
     }
@@ -275,7 +264,7 @@ const validateUpdateParkingZone = (req, res, done) => {
     if (!body.endTime) {
       errorArray.push({
         field: 'endTime',
-        error: 3241,
+        error: 'MVUPZ-8088',
         message: 'The endTime is required .'
       })
     }

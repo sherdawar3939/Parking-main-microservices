@@ -14,7 +14,7 @@ const validateGetClientsRevenue = (req, res, done) => {
     if (isNaN(query.ClientId)) {
       errorArray.push({
         field: 'ClientId',
-        error: 25,
+        error: 'MVGCR-8060',
         message: 'Please provide only valid \'ClientId\' as numeric.'
       })
     }
@@ -25,7 +25,7 @@ const validateGetClientsRevenue = (req, res, done) => {
     if (isNaN(query.UserId)) {
       errorArray.push({
         field: 'UserId',
-        error: 25,
+        error: 'MVGCR-8061',
         message: 'Please provide only valid \'UserId\' as numeric.'
       })
     }
@@ -104,7 +104,7 @@ const validateGetReportListing = (req, res, done) => {
     if (isNaN(query.ClientId)) {
       errorArray.push({
         field: 'ClientId',
-        error: 25,
+        error: 'MVGRL-8060',
         message: 'Please provide only valid \'ClientId\' as numeric.'
       })
     }

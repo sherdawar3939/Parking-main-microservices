@@ -22,6 +22,9 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.ENUM(['General', 'ParkingZone', 'Voucher']),
       allowNull: false,
       defaultValue: 'General'
+    },
+    RefId: {
+      type: DataTypes.INTEGER
     }
   }, {
     associate: function (models) {

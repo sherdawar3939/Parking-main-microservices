@@ -15,7 +15,7 @@ const validatePostInspector = (req, res, done) => {
   if (_.isEmpty(body.fName) || !_.isString(body.fName) || body.fName.length < 2 || body.fName.length > 100) {
     errorArray.push({
       field: 'fName',
-      error: 1000,
+      error: 'MVPI-8060',
       message: '\'fName\' is required as string, length must be between 2 and 100.'
     })
   }
@@ -25,7 +25,7 @@ const validatePostInspector = (req, res, done) => {
     if (!_.isString(body.lName) || body.lName.length < 2 || body.lName.length > 100) {
       errorArray.push({
         field: 'lName',
-        error: 1003,
+        error: 'MVGCR-8061',
         message: 'Please provide only valid \'lName\' as string, length must be between 2 and 100.'
       })
     }
@@ -37,7 +37,7 @@ const validatePostInspector = (req, res, done) => {
     if (_.isEmpty(body.email) || !_.isString(body.email) || body.email.length < 5 || body.email.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.email))) {
       errorArray.push({
         field: 'email',
-        error: 1006,
+        error: 'MVGCR-8062',
         message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
       })
     }
@@ -66,7 +66,7 @@ const validateUpdateInspector = (req, res, done) => {
   if (!_.isString(body.fName) || body.fName.length > 50) {
     errorArray.push({
       field: 'fName',
-      error: 25,
+      error: 'MVGCR-8063',
       message: 'Please provide only valid \'fName\' as string,'
     })
   }
@@ -74,7 +74,7 @@ const validateUpdateInspector = (req, res, done) => {
   if (!_.isString(body.lName) || body.lName.length > 50) {
     errorArray.push({
       field: 'lName',
-      error: 25,
+      error: 'MVGCR-8064',
       message: 'Please provide only valid \'lName\' as string, length must be between 2 and 20.'
     })
   }
@@ -84,7 +84,7 @@ const validateUpdateInspector = (req, res, done) => {
     if (_.isEmpty(body.email) || !_.isString(body.email) || body.email.length < 5 || body.email.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.email))) {
       errorArray.push({
         field: 'email',
-        error: 1006,
+        error: 'MVGCR-8065',
         message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
       })
     }
@@ -107,7 +107,7 @@ const validateInspectorUser = (req, res, done) => {
   if (isNaN(req.params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVIU-8060',
       message: "Please provide only valid 'id' as number."
     })
   }
@@ -122,7 +122,7 @@ const validateGetInspectorUser = (req, res, done) => {
   if (isNaN(req.params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVGCU-8060',
       message: "Please provide only valid 'id' as number."
     })
   }

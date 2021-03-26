@@ -13,7 +13,7 @@ function createVoucherHelper (body, status) {
             if (!parkingZone) {
               return generalHelper.rejectPromise([{
                 field: 'createVoucherHelper',
-                error: 3422,
+                error: 'HCVH-0001',
                 message: 'First create parking zone'
               }])
             }
@@ -31,7 +31,8 @@ function createVoucherHelper (body, status) {
         status: 'APPROVED',
         uid: contractUid,
         contractUrl: filename,
-        ClientId: voucher.ClientId
+        ClientId: voucher.ClientId,
+        RefId: voucher.id
       }
       const contractData = {
         created: [],
