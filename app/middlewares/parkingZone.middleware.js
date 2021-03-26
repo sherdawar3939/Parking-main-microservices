@@ -225,17 +225,7 @@ const validateUpdateParkingZone = (req, res, done) => {
     }
     validatedBody.maxTime = body.maxTime
   }
-  // zip must be required required  Validating as not empty, valid integer.
-  // if (body.hasOwnProperty('zip') && body.zip) {
-  //   if (!body.zip || isNaN(body.zip)) {
-  //     errorArray.push({
-  //       field: 'zip',
-  //       error: 26,
-  //       message: 'Please provide only valid \'zip\' as numeric, length must be between 0 and 5.'
-  //     })
-  //   }
-  //   validatedBody.zip = body.zip
-  // }
+
   // polygones must be required required  Validating as not empty, valid integer.
 
   if (body.hasOwnProperty('polygons') && body.polygons) {

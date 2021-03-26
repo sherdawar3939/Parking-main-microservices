@@ -174,12 +174,48 @@ const getParkingZoneId = (id) => {
 }
 
 function updateParkingZone (id, data) {
-  return db.ParkingZone.update(data, {
-    where: {
-      id
-    }
-  })
+  return db.ParkingZone.findOne({ where: { id } })
+    .then((parkingZoneDetail) => {
+      if (!parkingZoneDetail) {
+        return generalHelper.rejectPromise({
+          field: 'id',
+          error: 'PZUP-0001',
+          message: 'No Record Exist.'
+        })
+      }
+      return db.ParkingZone.update(data, {
+        where: {
+          id
+        }
+      })
+    })
+    .then(async (parkingZoneDetail) => {
+      const contractUid = await generalHelper.getUid('Contract', 'uid', {
+        type: 'ParkingZone', ClientId: parkingZoneDetail.ClientId
+      }, 'II')
+      const fileName = `${parkingZoneDetail.ClientId}-${contractUid.uid}`
+      const contract = {
+        type: 'ParkingZone',
+        status: 'APPROVED',
+        uid: contractUid,
+        contractUrl: fileName,
+        ClientId: parkingZoneDetail.ClientId,
+        RefId: parkingZoneDetail.id
+      }
+
+      const currentDate = new Date()
+      const contractData = {
+        updated: []
+      }
+      contractData.updated.push(`${parkingZoneDetail.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
+
+      await generalHelper.generateParkingZoneContract(fileName, JSON.parse(JSON.stringify(contractData.updated)))
+      contract.data = JSON.stringify(contractData)
+
+      await db.Contract.save(contract)
+    })
 }
+
 module.exports = {
   addParkingZone,
   getparkingZone,
