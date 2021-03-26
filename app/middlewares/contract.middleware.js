@@ -1,8 +1,6 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
-const multer = require('multer')
-const fs = require('fs')
 const validateGetContractList = (req, res, done) => {
   const errorArray = []
   const query = req.query
@@ -36,7 +34,7 @@ const validateGetContract = (req, res, done) => {
   if (isNaN(req.params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVGC-8060',
       message: "Please provide only valid 'id' as number."
     })
   }
@@ -58,7 +56,7 @@ const validateCreateContract = (req, res, done) => {
   if (body.zipCode.length <= 0) {
     errorArray.push({
       field: 'zipCode',
-      error: 233,
+      error: 'MVCC-8060',
       message: 'The zipCode is required with 1 min  value.'
     })
   } else {
@@ -67,7 +65,7 @@ const validateCreateContract = (req, res, done) => {
       if (isNaN(id)) {
         errorArray.push({
           field: 'field',
-          error: 2345,
+          error: 'MVUC-8061',
           message: 'The zipCodes is required with as numeric.'
         })
       }
@@ -90,7 +88,7 @@ const validateVerifyContract = (req, res, done) => {
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVVC-8060',
       message: "Please provide only valid 'id' as numeric."
     })
   }
@@ -112,7 +110,7 @@ const validateContractApproved = (req, res, done) => {
       if (isNaN(query.clientId) || query.clientId < 1 || query.clientId > 9999999999) {
         errorArray.push({
           field: 'clientId',
-          error: 'cmca-5',
+          error: 'MVCA-8060',
           message: 'The clientId should be number with min 1 and max 9999999999 value.'
         })
       }
