@@ -5,7 +5,7 @@ const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalHelper = require('./general.helper')
 const addParkingZone = (data) => {
-  data.uid = data.maxTime.toString() + data.zip.toString() + data.fee.toString().split('.').join('')
+  data.uid = data.maxTime.toString() + data.fee.toString().split('.').join('') + data.zip.toString()
   const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
   if (center) {
     data.lat = center.lat
@@ -17,10 +17,8 @@ const addParkingZone = (data) => {
     .then(async client => {
       if (client[0].dataValues.type === 'Government') {
         const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0 } })
-        console.log(parkingZone)
         if (!parkingZone) {
           data.clientCount = 0
-          return db.ParkingZone.create(data)
         }
         return generalHelper.rejectPromise([{
           field: 'clientCount',
@@ -35,17 +33,20 @@ const addParkingZone = (data) => {
         if (parkingZone.length < 1) {
           data.clientCount = 9
           return db.ParkingZone.create(data)
-        } else if (parkingZone[0].dataValues.clientCount === 5) {
+        } else if (parkingZone[0].dataValues.clientCount >= 5) {
+          data.clientCount = (parkingZone[0].dataValues.clientCount - 1)
+        } else {
           return generalHelper.rejectPromise([{
             field: 'clientCount',
             error: 1540,
             message: 'You are not created parkingZone'
           }])
-        } else {
-          data.clientCount = (parkingZone[0].dataValues.clientCount - 1)
-          return db.ParkingZone.create(data)
         }
       }
+
+      
+
+      return db.ParkingZone.create(data)
     }).then(async (createdParkingZone) => {
       if (!createdParkingZone) {
         return null
