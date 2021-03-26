@@ -181,7 +181,7 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
     const doc = printer.createPdfKitDocument(docDefinition)
 
     doc.pipe(
-      fs.createWriteStream(`contracts/${fileName}.pdf`).on('error', (err) => {
+      fs.createWriteStream(`contracts/${fileName}`).on('error', (err) => {
         console.log(err)
       })
     )
@@ -245,7 +245,7 @@ function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = 
     const doc = printer.createPdfKitDocument(docDefinition)
 
     doc.pipe(
-      fs.createWriteStream(`contracts/${fileName}.pdf`).on('error', (err) => {
+      fs.createWriteStream(`contracts/${fileName}`).on('error', (err) => {
         console.log(err)
       })
     )

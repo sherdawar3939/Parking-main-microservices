@@ -20,12 +20,27 @@ function createVoucherHelper (body, status) {
             body.uid = generalHelper.createUid(parkingZone.clientCount, body.zip, status)
           })
       }
+
+      const foundVoucher = await db.Voucher.findOne({
+        where: {
+          uid: body.uid
+        }
+      })
+
+      if (foundVoucher) {
+        return generalHelper.rejectPromise([{
+          field: 'general',
+          error: 'HCVH-0005',
+          message: 'This voucher already exist.'
+        }])
+      }
+
       return db.Voucher.create(body)
     }).then(async voucher => {
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
         type: 'Voucher', ClientId: body.ClientId
       }, 'III')
-      const filename = `${voucher.ClientId}-${contractUid}`
+      const filename = `${voucher.ClientId}-${contractUid}.pdf`
       const contract = {
         type: 'Voucher',
         status: 'APPROVED',
@@ -39,23 +54,27 @@ function createVoucherHelper (body, status) {
         updated: [],
         deleted: []
       }
-      console.log(contractUid)
-      contractData.created.push(voucher.uid)
+
+      const currentDate = new Date()
+      contractData.created.push(`${voucher.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
 
       await generalHelper.generateVoucherContract(filename, JSON.parse(JSON.stringify(contractData.created)))
       contract.data = JSON.stringify(contractData)
       await db.Contract.create(contract)
     })
+    .catch(generalHelper.catchException)
 }
+
 const getVoucherHelper = (conditions) => {
   const where = {}
   if (conditions.ClientId) {
     where.ClientId = conditions.ClientId
   }
-  return db.Voucher.findAll(where)
+  return db.Voucher.findAll({ where })
 }
+
 const getVoucherByIdHelper = (id) => {
-  return db.Voucher.findAll({
+  return db.Voucher.findOne({
     where: { id }
   })
 }

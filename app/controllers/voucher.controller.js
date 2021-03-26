@@ -16,7 +16,7 @@ const createVoucher = function (req, res) {
     })
 }
 const getVoucher = (req, res) => {
-  return voucherHelper.getVoucherHelper(req.validatedConditions)
+  return voucherHelper.getVoucherHelper(req.conditions)
     .then(function (data) {
       generalController.successResponse(res, 'Voucher get successfully.', data, 'Voucher.controller.getVoucher')
     }).catch(StandardError, function (err) {

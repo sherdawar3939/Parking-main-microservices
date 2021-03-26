@@ -6,19 +6,23 @@ const db = require('../config/sequelize.config')
 const generalHelper = require('./general.helper')
 
 const addParkingZone = (data) => {
-  data.uid = data.maxTime.toString() + data.fee.toString().split('.').join('') + data.zip.toString()
+  let feeString = data.fee.toString().split('.')
+  if (feeString.length < 2) {
+    feeString = feeString + '0'
+  }
+  data.uid = data.maxTime.toString() + feeString + data.zip.toString()
   const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
   if (center) {
     data.lat = center.lat
     data.lng = center.lng
   }
   data.polygons = JSON.stringify(data.polygons)
-  return db.ParkingZone.findOne({ where: { zip: data.zip, ClientId: data.ClientId } })
+  return db.ParkingZone.findOne({ where: { zip: data.zip, ClientId: data.ClientId, CityId: data.CityId } })
     .then(parking => {
       if (parking) {
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 'HAPZ-0001',
+          error: 'HAPZ-005',
           message: 'This user already Created parkingZone'
         }])
       }
@@ -26,19 +30,19 @@ const addParkingZone = (data) => {
     })
     .then(async client => {
       if (client.type === 'Government') {
-        const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0 } })
+        const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0, CityId: data.CityId } })
         if (!parkingZone) {
           data.clientCount = 0
         }
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 'HAPZ-0002',
-          message: 'Already created one Government client parkingZone '
+          error: 'HAPZ-010',
+          message: 'already created parkingZone for govt'
         }])
       } else if (client.type === 'Private') {
         const parkingZone = await db.ParkingZone.findAll({
-          where: { zip: data.zip, clientCount: { [Op.ne]: 0 } },
-          order: [ ['clientCount', 'ASC'] ]
+          where: { zip: data.zip, clientCount: { [Op.ne]: 0 }, CityId: data.CityId },
+          order: [['clientCount', 'ASC']]
         })
         if (parkingZone.length < 1) {
           data.clientCount = 9
@@ -47,7 +51,7 @@ const addParkingZone = (data) => {
         } else {
           return generalHelper.rejectPromise([{
             field: 'clientCount',
-            error: 'HAPZ-0003',
+            error: 'HAPZ-015',
             message: 'You are not created parkingZone'
           }])
         }
@@ -67,13 +71,13 @@ const addParkingZone = (data) => {
             ParkingZoneId: createdParkingZone.id
           })
         })
-        db.ParkingZoneHolidays.bulkCreate(holidaysToInsert)
+        db.ParkingZoneHoliday.bulkCreate(holidaysToInsert)
       }
 
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
         type: 'ParkingZone', ClientId: data.ClientId
       }, 'II')
-      const fileName = `${data.ClientId}-${contractUid.uid}`
+      const fileName = `${data.ClientId}-${contractUid}.pdf`
       const contract = {
         type: 'ParkingZone',
         status: 'APPROVED',
@@ -83,13 +87,12 @@ const addParkingZone = (data) => {
         RefId: createdParkingZone.id
       }
 
-      const currentDate = new Date()
-
       const contractData = {
         created: [],
         updated: [],
         deleted: []
       }
+      const currentDate = new Date()
       contractData.created.push(`${createdParkingZone.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
 
       await generalHelper.generateParkingZoneContract(fileName, JSON.parse(JSON.stringify(contractData.created)))
@@ -166,7 +169,7 @@ function getparkingZone (conditions, limit, offset) {
 }
 
 const getParkingZoneId = (id) => {
-  return db.ParkingZone.findAll({
+  return db.ParkingZone.findOne({
     where: {
       id
     },
@@ -180,9 +183,10 @@ const getParkingZoneId = (id) => {
     }, {
       model: db.CreativeRequest,
       as: 'parkingCreatives'
-    }
-
-    ]
+    }, {
+      model: db.ParkingZoneHoliday,
+      as: 'parkingHolidays'
+    }]
   })
 }
 
