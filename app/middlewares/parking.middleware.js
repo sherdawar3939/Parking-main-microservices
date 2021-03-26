@@ -14,11 +14,11 @@ const validateCreateParking = (req, res, done) => {
     })
   }
 
-  if (!body.UserVehicleId || isNaN(body.UserVehicleId)) {
+  if (!body.licensePlate || body.licensePlate.length > 20 || body.licensePlate.length < 2) {
     errorArray.push({
-      field: 'UserVehicleId',
+      field: 'licensePlate',
       error: 26,
-      message: 'Please provide only valid \'UserVehicleId\' as Integer.'
+      message: 'Please provide only valid \'licensePlate\'.'
     })
   }
 
@@ -27,7 +27,7 @@ const validateCreateParking = (req, res, done) => {
   }
 
   validatedBody.ParkingZoneId = body.ParkingZoneId
-  validatedBody.UserVehicleId = body.UserVehicleId
+  validatedBody.licensePlate = body.licensePlate
   req.validatedBody = validatedBody
   done()
 }

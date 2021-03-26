@@ -112,11 +112,20 @@ const validateGetParkingZone = (req, res, done) => {
   const validatedConditions = {}
   let limit = 50
   let offset = 0
+
   if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
     validatedConditions.ClientId = req.user.employeeId
   } else if (query.hasOwnProperty('ClientId') && query.ClientId && !isNaN(query.ClientId)) {
     validatedConditions.ClientId = query.ClientId
   }
+
+  if (req.user && req.user.RoleId === 3 && req.user.id) {
+    validatedConditions.status = 'Active'
+    validatedConditions.activeAfter = true
+  } else if (query.hasOwnProperty('status' && query.status)) {
+    validatedConditions.status = query.status
+  }
+
   // validating as optional string field
   if (query.hasOwnProperty('search') && query.search) {
     validatedConditions.search = query.search

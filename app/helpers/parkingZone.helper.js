@@ -4,6 +4,7 @@ var Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const generalHelper = require('./general.helper')
+
 const addParkingZone = (data) => {
   data.uid = data.maxTime.toString() + data.fee.toString().split('.').join('') + data.zip.toString()
   const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
@@ -102,6 +103,17 @@ function getparkingZone (conditions, limit, offset) {
   if (conditions.CityId) {
     cityIdWhere.CityId = conditions.CityId
   }
+
+  if (conditions.status) {
+    where.status = conditions.status
+  }
+
+  if (conditions.activeAfter) {
+    where.activeAfter = {
+      [Op.lt]: new Date()
+    }
+  }
+
   if (conditions.search) {
     where[Op.or] = {
       days: {
@@ -116,6 +128,8 @@ function getparkingZone (conditions, limit, offset) {
 
     }
   }
+
+  console.log(where)
 
   return db.ParkingZone.findAndCountAll({
     where,

@@ -5,9 +5,11 @@ const validatePostVoucher = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
+
   if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
     validatedBody.ClientId = req.user.employeeId
   }
+
   // validating as required number field
   if (!body.fee || isNaN(body.fee)) {
     errorArray.push({
@@ -17,7 +19,7 @@ const validatePostVoucher = (req, res, done) => {
     })
   }
   // validating as required string field
-  if (!body.zip || isNaN(body.zip) || body.zip.length < 0 || body.zip.length > 5) {
+  if (!body.zip || isNaN(body.zip) || body.zip.length < 5 || body.zip.length > 5) {
     errorArray.push({
       field: 'zip',
       error: 2345,

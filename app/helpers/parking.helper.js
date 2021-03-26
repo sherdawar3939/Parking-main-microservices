@@ -3,34 +3,57 @@
 // var Sequelize = require('sequelize')
 // const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
+const Op = db.Sequelize.Op
 // const _ = require('lodash')
+const generalHelper = require('./general.helper')
 
 /** Create Creative Requests */
-const createParkingHelper = async (data) => {
-  const parkingCreatedData = {}
-  const UserVehicle = await db.UserVehicle.findOne({
+const createParkingHelper = (data) => {
+  return db.ParkingZone.findOne({
     where: {
-      id: data.UserVehicleId
-    }
+      id: data.ParkingZoneId,
+      status: 'Active',
+      activeAfter: {
+        [Op.lt]: new Date()
+      }
+    },
+    raw: true
   })
-  const parkingZone = await db.ParkingZone.findOne({
-    where: {
-      id: data.ParkingZoneId
-    }
-  })
-  parkingCreatedData.licensePlate = UserVehicle.dataValues.licensePlate
-  // parkingCharges from ParkingZone fee
-  parkingCreatedData.parkingCharges = parkingZone.dataValues.fee / 60
-  // Quantity Calculations
-  parkingCreatedData.quantity = UserVehicle.dataValues.quantity
-  parkingCreatedData.status = 'Started'
-  parkingCreatedData.startedOn = new Date()
-  parkingCreatedData.UserId = data.UserId
-  parkingCreatedData.UserVehicleId = data.UserVehicleId
-  parkingCreatedData.ParkingZoneId = data.ParkingZoneId
-  // clientProfit = Quantity * Tax
+    .then(async (parkingZone) => {
+      if (!parkingZone) {
+        return generalHelper.rejectPromise([{
+          field: 'clientCount',
+          error: 1540,
+          message: 'Parking zone is not valid'
+        }])
+      }
 
-  return db.Parking.create(parkingCreatedData)
+      const parkingCreatedData = {}
+      const userVehicle = await db.UserVehicle.findOne({
+        where: {
+          licensePlate: data.licensePlate,
+          isDeleted: false
+        },
+        raw: true
+      })
+
+      if (userVehicle) {
+        parkingCreatedData.UserVehicleId = userVehicle.id
+        parkingCreatedData.quantity = userVehicle.quantity
+      }
+
+      parkingCreatedData.licensePlate = data.licensePlate
+      // parkingCharges from ParkingZone fee
+      parkingCreatedData.parkingCharges = parkingZone.fee / 60
+      // Quantity Calculations
+      parkingCreatedData.status = 'Started'
+      parkingCreatedData.startedOn = new Date()
+      parkingCreatedData.UserId = data.UserId
+      parkingCreatedData.ParkingZoneId = data.ParkingZoneId
+      // clientProfit = Quantity * Tax
+
+      return db.Parking.create(parkingCreatedData)
+    })
 }
 /** Fetch Creative Request List */
 function ActiveParkingListHelper (conditions, limit, offset) {
@@ -73,13 +96,14 @@ function ActiveParkingListHelper (conditions, limit, offset) {
   }
 
   console.log('include', includes)
-  return db.Parking.findAll({
+  return db.Parking.findAndCountAll({
     where: parkingWhere,
     include: includes,
     limit: limit,
     offset: offset
   })
 }
+
 const endParkingHelper = (id) => {
   let bill = {}
   // TIMESTAMPDIFF(SECOND, '2012-06-06 13:13:55', '2012-06-06 15:20:18')
