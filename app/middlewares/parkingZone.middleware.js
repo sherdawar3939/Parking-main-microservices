@@ -99,6 +99,7 @@ const validateCreateParkingZone = (req, res, done) => {
         message: 'Please provide only valid \'holidays \' as Array.'
       })
     }
+    validatedBody.holidays = body.holidays
   }
 
   if (!_.isEmpty(errorArray)) {
@@ -117,7 +118,6 @@ const validateCreateParkingZone = (req, res, done) => {
   validatedBody.startTime = body.startTime
   validatedBody.endTime = body.endTime
   validatedBody.activeAfter = date
-  validatedBody.holidays = body.holidays
   req.validatedBody = validatedBody
   done()
 }
