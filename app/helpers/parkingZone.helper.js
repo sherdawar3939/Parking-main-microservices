@@ -61,7 +61,9 @@ const addParkingZone = (data) => {
       if (!createdParkingZone) {
         return null
       }
-      await db.ParkingZoneHolidays.bulkCreate(data.holidays)
+      console.log(createdParkingZone)
+      
+      await db.ParkingZoneHolidays.bulkCreate(data.holidays, { ParkingZoneId: createdParkingZone.id })
 
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
         ClientId: data.ClientId
