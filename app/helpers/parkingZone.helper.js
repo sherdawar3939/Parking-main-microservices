@@ -173,6 +173,7 @@ const getParkingZoneId = (id) => {
 }
 
 function updateParkingZone (id, data) {
+  
   return db.ParkingZone.update(data, {
     where: {
       id
