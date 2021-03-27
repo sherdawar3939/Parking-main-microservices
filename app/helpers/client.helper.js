@@ -6,6 +6,7 @@ const db = require('../config/sequelize.config')
 const generalMiddleware = require('../middlewares/general.middleware')
 const generalHelpingMethods = require('../helpers/general.helper')
 const fs = require('fs')
+const generalHelper = require('./general.helper')
 // Get Client List
 const getClientList = (conditions) => {
   const where = {}
@@ -95,13 +96,21 @@ const postClient = (body, files, uid) => {
         message: 'Email already exist '
       }])
     }
-  }).then(createdClient => {
+  }).then(async createdClient => {
     const client = JSON.stringify(createdClient)
     contract.data = client
     contract.uid = uid
     contract.UserId = body.UserId
     contract.ClientId = createdClient.dataValues.id
     contract.contractUrl = files.files[0].filename
+    await db.Contract.create(contract)
+    contract.uid = 'I-001'
+    contract.contractUrl = `${Date.now()}-I-001.pdf`
+    await generalHelper.generateContractOne(contract.contractUrl)
+    await db.Contract.create(contract)
+    contract.uid = 'IV-001'
+    contract.contractUrl = `${Date.now()}-IV-001.pdf`
+    await generalHelper.generateContractTwo(contract.contractUrl)
     return db.Contract.create(contract)
   })
     .catch(generalHelpingMethods.catchException)
