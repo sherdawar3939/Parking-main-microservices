@@ -399,8 +399,8 @@ var storage = multer.diskStorage({
     cb(null, dir)
   },
   filename: async function (req, file, cb) {
-    req.uid = 'I-0001'
-    cb(null, `${Date.now()}-I-0001.pdf`)
+    req.uid = 'G-0001'
+    cb(null, `${Date.now()}-G-0001.pdf`)
   }
 })
 
