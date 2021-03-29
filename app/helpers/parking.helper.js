@@ -4,8 +4,14 @@
 // const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const Op = db.Sequelize.Op
-// const _ = require('lodash')
+const _ = require('lodash')
 const generalHelper = require('./general.helper')
+const paypal = require('paypal-rest-sdk')
+paypal.configure({
+  'mode': 'sandbox', // sandbox or live
+  'client_id': 'AcaLzKSb7p64VlLI__UWvOS0TJSeuBluAbbAsfkC5GwalU6xEqUvZDLa45d_O4NpwggWTpXeAdVkgAY6',
+  'client_secret': 'EImio5Sa03mU60yEhQWjmmVvHS5BSOIoFXNQuCsSNWZCtG4U8yvneuWWaKvlbgNVJtQhuUTx-l6MIYwU'
+})
 
 /** Create Creative Requests */
 const createParkingHelper = (data) => {
@@ -109,67 +115,149 @@ const endParkingHelper = (id) => {
   // TIMESTAMPDIFF(SECOND, '2012-06-06 13:13:55', '2012-06-06 15:20:18')
   let query = `SELECT *, Parkings.id as ParkingId FROM Parkings
   INNER JOIN ParkingZones ON Parkings.ParkingZoneId = ParkingZones.id
-  WHERE status='Started' AND Parkings.id=${id}`
-
-  console.log(query)
+  WHERE Parkings.status='Started' AND Parkings.id=${id}`
 
   return db.sequelize.query(query, {
     type: db.sequelize.QueryTypes.SELECT
   })
-    .then((result) => {
+    .then(async (result) => {
       if (!result || !result.length) {
         return {}
       }
-
       result = result[0]
+      let countryTax = 0
 
-      let profit = 0.05
+      await db.City.findOne({
+        where: {
+          id: result.CityId
+        },
+        include: {
+          model: db.Country,
+          as: 'cityCountry'
+        }
+      })
+        .then((foundCity) => {
+          if (foundCity) {
+            countryTax = parseFloat(foundCity.cityCountry.tax) / 100
+          }
+        })
+
+      let adminProfit = 0.5
+      let adminTax = adminProfit * countryTax
       let totalSeconds = (new Date() - new Date(result.startedOn)) / 1000
       let parkingFeePerSec = (result.fee / 60) / 60
       let parkingCharges = parkingFeePerSec * totalSeconds
-      let total = parkingCharges + profit
+      let clientProfit = parkingCharges
+      let clientTax = parkingCharges * countryTax
+      let total = parkingCharges + clientTax + adminProfit + adminTax
 
-      bill = { status: 'Ended', endedOn: new Date(), parkingCharges, totalSeconds, total, profit }
+      bill = { status: 'Ended', endedOn: new Date(), totalSeconds, parkingCharges, clientTax, clientProfit, adminTax, adminProfit, total }
+      console.log(bill)
       db.Parking.update(
         bill, { where: { id: id } }
       )
 
-      // const create_payment_json = JSON.stringify({
-      //   intent: 'sale',
-      //   payer: {
-      //     payment_method: 'paypal'
-      //   },
-      //   redirect_urls: {
-      //     return_url: 'http://trainthedoggo.com/smart-phone/paid/' + id,
-      //     cancel_url: 'http://localhost:3000/cancel'
-      //   },
-      //   transactions: [{
-      //     amount: {
-      //       total: total.toFixed(2),
-      //       currency: 'EUR'
-      //     },
-      //     description: 'This is the payment for parking fee.'
-      //   }]
-      // })
+      const create_payment_json = JSON.stringify({
+        intent: 'sale',
+        payer: {
+          payment_method: 'paypal'
+        },
+        redirect_urls: {
+          return_url: 'http://parking-user.webhudlab.com/parking/paid/' + id,
+          cancel_url: 'http://localhost:3000/cancel'
+        },
+        transactions: [{
+          amount: {
+            total: total.toFixed(2),
+            currency: 'EUR'
+          },
+          description: `Parking Zone: ${result.uid}, License Plate: ${result.licensePlate}`
+        }]
+      })
 
-      // return getPaypalLink(create_payment_json)
+      return getPaypalLink(create_payment_json)
+      // return bill
+    })
+    .then((payment) => {
+      let paypalUrl = payment.links.filter(link => link.rel === 'approval_url')
+      if (paypalUrl && paypalUrl.length) {
+        bill.paypalUrl = paypalUrl[0].href
+      } else {
+        bill.paypalUrl = {}
+      }
       return bill
     })
-    // .then((payment) => {
-    //   let paypalUrl = payment.links.filter(link => link.rel === 'approval_url')
-    //   if (paypalUrl && paypalUrl.length) {
-    //     bill.paypalUrl = paypalUrl[0].href
-    //   } else {
-    //     bill.paypalUrl = {}
-    //   }
-    //   return bill
-    // })
     .catch((error) => {
       console.log('Error', error /* error.response.details[0] */)
     })
 }
+
+const getPaypalLink = (create_payment_json) => {
+  return new Promise((resolve, reject) => {
+    paypal.payment.create(create_payment_json, function (error, payment) {
+      if (error) {
+        reject(error)
+      } else {
+        console.log('Create Payment Response')
+        console.log(payment)
+        resolve(payment)
+      }
+    })
+  })
+}
+
+const executeTransaction = (execute_payment_json, paymentId) => {
+  return new Promise((resolve, reject) => {
+    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+      if (error) {
+        console.log(error.response)
+        reject(error)
+      } else {
+        console.log(JSON.stringify(payment))
+        resolve(payment)
+      }
+    })
+  })
+}
+
+const paymentVerifiedHelper = (data) => {
+  return db.Parking.findOne({
+    where: {
+      id: data.ParkingId
+    }
+  })
+    .then((foundParking) => {
+      console.log('===>', parseFloat(foundParking.total), parseFloat(foundParking.total).toFixed(2))
+      const execute_payment_json = {
+        'payer_id': data.PayerID,
+        'transactions': [{
+          'amount': {
+            'currency': 'EUR',
+            'total': parseFloat(foundParking.total).toFixed(2)
+          }
+        }]
+      }
+
+      executeTransaction(execute_payment_json, data.paymentId)
+        .then((result) => {
+          console.log('----------- Done -------')
+        })
+
+      foundParking.PayerID = data.PayerID
+      foundParking.paymentId = data.paymentId
+      foundParking.paymentStatus = 'Paid'
+      return foundParking.save()
+    })
+
+  // return db.Parking.update(
+  //   { PayerID: data.PayerID, paymentId: data.paymentId },
+  //   { where: { id: data.ParkingId } }
+  // )
+}
+
 module.exports = {
   createParkingHelper,
   ActiveParkingListHelper,
-  endParkingHelper
+  endParkingHelper,
+  paymentVerifiedHelper
 }

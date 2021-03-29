@@ -66,11 +66,11 @@ function createVoucherHelper (body, status) {
 }
 
 const getVoucherHelper = (conditions) => {
-  const where = {}
-  if (conditions.ClientId) {
-    where.ClientId = conditions.ClientId
-  }
-  return db.Voucher.findAll({ where })
+  // const where = {}
+  // if (conditions.ClientId) {
+  //   where.ClientId = conditions.ClientId
+  // }
+  return db.Voucher.findAll({ where: conditions })
 }
 
 const getVoucherByIdHelper = (id) => {

@@ -69,7 +69,7 @@ function getUserVoucherID (id) {
     },
     include: [{
       model: db.UserVehicle,
-      as: 'UserVehicleVouchers',
+      as: 'userVehicle',
       attributes: ['licensePlate'],
       where: { isDeleted: false }
     }]
@@ -99,9 +99,14 @@ function getUserVoucherList (conditions) {
     where,
     include: [{
       model: db.UserVehicle,
-      as: 'UserVehicleVouchers',
+      as: 'userVehicle',
       attributes: ['licensePlate'],
-      where: { isDeleted: false }
+      where: { isDeleted: false },
+      required: true
+    }, {
+      model: db.Voucher,
+      as: 'voucher',
+      attributes: ['zip']
     }]
   })
 }
