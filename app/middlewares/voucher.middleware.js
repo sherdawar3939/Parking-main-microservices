@@ -138,8 +138,42 @@ const validateByIdVoucher = (req, res, done) => {
   }
   done()
 }
+
+/** Validate Update Seasonal Pass */
+const validateUpdateSeasonalPass = (req, res, done) => {
+  const errorArray = []
+  const body = req.body
+  const validatedBody = {}
+  // validating as optional string field
+  if (!req.params.id || isNaN(req.params.id)) {
+    errorArray.push({
+      field: 'id',
+      error: 'VCU-1234',
+      message: 'Please provide only valid \'id\' as numeric,.'
+    })
+  }
+
+  // fee must be required required  Validating as not empty, valid String and length range.
+  if (body.hasOwnProperty('fee') && body.fee) {
+    if (isNaN(body.fee) || body.fee.length < 1 || body.fee.length > 20) {
+      errorArray.push({
+        field: 'fee',
+        error: 'MVUPZ-1235',
+        message: 'Please provide only valid \'fee\' as integer, length must be between 2 and 20.'
+      })
+    }
+    validatedBody.fee = body.fee
+  }
+
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'voucher.middleware.validateUpdateSeasonalPass')
+  }
+  req.validatedBody = validatedBody
+  done()
+}
 module.exports = {
   validatePostVoucher,
   validateGetVoucher,
-  validateByIdVoucher
+  validateByIdVoucher,
+  validateUpdateSeasonalPass
 }
