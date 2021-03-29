@@ -27,18 +27,14 @@ const validateGetInspection = (req, res, done) => {
   const validatedConditions = {}
   const query = req.query
 
-  let limit = 50
-  let offset = 0
-  console.log(req.user.id)
-
-  if (req.user && req.user.RoleId === 3 && req.user.id) {
+  if (req.user && req.user.RoleId === 4 && req.user.id) {
     validatedConditions.InspectorId = req.user.id
-  } else if (query.hasOwnProperty('InspectorId') && query.InspectorId && isNaN(query.InspectorId)) {
+  } else if (query.hasOwnProperty('InspectorId') && query.InspectorId && !isNaN(query.InspectorId)) {
     validatedConditions.InspectorId = query.InspectorId
   }
 
   // ParkingZoneId optional and Numeric
-  if (query.hasOwnProperty('ParkingZoneId') && query.ParkingZoneId && isNaN(query.ParkingZoneId)) {
+  if (query.hasOwnProperty('ParkingZoneId') && query.ParkingZoneId && !isNaN(query.ParkingZoneId)) {
     validatedConditions.ParkingZoneId = query.ParkingZoneId
   }
 
@@ -46,29 +42,27 @@ const validateGetInspection = (req, res, done) => {
   if (query.hasOwnProperty('result')) {
     validatedConditions.result = query.result
   }
+
   // ClientId optional and Numeric
-  if (query.hasOwnProperty('ClientId') && query.ClientId && isNaN(query.ClientId)) {
+  if (query.hasOwnProperty('ClientId') && query.ClientId && !isNaN(query.ClientId)) {
     validatedConditions.ClientId = query.ClientId
   }
+
   if (query.hasOwnProperty('fromDate') && query.fromDate) {
     validatedConditions.fromDate = query.fromDate
   }
+
   if (query.hasOwnProperty('toDate') && query.toDate) {
     validatedConditions.toDate = query.toDate
   }
-  if (query.limit && query.limit > 0) {
-    limit = parseInt(query.limit)
+
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'inspection.middleware.validateGetInspection')
   }
 
-  if (query.offset && query.offset > 0) {
-    offset = parseInt(query.offset)
-  }
-  if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetParkingZone')
-  }
   req.conditions = validatedConditions
-  req.limit = limit
-  req.offset = offset
+  req.limit = query.limit && query.limit > 0 ? parseInt(query.limit) : 20
+  req.offset = query.offset && query.offset > 0 ? parseInt(query.offset) : 0
 
   done()
 }

@@ -26,9 +26,9 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     associate: function (models) {
-      Inspection.belongsTo(models.Inspector, { foreignKey: 'InspectorId', as: 'Inspections' })
+      Inspection.belongsTo(models.Inspector, { foreignKey: 'InspectorId', as: 'inspector' })
       Inspection.belongsTo(models.Parking, { foreignKey: 'ParkingId', as: 'parkingInspections' })
-      Inspection.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'parkingZoneInspections' })
+      Inspection.belongsTo(models.ParkingZone, { foreignKey: 'ParkingZoneId', as: 'inspectedParkingZone' })
     }
   })
   return Inspection
