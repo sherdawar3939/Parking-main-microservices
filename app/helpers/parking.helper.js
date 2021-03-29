@@ -66,10 +66,7 @@ function ActiveParkingListHelper (conditions, limit, offset) {
   let parkingWhere = {}
   const parkingZoneWhere = {}
   let includes = [{
-    where: parkingZoneWhere,
-    model: db.ParkingZone,
-    as: 'parkingZone',
-    attributes: ['uid', 'fee', 'zip', 'maxTime']
+    where: parkingZoneWhere
   }]
 
   if (conditions.ClientId) {
