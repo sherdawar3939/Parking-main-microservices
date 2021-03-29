@@ -107,6 +107,11 @@ function getUserVoucherList (conditions) {
       model: db.Voucher,
       as: 'voucher',
       attributes: ['zip']
+    },
+    {
+      model: db.User,
+      as: 'UserVouchersUser',
+      attributes: ['fname','lname']
     }]
   })
 }
