@@ -128,7 +128,6 @@ const validateGetParkingZone = (req, res, done) => {
   const validatedConditions = {}
   let limit = 50
   let offset = 0
-
   if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
     validatedConditions.ClientId = req.user.employeeId
   } else if (query.hasOwnProperty('ClientId') && query.ClientId && !isNaN(query.ClientId)) {
@@ -163,6 +162,8 @@ const validateGetParkingZone = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetParkingZone')
   }
+  req.validatedConditions = validatedConditions
+  done()
 }
 
 const validateGetParkingZoneId = (req, res, done) => {

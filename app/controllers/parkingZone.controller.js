@@ -16,7 +16,7 @@ const addParkingZone = function (req, res) {
 }
 
 const getParkingZone = function (req, res) {
-  return ParkingZoneHelper.getparkingZone(req.conditions, req.limit, req.offset)
+  return ParkingZoneHelper.getparkingZone(req.validatedConditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'Parking zone fetched successfully.', data, 'parkingZone.controller.getparkingzone')
     }).catch(StandardError, function (err) {
