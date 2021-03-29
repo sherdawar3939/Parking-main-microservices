@@ -110,7 +110,8 @@ const postClient = (body, files, uid) => {
     await db.Contract.create(contract)
     contract.uid = 'IV-001'
     contract.contractUrl = `${Date.now()}-IV-001.pdf`
-    await generalHelper.generateContractTwo(contract.contractUrl)
+    const countryName = await db.Country.findOne({ raw: true, where: { id: body.CountryId }, attributes: ['name'] })
+    await generalHelper.generateContractTwo(contract.contractUrl, countryName.name)
     return db.Contract.create(contract)
   })
     .catch(generalHelpingMethods.catchException)
