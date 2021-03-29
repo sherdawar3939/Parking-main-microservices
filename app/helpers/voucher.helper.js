@@ -119,65 +119,75 @@ function deleteVoucher (id) {
 }
 
 function updateSeasonalPass (id, data, status) {
-  let previousValues
+  let foundVoucher
   return db.Voucher.findOne({ where: { id } })
     .then(async (voucher) => {
       if (!voucher) {
         return generalHelper.rejectPromise({
           field: 'id',
-          error: 'voucher-0001',
+          error: 'HVUV-0001',
           message: 'No Record Exist.'
         })
       }
+      foundVoucher = voucher
 
-      previousValues = JSON.parse(JSON.stringify(voucher))
-
-      if (data.fee === previousValues.fee) {
-        return generalHelper.rejectPromise({
-          field: 'id',
-          error: 'voucher-0004',
-          message: 'This fee Already Exist.'
-        })
+      if (data.fee === foundVoucher.fee) {
+        return voucher
       }
 
-      if (data.uid && data.uid !== previousValues.uid) {
-        data.uid = generalHelper.createUid(0, voucher.zip, status)
-        await db.Voucher.findOne({ where: { uid: data.uid } })
-          .then((foundVoucher) => {
-            if (!foundVoucher) {
-              return generalHelper.rejectPromise({
-                field: 'id',
-                error: 'voucher-0005',
-                message: 'A voucher exist with this uid.'
+      return db.Client.findOne({ raw: true, where: { id: foundVoucher.ClientId } })
+        .then(async client => {
+          if (client.type === 'Government') {
+            data.uid = generalHelper.createUid(0, foundVoucher.zip, status)
+          } else if (client.type === 'Private') {
+            await db.ParkingZone.findOne({ raw: true, where: { zip: foundVoucher.zip, ClientId: foundVoucher.ClientId } })
+              .then(parkingZone => {
+                if (!parkingZone) {
+                  return generalHelper.rejectPromise([{
+                    field: 'UpdateVoucherHelper',
+                    error: 'UPVH-0002',
+                    message: 'First create parking zone'
+                  }])
+                }
+                data.uid = generalHelper.createUid(parkingZone.clientCount, foundVoucher.zip, status)
               })
+          }
+          return db.Voucher.findOne({ where: { uid: data.uid } })
+        })
+        .then((foundVoucher) => {
+          if (foundVoucher) {
+            return generalHelper.rejectPromise({
+              field: 'id',
+              error: 'voucher-0005',
+              message: 'A voucher exist with this uid.'
+            })
+          }
+
+          return db.Contract.findOne({
+            where: {
+              type: 'Voucher',
+              ClientId: foundVoucher.ClientId,
+              RefId: foundVoucher.id
             }
-
-            return db.Contract.findOne({
-              where: {
-                type: 'Voucher',
-                ClientId: voucher.ClientId,
-                RefId: voucher.id
-              }
-            })
           })
-          .then((foundContract) => {
-            const currentDate = new Date()
-            const contractData = JSON.parse(foundContract.dataValues.data)
-            contractData.updated.push(`${data.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}\n`)
+        })
+        .then((foundContract) => {
+          const currentDate = new Date()
+          const contractData = JSON.parse(foundContract.dataValues.data)
+          contractData.updated.push(`${data.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}\n`)
 
-            generalHelper.generateVoucherContract(foundContract.dataValues.contractUrl, JSON.parse(JSON.stringify(contractData.created)), JSON.parse(JSON.stringify(contractData.updated)))
-            foundContract.set({
-              data: JSON.stringify(contractData)
-            })
-            return foundContract.save()
+          generalHelper.generateVoucherContract(foundContract.dataValues.contractUrl, JSON.parse(JSON.stringify(contractData.created)), JSON.parse(JSON.stringify(contractData.updated)))
+          foundContract.set({
+            data: JSON.stringify(contractData)
           })
-      }
-      voucher.set(data)
-      return voucher.save()
+          foundContract.save()
+
+          foundVoucher.set(data)
+          return foundVoucher.save()
+        })
     })
     .catch(generalHelper.catchException)
 }
-
 module.exports = {
   createVoucherHelper,
   getVoucherHelper,
