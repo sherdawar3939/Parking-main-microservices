@@ -36,6 +36,17 @@ const getVoucherById = (req, res) => {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'createVoucher.controller.getVoucherById', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+/** Updated Seasonal Pass T */
+const updateSeasonalPass = (req, res) => {
+  return voucherHelper.updateSeasonalPass(req.params.id, req.validatedBody)
+    .then((data) => {
+      generalController.successResponse(res, 'Voucher Updated successfully.', data, 'voucher.controller.updateSeasonalPass')
+    }).catch(StandardError, (err) => {
+      generalController.errorResponse(res, err, null, 'voucher.controller.updateSeasonalPass', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch((err) => {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'voucher.controller.updateSeasonalPass', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 
 const deleteVoucher = (req, res) => {
   return voucherHelper.deleteVoucher(req.params.id)
@@ -52,5 +63,6 @@ module.exports = {
   createVoucher,
   getVoucher,
   getVoucherById,
+  updateSeasonalPass,
   deleteVoucher
 }

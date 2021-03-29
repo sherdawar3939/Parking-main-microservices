@@ -118,9 +118,79 @@ function deleteVoucher (id) {
     })
 }
 
+function updateSeasonalPass (id, data) {
+  let previousValues
+  return db.Voucher.findOne({ where: { id } })
+    .then(async (voucher) => {
+      if (!voucher) {
+        return generalHelper.rejectPromise({
+          field: 'id',
+          error: 'voucher-0001',
+          message: 'No Record Exist.'
+        })
+      }
+
+      previousValues = JSON.parse(JSON.stringify(voucher))
+
+      if (data.fee || (data.fee !== previousValues.fee)) {
+        let feeNumber = data.fee || previousValues.fee
+        let feeString = ''
+        if (feeNumber < 0) {
+          feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
+          feeString = feeNumber.toString().split('.').join('')
+        } else {
+          feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
+          feeString = feeNumber.toString().split('.').join('')
+        }
+        if (feeString.length < 2) {
+          feeString = feeString + '0'
+        }
+        let zip = previousValues.zip.toString()
+
+        data.uid = feeString + zip
+      }
+
+      if (data.uid && data.uid !== previousValues.uid) {
+        await db.Voucher.findOne({ where: { uid: data.uid } })
+          .then((foundVoucher) => {
+            if (foundVoucher) {
+              return generalHelper.rejectPromise({
+                field: 'id',
+                error: 'voucher-0005',
+                message: 'A voucher in this zip code already exist with this fee.'
+              })
+            }
+
+            return db.Contract.findOne({
+              where: {
+                type: 'Voucher',
+                ClientId: voucher.ClientId,
+                RefId: voucher.id
+              }
+            })
+          })
+          .then((foundContract) => {
+            const currentDate = new Date()
+            const contractData = JSON.parse(foundContract.dataValues.data)
+            contractData.updated.push(`${data.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}\n`)
+
+            generalHelper.generateVoucherContract(foundContract.dataValues.contractUrl, JSON.parse(JSON.stringify(contractData.created)), JSON.parse(JSON.stringify(contractData.updated)))
+            foundContract.set({
+              data: JSON.stringify(contractData)
+            })
+            return foundContract.save()
+          })
+      }
+      voucher.set(data)
+      return voucher.save()
+    })
+    .catch(generalHelper.catchException)
+}
+
 module.exports = {
   createVoucherHelper,
   getVoucherHelper,
   getVoucherByIdHelper,
-  deleteVoucher
+  deleteVoucher,
+  updateSeasonalPass
 }
