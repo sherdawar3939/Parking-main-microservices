@@ -6,42 +6,52 @@ const db = require('../config/sequelize.config')
 const generalHelper = require('./general.helper')
 
 const addParkingZone = (data) => {
-  data.uid = data.maxTime.toString() + data.fee.toString().split('.').join('') + data.zip.toString()
+  let feeNumber = data.fee
+  let feeString = ''
+  if (feeNumber < 0) {
+    feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
+    feeString = feeNumber.toString().split('.').join('')
+  } else {
+    feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
+    feeString = feeNumber.toString().split('.').join('')
+  }
+  if (feeString.length < 2) {
+    feeString = feeString + '0'
+  }
+
+  data.uid = data.maxTime.toString() + feeString + data.zip.toString()
   const center = generalHelper.getLatLonCenterFromGeometry(data.polygons[0])
   if (center) {
     data.lat = center.lat
     data.lng = center.lng
   }
   data.polygons = JSON.stringify(data.polygons)
-  return db.ParkingZone.findOne({ where: { zip: data.zip, ClientId: data.ClientId } })
+  return db.ParkingZone.findOne({ where: { zip: data.zip, ClientId: data.ClientId, CityId: data.CityId } })
     .then(parking => {
       if (parking) {
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 1540,
+          error: 'HAPZ-005',
           message: 'This user already Created parkingZone'
         }])
       }
-      return parking
-    }).then(parking => {
-      if (!parking) {
-        return db.Client.findOne({ raw: true, where: { id: data.ClientId } })
-      }
-    }).then(async client => {
+      return db.Client.findOne({ raw: true, where: { id: data.ClientId } })
+    })
+    .then(async client => {
       if (client.type === 'Government') {
-        const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0 } })
+        const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0, CityId: data.CityId } })
         if (!parkingZone) {
           data.clientCount = 0
         }
         return generalHelper.rejectPromise([{
           field: 'clientCount',
-          error: 1540,
-          message: 'already created parkingZone '
+          error: 'HAPZ-010',
+          message: 'already created parkingZone for govt'
         }])
       } else if (client.type === 'Private') {
         const parkingZone = await db.ParkingZone.findAll({
-          where: { zip: data.zip, clientCount: { [Op.ne]: 0 } },
-          order: [ ['clientCount', 'ASC'] ]
+          where: { zip: data.zip, clientCount: { [Op.ne]: 0 }, CityId: data.CityId },
+          order: [['clientCount', 'ASC']]
         })
         if (parkingZone.length < 1) {
           data.clientCount = 9
@@ -50,7 +60,7 @@ const addParkingZone = (data) => {
         } else {
           return generalHelper.rejectPromise([{
             field: 'clientCount',
-            error: 1540,
+            error: 'HAPZ-015',
             message: 'You are not created parkingZone'
           }])
         }
@@ -61,30 +71,39 @@ const addParkingZone = (data) => {
       if (!createdParkingZone) {
         return null
       }
-      console.log(createdParkingZone)
-      await db.ParkingZoneHolidays.bulkCreate(data.holidays, { ParkingZoneId: createdParkingZone.id })
+
+      if (data.holidays) {
+        const holidaysToInsert = []
+        data.holidays.forEach(holiday => {
+          holidaysToInsert.push({
+            holidayDate: new Date(holiday),
+            ParkingZoneId: createdParkingZone.id
+          })
+        })
+        db.ParkingZoneHoliday.bulkCreate(holidaysToInsert)
+      }
 
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
-        ClientId: data.ClientId
+        type: 'ParkingZone', ClientId: data.ClientId
       }, 'II')
-
+      const fileName = `${data.ClientId}-${contractUid}.pdf`
       const contract = {
         type: 'ParkingZone',
         status: 'APPROVED',
         uid: contractUid,
-        contractUrl: `${data.ClientId}${contractUid}.pdf`,
-        ClientId: createdParkingZone.ClientId
+        contractUrl: fileName,
+        ClientId: createdParkingZone.ClientId,
+        RefId: createdParkingZone.id
       }
-
-      const currentDate = new Date()
 
       const contractData = {
         created: [],
         updated: [],
         deleted: []
       }
+      const currentDate = new Date()
       contractData.created.push(`${createdParkingZone.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`)
-      const fileName = `${data.ClientId}${contract.uid}`
+
       await generalHelper.generateParkingZoneContract(fileName, JSON.parse(JSON.stringify(contractData.created)))
       contract.data = JSON.stringify(contractData)
 
@@ -114,6 +133,17 @@ function getparkingZone (conditions, limit, offset) {
   if (conditions.CityId) {
     cityIdWhere.CityId = conditions.CityId
   }
+
+  if (conditions.status) {
+    where.status = conditions.status
+  }
+
+  if (conditions.activeAfter) {
+    where.activeAfter = {
+      [Op.lt]: new Date()
+    }
+  }
+
   if (conditions.search) {
     where[Op.or] = {
       days: {
@@ -128,6 +158,8 @@ function getparkingZone (conditions, limit, offset) {
 
     }
   }
+
+  console.log(where)
 
   return db.ParkingZone.findAndCountAll({
     where,
@@ -146,7 +178,7 @@ function getparkingZone (conditions, limit, offset) {
 }
 
 const getParkingZoneId = (id) => {
-  return db.ParkingZone.findAll({
+  return db.ParkingZone.findOne({
     where: {
       id
     },
@@ -160,22 +192,127 @@ const getParkingZoneId = (id) => {
     }, {
       model: db.CreativeRequest,
       as: 'parkingCreatives'
-    }
-
-    ]
+    }, {
+      model: db.ParkingZoneHoliday,
+      as: 'parkingHolidays'
+    }]
   })
 }
 
 function updateParkingZone (id, data) {
-  return db.ParkingZone.update(data, {
+  let previousValues
+  return db.ParkingZone.findOne({ where: { id } })
+    .then(async (parkingZone) => {
+      if (!parkingZone) {
+        return generalHelper.rejectPromise({
+          field: 'id',
+          error: 'PZUP-0001',
+          message: 'No Record Exist.'
+        })
+      }
+
+      previousValues = JSON.parse(JSON.stringify(parkingZone))
+
+      if (data.fee || data.maxTime || (data.fee != previousValues.fee) || (data.maxTime != previousValues.maxTime)) {
+        let maxTime = data.maxTime.toString() || previousValues.maxTime.toString()
+
+        let feeNumber = data.fee || previousValues.fee
+        let feeString = ''
+        if (feeNumber < 0) {
+          feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
+          feeString = feeNumber.toString().split('.').join('')
+        } else {
+          feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
+          feeString = feeNumber.toString().split('.').join('')
+        }
+        if (feeString.length < 2) {
+          feeString = feeString + '0'
+        }
+        let zip = previousValues.zip.toString()
+
+        data.uid = maxTime + feeString + zip
+      }
+
+      if (data.uid && data.uid != previousValues.uid) {
+        await db.ParkingZone.findOne({ where: { uid: data.uid } })
+          .then((foundZone) => {
+            if (foundZone) {
+              return generalHelper.rejectPromise({
+                field: 'id',
+                error: 'PZUP-0005',
+                message: 'A parking zone in this zip code already exist with this fee and max time.'
+              })
+            }
+
+            return db.Contract.findOne({
+              where: {
+                type: 'ParkingZone',
+                ClientId: parkingZone.ClientId,
+                RefId: parkingZone.id
+              }
+            })
+          })
+          .then((foundContract) => {
+            const currentDate = new Date()
+            const contractData = JSON.parse(foundContract.dataValues.data)
+            contractData.updated.push(`${data.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}\n`)
+
+            generalHelper.generateParkingZoneContract(foundContract.dataValues.contractUrl, JSON.parse(JSON.stringify(contractData.created)), JSON.parse(JSON.stringify(contractData.updated)))
+            foundContract.set({
+              data: JSON.stringify(contractData)
+            })
+            return foundContract.save()
+          })
+      }
+      parkingZone.set(data)
+      return parkingZone.save()
+    })
+    .catch(generalHelper.catchException)
+}
+
+function deleteParkingZone (id) {
+  return db.ParkingZone.findOne({
     where: {
       id
-    }
+    },
+    raw: true
   })
+    .then((foundParkingZone) => {
+      if (!foundParkingZone) {
+        return false
+      }
+
+      db.Contract.findOne({
+        where: {
+          type: 'ParkingZone',
+          ClientId: foundParkingZone.ClientId,
+          RefId: foundParkingZone.id
+        }
+      })
+        .then((foundContract) => {
+          const currentDate = new Date()
+          const contractData = JSON.parse(foundContract.dataValues.data)
+          contractData.deleted.push(`${foundParkingZone.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}\n`)
+
+          generalHelper.generateParkingZoneContract(foundContract.dataValues.contractUrl, JSON.parse(JSON.stringify(contractData.created)), JSON.parse(JSON.stringify(contractData.updated)), JSON.parse(JSON.stringify(contractData.deleted)))
+          foundContract.set({
+            data: JSON.stringify(contractData)
+          })
+          return foundContract.save()
+        })
+
+      return db.ParkingZone.destroy({
+        where: {
+          id
+        }
+      })
+    })
 }
+
 module.exports = {
   addParkingZone,
   getparkingZone,
   getParkingZoneId,
-  updateParkingZone
+  updateParkingZone,
+  deleteParkingZone
 }

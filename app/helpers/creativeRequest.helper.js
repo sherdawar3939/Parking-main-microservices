@@ -39,6 +39,11 @@ function getRequestList (conditions, limit, offset) {
   if (conditions.status) {
     where.status = conditions.status
   }
+
+  if (conditions.ParkingZoneId) {
+    where.ParkingZoneId = conditions.ParkingZoneId
+  }
+
   if (conditions.search) {
     where[Op.or] = {
       uid: {

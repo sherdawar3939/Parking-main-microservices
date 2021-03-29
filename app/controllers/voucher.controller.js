@@ -16,7 +16,7 @@ const createVoucher = function (req, res) {
     })
 }
 const getVoucher = (req, res) => {
-  return voucherHelper.getVoucherHelper(req.validatedConditions)
+  return voucherHelper.getVoucherHelper(req.conditions)
     .then(function (data) {
       generalController.successResponse(res, 'Voucher get successfully.', data, 'Voucher.controller.getVoucher')
     }).catch(StandardError, function (err) {
@@ -25,6 +25,7 @@ const getVoucher = (req, res) => {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'createVoucher.controller.getVoucher', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+
 const getVoucherById = (req, res) => {
   return voucherHelper.getVoucherByIdHelper(req.params.id)
     .then(function (data) {
@@ -35,8 +36,21 @@ const getVoucherById = (req, res) => {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'createVoucher.controller.getVoucherById', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+
+const deleteVoucher = (req, res) => {
+  return voucherHelper.deleteVoucher(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'Voucher deleted successfully.', data, 'Voucher.controller.deleteVoucher')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'Voucher.controller.deleteVoucher', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'createVoucher.controller.deleteVoucher', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
 module.exports = {
   createVoucher,
   getVoucher,
-  getVoucherById
+  getVoucherById,
+  deleteVoucher
 }

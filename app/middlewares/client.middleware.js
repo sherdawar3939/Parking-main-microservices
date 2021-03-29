@@ -39,7 +39,7 @@ const validateGetClientId = (req, res, done) => {
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVGC-8040',
       message: 'Please provide only valid \'Client id\' as numeric.'
     })
   }
@@ -56,17 +56,25 @@ const validatePostClient = async (req, res, done) => {
     validatedBody.UserId = req.user.id
     validatedBody.isProfile = true
   }
+  // validating as required string field
+  if (!body.type || body.type.length < 5 || body.type.length > 20) {
+    errorArray.push({
+      field: 'type',
+      error: 'MVPC-8060',
+      message: 'The type is required with min 5 and max 20 characters.'
+    })
+  }
   if (!body.companyName || body.companyName.length < 3 || body.companyName.length > 30) {
     errorArray.push({
       field: 'companyName',
-      error: 1001,
+      error: 'MVPC-8040',
       message: 'The field is required with 3 min and 20 max characters.'
     })
   }
   if (_.isEmpty(body.email) || !_.isString(body.email) || body.email.length < 5 || body.email.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.email))) {
     errorArray.push({
       field: 'email',
-      error: 1006,
+      error: 'MVPC-8041',
       message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
     })
   }
@@ -74,7 +82,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.phone || isNaN(body.phone) || body.phone.length < 11) {
     errorArray.push({
       field: 'phone',
-      error: 1002,
+      error: 'MVPC-8042',
       message: 'The field is required with 11 min and max 11 value.'
     })
   }
@@ -82,21 +90,21 @@ const validatePostClient = async (req, res, done) => {
   if (!body.secondaryContactPersonName || body.secondaryContactPersonName.length < 3 || body.secondaryContactPersonName.length > 30) {
     errorArray.push({
       field: 'secondaryContactPersonName',
-      error: 1001,
+      error: 'MVPC-8043',
       message: 'The field is required with 3 min and 20 max characters.'
     })
   }
   if (_.isEmpty(body.secondaryEmail) || !_.isString(body.secondaryEmail) || body.secondaryEmail.length < 5 || body.secondaryEmail.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.secondaryEmail))) {
     errorArray.push({
       field: 'email',
-      error: 1006,
+      error: 'MVPC-8044',
       message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
     })
   }
   if (!body.secondaryPhone || isNaN(body.secondaryPhone) || body.secondaryPhone.length < 11) {
     errorArray.push({
       field: 'secondaryPhone',
-      error: 1002,
+      error: 'MVPC-8045',
       message: 'The field is required with 11 digit value.'
     })
   }
@@ -104,7 +112,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.primaryContactPersonName || body.primaryContactPersonName.length < 3 || body.primaryContactPersonName.length > 30) {
     errorArray.push({
       field: 'primaryContactPersonName',
-      error: 1001,
+      error: 'MVPC-8046',
       message: 'The field is required with 3 min and 20 max characters.'
     })
   }
@@ -112,7 +120,7 @@ const validatePostClient = async (req, res, done) => {
   if (_.isEmpty(body.primaryEmail) || !_.isString(body.primaryEmail) || body.primaryEmail.length < 5 || body.primaryEmail.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.primaryEmail))) {
     errorArray.push({
       field: 'primaryEmail',
-      error: 1006,
+      error: 'MVPC-8047',
       message: 'Please provide only valid \'primaryEmail\' as string, length must be between 5 and 100.'
     })
   }
@@ -120,7 +128,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.primaryPhone || isNaN(body.primaryPhone) || body.primaryPhone.length < 11) {
     errorArray.push({
       field: 'primaryPhone',
-      error: 1002,
+      error: 'MVPC-8048',
       message: 'The field is required with 11 digit value.'
     })
   }
@@ -128,7 +136,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.houseNo || body.houseNo.length < 1 || body.houseNo.length > 50) {
     errorArray.push({
       field: 'houseNo',
-      error: 1006,
+      error: 'MVPC-8049',
       message: 'Please provide only valid \'houseNo\' as string, length must be between 1 and 50.'
     })
   }
@@ -136,7 +144,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.streetNo || body.streetNo.length < 1 || body.streetNo.length > 100) {
     errorArray.push({
       field: 'streetNo',
-      error: 1006,
+      error: 'MVPC-8050',
       message: 'Please provide only valid \'streetNo\' as string, length must be between 1 and 100.'
     })
   }
@@ -144,7 +152,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.address || body.address.length < 5 || body.address.length > 50) {
     errorArray.push({
       field: 'address',
-      error: 1007,
+      error: 'MVPC-8051',
       message: 'The field is required with 10 min and 50 max characters.'
     })
   }
@@ -152,7 +160,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.iban || body.iban.length < 5 || body.iban.length > 50) {
     errorArray.push({
       field: 'iban',
-      error: 1008,
+      error: 'MVPC-8052',
       message: 'The field is required with 10 min and 50 max characters.'
     })
   }
@@ -160,7 +168,7 @@ const validatePostClient = async (req, res, done) => {
   if (!body.paymentFrequency) {
     errorArray.push({
       field: 'paymentFrequency',
-      error: 234,
+      error: 'MVPC-8053',
       message: 'The paymentFrequency is required.'
     })
   }
@@ -177,6 +185,7 @@ const validatePostClient = async (req, res, done) => {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient', 400)
   }
   validatedBody.companyName = body.companyName
+  validatedBody.type = body.type
   validatedBody.email = body.email
   validatedBody.phone = body.phone
   validatedBody.secondaryContactPersonName = body.secondaryContactPersonName
@@ -202,7 +211,7 @@ const validatePutClient = (req, res, done) => {
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVUC-8051',
       message: 'Please provide only valid \'Client id\' as numeric.'
     })
   }
@@ -211,7 +220,7 @@ const validatePutClient = (req, res, done) => {
     if (body.companyName.length < 3 || body.companyName.length > 50) {
       errorArray.push({
         field: 'companyName',
-        error: 1001,
+        error: 'MVUC-8052',
         message: 'The field should be string with 3 min and 50 max characters.'
       })
     }
@@ -222,7 +231,7 @@ const validatePutClient = (req, res, done) => {
     if (_.isEmpty(body.email) || !_.isString(body.email) || body.email.length < 5 || body.email.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.email))) {
       errorArray.push({
         field: 'email',
-        error: 1006,
+        error: 'MVUC-8053',
         message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
       })
     }
@@ -233,7 +242,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.phone || isNaN(body.phone) || body.phone.length < 11) {
       errorArray.push({
         field: 'phone',
-        error: 1002,
+        error: 'MVUC-8054',
         message: 'The field is required with 11 min and max 11 value.'
       })
     }
@@ -244,7 +253,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.secondaryContactPersonName || body.secondaryContactPersonName.length < 3 || body.secondaryContactPersonName.length > 30) {
       errorArray.push({
         field: 'secondaryContactPersonName',
-        error: 1001,
+        error: 'MVUC-8055',
         message: 'The field is required with 3 min and 20 max characters.'
       })
     }
@@ -255,7 +264,7 @@ const validatePutClient = (req, res, done) => {
     if (_.isEmpty(body.secondaryEmail) || !_.isString(body.secondaryEmail) || body.secondaryEmail.length < 5 || body.secondaryEmail.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.secondaryEmail))) {
       errorArray.push({
         field: 'email',
-        error: 1006,
+        error: 'MVUC-8056',
         message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
       })
     }
@@ -266,7 +275,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.secondaryPhone || isNaN(body.secondaryPhone) || body.secondaryPhone.length < 11) {
       errorArray.push({
         field: 'secondaryPhone',
-        error: 1002,
+        error:  'MVUC-8057',
         message: 'The field is required with 11 digit value.'
       })
     }
@@ -277,7 +286,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.primaryContactPersonName || body.primaryContactPersonName.length < 3 || body.primaryContactPersonName.length > 30) {
       errorArray.push({
         field: 'primaryContactPersonName',
-        error: 1001,
+        error:  'MVUC-8058',
         message: 'The field is required with 3 min and 20 max characters.'
       })
     }
@@ -288,7 +297,7 @@ const validatePutClient = (req, res, done) => {
     if (_.isEmpty(body.primaryEmail) || !_.isString(body.primaryEmail) || body.primaryEmail.length < 5 || body.primaryEmail.length > 100 || !(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(body.primaryEmail))) {
       errorArray.push({
         field: 'primaryEmail',
-        error: 1006,
+        error:  'MVUC-8059',
         message: 'Please provide only valid \'primaryEmail\' as string, length must be between 5 and 100.'
       })
     }
@@ -299,7 +308,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.primaryPhone || isNaN(body.primaryPhone) || body.primaryPhone.length < 11) {
       errorArray.push({
         field: 'primaryPhone',
-        error: 1002,
+        error:  'MVUC-8060',
         message: 'The field is required with 11 digit value.'
       })
     }
@@ -310,7 +319,7 @@ const validatePutClient = (req, res, done) => {
     if (body.houseNo.length < 1 || body.houseNo.length > 50) {
       errorArray.push({
         field: 'houseNo',
-        error: 1006,
+        error: 'MVUC-80601',
         message: 'Please provide only valid \'houseNo\' as string, length must be between 1 and 50.'
       })
     }
@@ -321,7 +330,7 @@ const validatePutClient = (req, res, done) => {
     if (body.streetNo.length < 1 || body.streetNo.length > 100) {
       errorArray.push({
         field: 'streetNo',
-        error: 1006,
+        error: 'MVUC-8062',
         message: 'Please provide only valid \'streetNo\' as string, length must be between 1 and 100.'
       })
     }
@@ -333,7 +342,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.address || body.address.length < 5 || body.address.length > 50) {
       errorArray.push({
         field: 'address',
-        error: 1007,
+        error: 'MVUC-8063',
         message: 'The field is required with 10 min and 50 max characters.'
       })
     }
@@ -345,7 +354,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.iban || body.iban.length < 5 || body.iban.length > 50) {
       errorArray.push({
         field: 'iban',
-        error: 1008,
+        error: 'MVUC-8064',
         message: 'The field is required with 10 min and 50 max characters.'
       })
       validatedBody.iban = body.iban
@@ -358,7 +367,7 @@ const validatePutClient = (req, res, done) => {
     if (!body.balance || isNaN(body.balance)) {
       errorArray.push({
         field: 'balance',
-        error: 1009,
+        error: 'MVUC-8065',
         message: 'The field is required .'
       })
     }
@@ -383,18 +392,15 @@ const imageFilter = (req, file, cb) => {
 
 var storage = multer.diskStorage({
   destination: function (req, files, cb) {
-    var dir = 'currents'
+    var dir = 'contracts'
     if (!fs.existsSync(dir)) {
-      fs.mkdirSync('currents')
+      fs.mkdirSync('contracts')
     }
     cb(null, dir)
   },
   filename: async function (req, file, cb) {
-    const uid = await generalHelper.getUid('Contract', 'uid', {
-      type: 'General'
-    }, 'I')
-    req.uid = uid
-    cb(null, `${uid}.pdf`)
+    req.uid = 'G-0001'
+    cb(null, `${Date.now()}-G-0001.pdf`)
   }
 })
 

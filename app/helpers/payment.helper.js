@@ -15,7 +15,7 @@ const addpayment = (data) => {
       if (data.amount > client.balance) {
         return generalHelpingMethods.rejectPromise({
           field: 'amount',
-          error: 3456,
+          error: 'HAPM-0001',
           message: 'amount greater then client balance.'
         })
       }

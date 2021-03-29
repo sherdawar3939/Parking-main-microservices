@@ -23,7 +23,7 @@ const attachBodyAndFiles = (req, res, next) => {
     if (err) {
       return standardErrorResponse(res, {
         field: 'general',
-        error: '2000',
+        error: 'MABF-8060',
         message: err
       }, 'attachBodyAndFiles.middleware.generalMiddleware')
     }

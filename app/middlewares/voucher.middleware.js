@@ -1,13 +1,16 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
+
 const validatePostVoucher = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
+
   if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
     validatedBody.ClientId = req.user.employeeId
   }
+
   // validating as required number field
   if (!body.fee || isNaN(body.fee)) {
     errorArray.push({
@@ -17,7 +20,7 @@ const validatePostVoucher = (req, res, done) => {
     })
   }
   // validating as required string field
-  if (!body.zip || isNaN(body.zip) || body.zip.length < 0 || body.zip.length > 5) {
+  if (!body.zip || isNaN(body.zip) || body.zip.length < 5 || body.zip.length > 5) {
     errorArray.push({
       field: 'zip',
       error: 2345,
@@ -60,11 +63,49 @@ const validateGetVoucher = (req, res, done) => {
   const validatedConditions = {}
   let limit = 50
   let offset = 0
+
   if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
     validatedConditions.ClientId = req.user.employeeId
   } else if (query.hasOwnProperty('ClientId') && query.ClientId && !isNaN(query.ClientId)) {
     validatedConditions.ClientId = query.ClientId
   }
+
+  // validating as optional number field
+  if (query.hasOwnProperty('validityDays') && query.validityDays) {
+    if (isNaN(query.validityDays) || query.validityDays < 1) {
+      errorArray.push({
+        field: 'validityDays',
+        error: 'MGV-0005',
+        message: 'The validityDays should be number with min value 1.'
+      })
+    }
+    validatedConditions.validityDays = query.validityDays
+  }
+
+  // validating as optional number field
+  if (query.hasOwnProperty('CityId') && query.CityId) {
+    if (isNaN(query.CityId) || query.CityId < 1) {
+      errorArray.push({
+        field: 'CityId',
+        error: 'MGV-0010',
+        message: 'The CityId should be number with min value 1.'
+      })
+    }
+    validatedConditions.CityId = query.CityId
+  }
+
+  // validating as optional number field
+  if (query.hasOwnProperty('zip') && query.zip) {
+    if (isNaN(query.zip) || query.zip < 10000 || query.zip > 99999) {
+      errorArray.push({
+        field: 'zip',
+        error: 'MGV-0015',
+        message: 'The zip should be number with min 10000 and max 99999 value.'
+      })
+    }
+    validatedConditions.zip = query.zip
+  }
+
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }
@@ -74,7 +115,7 @@ const validateGetVoucher = (req, res, done) => {
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetParkingZone')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'voucher.middleware.validateGetParkingZone')
   }
 
   req.conditions = validatedConditions

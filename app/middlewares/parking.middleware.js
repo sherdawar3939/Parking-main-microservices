@@ -1,24 +1,27 @@
 'use strict'
 const generalMiddleware = require('./general.middleware')
 const _ = require('lodash')
+
 const validateCreateParking = (req, res, done) => {
   const errorArray = []
   const body = req.body
   const validatedBody = {}
 
+  validatedBody.UserId = req.user.id
+
   if (!body.ParkingZoneId || isNaN(body.ParkingZoneId)) {
     errorArray.push({
       field: 'ParkingZoneId',
-      error: 26,
+      error: 'MVCP-8060',
       message: 'Please provide only valid \'ParkingZoneId\' as Integer.'
     })
   }
 
-  if (!body.UserVehicleId || isNaN(body.UserVehicleId)) {
+  if (!body.licensePlate || body.licensePlate.length > 20 || body.licensePlate.length < 2) {
     errorArray.push({
-      field: 'UserVehicleId',
+      field: 'licensePlate',
       error: 26,
-      message: 'Please provide only valid \'UserVehicleId\' as Integer.'
+      message: 'Please provide only valid \'licensePlate\'.'
     })
   }
 
@@ -27,7 +30,7 @@ const validateCreateParking = (req, res, done) => {
   }
 
   validatedBody.ParkingZoneId = body.ParkingZoneId
-  validatedBody.UserVehicleId = body.UserVehicleId
+  validatedBody.licensePlate = body.licensePlate
   req.validatedBody = validatedBody
   done()
 }
@@ -76,6 +79,7 @@ const validateGetParkingList = (req, res, done) => {
   req.offset = offset
   done()
 }
+
 const validateEndParking = (req, res, done) => {
   const errorArray = []
   const body = req.body
@@ -89,15 +93,57 @@ const validateEndParking = (req, res, done) => {
     })
   }
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateCreateParking')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateEndParking')
   }
 
   validatedBody.id = body.id
   req.validatedBody = validatedBody
   done()
 }
+
+const validateVerifyPayment = (req, res, done) => {
+  const errorArray = []
+  const body = req.body
+  const validatedBody = {}
+
+  if (!body.ParkingId || isNaN(body.ParkingId)) {
+    errorArray.push({
+      field: 'id',
+      error: 'MVP-001',
+      message: 'Please provide only valid \'ParkingId\' as Integer.'
+    })
+  }
+
+  if (!body.PayerID) {
+    errorArray.push({
+      field: 'id',
+      error: 'MVP-005',
+      message: 'Please provide only valid \'PayerID\'.'
+    })
+  }
+
+  if (!body.paymentId) {
+    errorArray.push({
+      field: 'id',
+      error: 'MVP-010',
+      message: 'Please provide only valid \'paymentId\'.'
+    })
+  }
+
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'parking.middleware.validateVerifyPayment')
+  }
+
+  validatedBody.ParkingId = body.ParkingId
+  validatedBody.PayerID = body.PayerID
+  validatedBody.paymentId = body.paymentId
+  req.validatedBody = validatedBody
+  done()
+}
+
 module.exports = {
   validateCreateParking,
   validateGetParkingList,
-  validateEndParking
+  validateEndParking,
+  validateVerifyPayment
 }
