@@ -2,14 +2,28 @@ const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
 const createUserVoucher = (userData) => {
-  // console.log(userData.UserId, userData.UserVehicleId, userData.payemntStatus)
-  console.log(userData)
-  return db.UserVoucher.create({
-    UserVehicleId: userData.UserVehicleId,
-    VoucherId: userData.VoucherId,
-    UserId: userData.UserId,
-    fee: userData.fee,
-    expiryDate: userData.expiryDate })
+  return db.Voucher.findOne({
+    where: { id: userData.VoucherId },
+    raw: true
+  })
+    .then((foundVoucher) => {
+      if (!foundVoucher) {
+        return generalHelpingMethods.rejectPromise({
+          field: 'VoucherId',
+          error: 3456,
+          message: 'No Record Exists.'
+        })
+      }
+      var date = new Date()
+
+      return db.UserVoucher.create({
+        UserVehicleId: userData.UserVehicleId,
+        VoucherId: userData.VoucherId,
+        UserId: userData.UserId,
+        fee: foundVoucher.fee,
+        expiryDate: date.setDate(date.getDate() + foundVoucher.validityDays)
+      })
+    })
 }
 
 const updateUserVoucher = (id, data) => {
@@ -18,7 +32,7 @@ const updateUserVoucher = (id, data) => {
       if (!foundUserVoucher) {
         return generalHelpingMethods.rejectPromise({
           field: 'id',
-          error: 3456,
+          error: 'HUUV-0001',
           message: 'No Record Exists.'
         })
       }
@@ -36,7 +50,7 @@ function deleteUserVoucherID (id) {
       if (!foundUserVoucher) {
         return generalHelpingMethods.rejectPromise({
           field: 'id',
-          error: 3456,
+          error: 'HDUV-0002',
           message: 'No Record Exists.'
         })
       }
@@ -55,7 +69,7 @@ function getUserVoucherID (id) {
     },
     include: [{
       model: db.UserVehicle,
-      as: 'UserVehicleVouchers',
+      as: 'userVehicle',
       attributes: ['licensePlate'],
       where: { isDeleted: false }
     }]
@@ -63,13 +77,36 @@ function getUserVoucherID (id) {
 }
 
 function getUserVoucherList (conditions) {
+  let where = {}
+
+  if (conditions.UserId) {
+    where.UserId = conditions.UserId
+  }
+
+  if (conditions.UserVehicleId) {
+    where.UserVehicleId = conditions.UserVehicleId
+  }
+
+  if (conditions.VoucherId) {
+    where.VoucherId = conditions.VoucherId
+  }
+
+  if (conditions.paymentStatus) {
+    where.paymentStatus = conditions.paymentStatus
+  }
+
   return db.UserVoucher.findAll({
-    where: conditions,
+    where,
     include: [{
       model: db.UserVehicle,
-      as: 'UserVehicleVouchers',
+      as: 'userVehicle',
       attributes: ['licensePlate'],
-      where: { isDeleted: false }
+      where: { isDeleted: false },
+      required: true
+    }, {
+      model: db.Voucher,
+      as: 'voucher',
+      attributes: ['zip']
     }]
   })
 }

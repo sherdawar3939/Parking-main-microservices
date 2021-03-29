@@ -25,29 +25,10 @@ const validatePostUserVoucher = (req, res, done) => {
     })
   }
 
-  // validating expiryDate
-  if (!body.expiryDate) {
-    errorArray.push({
-      field: 'expiryDate',
-      error: 2345,
-      message: 'The expiryDate is required.'
-    })
-  }
-
-  // validating fee
-  if (!body.fee || isNaN(body.fee)) {
-    errorArray.push({
-      field: 'fee',
-      error: 2345,
-      message: 'The fee is required.'
-    })
-  }
-
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'inspector.middleware.validatePostUserVoucher')
   }
-  validatedUserData.fee = body.fee
-  validatedUserData.expiryDate = body.expiryDate
+
   validatedUserData.VoucherId = body.VoucherId
   validatedUserData.UserVehicleId = body.UserVehicleId
   validatedUserData.UserId = req.user.id
@@ -60,17 +41,19 @@ const validateUpdateUserVoucher = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
 
-  // paymentStatus must be required  Validating as not empty, valid String and length range.
-  if (!_.isString(body.paymentStatus) || body.paymentStatus.length > 50) {
-    errorArray.push({
-      field: 'paymentStatus',
-      error: 25,
-      message: 'Please provide only valid \'paymentStatus\' as string, length must be between 2 and 20.'
-    })
+  // paymentStatus Optional Validating as not empty, valid String and length range.
+  if (body.paymentStatus) {
+    if (!_.isString(body.paymentStatus) || body.paymentStatus.length > 50) {
+      errorArray.push({
+        field: 'paymentStatus',
+        error: 25,
+        message: 'Please provide only valid \'paymentStatus\' as string, length must be between 2 and 20.'
+      })
+    }
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateUserVoucher')
   }
   validatedBody.paymentStatus = body.paymentStatus
 
@@ -88,22 +71,7 @@ const validateGetUserVoucher = (req, res, done) => {
     })
   }
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'inspector.middleware.validateIspectorUser')
-  }
-  done()
-}
-
-const validateGetInspectorUser = (req, res, done) => {
-  const errorArray = []
-  if (isNaN(req.params.id)) {
-    errorArray.push({
-      field: 'id',
-      error: 80140,
-      message: "Please provide only valid 'id' as number."
-    })
-  }
-  if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'inspector.middleware.validateGetInspectorUser')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVoucher.middleware.validateGetUserVoucher')
   }
   done()
 }
@@ -113,39 +81,27 @@ const validateGetUserVoucherList = (req, res, done) => {
   const query = req.query
   const validatedConditions = {}
 
-  let limit = 50
-  let offset = 0
-  if (query.hasOwnProperty('fName') && query.fName) {
-    validatedConditions.search = query.search
+  if (query.hasOwnProperty('VoucherId') && query.VoucherId) {
+    validatedConditions.VoucherId = query.VoucherId
   }
 
-  if (query.hasOwnProperty('lName') && query.lName) {
-    validatedConditions.lName = query.lName
+  if (query.hasOwnProperty('UserVehicleId') && query.UserVehicleId) {
+    validatedConditions.UserVehicleId = query.UserVehicleId
   }
 
-  if (query.hasOwnProperty('status') && query.status) {
-    validatedConditions.status = query.status
+  if (query.hasOwnProperty('paymentStatus') && query.paymentStatus) {
+    validatedConditions.paymentStatus = query.paymentStatus
   }
 
-  if (query.hasOwnProperty('email') && query.email) {
-    validatedConditions.email = query.email
-  }
-
-  if (query.limit && query.limit > 0) {
-    limit = parseInt(query.limit)
-  }
-
-  if (query.offset && query.offset > 0) {
-    offset = parseInt(query.offset)
+  if (query.hasOwnProperty('UserId') && query.UserId) {
+    validatedConditions.UserId = query.UserId
   }
 
   if (!_.isEmpty(errorArray)) {
-    return generalMiddleware.standardErrorResponse(res, errorArray, 'creativeRequest.middleware.validateGetCreativeRequest')
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'userVoucher.middleware.validateGetUserVouvherList')
   }
   req.conditions = validatedConditions
-  req.limit = limit
-  req.offset = offset
   done()
 }
 
-module.exports = { validatePostUserVoucher, validateUpdateUserVoucher, validateGetUserVoucher, validateGetInspectorUser, validateGetUserVoucherList }
+module.exports = { validatePostUserVoucher, validateUpdateUserVoucher, validateGetUserVoucher, validateGetUserVoucherList }

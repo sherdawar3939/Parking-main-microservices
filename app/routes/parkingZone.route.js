@@ -9,4 +9,5 @@ module.exports = function (app, apiVersion) {
   app.get(`${route}/parking-zone`, passport.authenticate('jwt', { session: false }), parkingZoneMiddleware.validateGetParkingZone, ParkingZoneController.getParkingZone)
   app.get(`${route}/parking-zone/:id`, passport.authenticate('jwt', { session: false }), parkingZoneMiddleware.validateGetParkingZoneId, ParkingZoneController.getParkingZoneById)
   app.put(`${route}/parking-zone/:id`, passport.authenticate('jwt', { session: false }), parkingZoneMiddleware.validateUpdateParkingZone, ParkingZoneController.updateParkingZone)
+  app.delete(`${route}/parking-zone/:id`, passport.authenticate('jwt', { session: false }), parkingZoneMiddleware.validateGetParkingZoneId, ParkingZoneController.deleteParkingZone)
 }

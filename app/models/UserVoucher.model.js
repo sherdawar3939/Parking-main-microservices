@@ -5,6 +5,9 @@ module.exports = function (sequelize, DataTypes) {
     expiryDate: {
       type: DataTypes.DATE
     },
+    fee: {
+      type: DataTypes.DECIMAL(8, 2)
+    },
     paymentStatus: {
       type: DataTypes.ENUM(['Pending', 'Paid']),
       allowNull: false,
@@ -26,9 +29,9 @@ module.exports = function (sequelize, DataTypes) {
     }
   }, {
     associate: function (models) {
-      UserVoucher.belongsTo(models.Voucher, { foreignKey: 'VoucherId', as: 'UserVouchers' })
-      UserVoucher.belongsTo(models.User, { foreignKey: 'UserId', as: 'UserVouchersUser' })
-      UserVoucher.belongsTo(models.UserVehicle, { foreignKey: 'UserVehicleId', as: 'UserVehicleVouchers' })
+      UserVoucher.belongsTo(models.Voucher, { foreignKey: 'VoucherId', as: 'voucher' })
+      UserVoucher.belongsTo(models.User, { foreignKey: 'UserId', as: 'user' })
+      UserVoucher.belongsTo(models.UserVehicle, { foreignKey: 'UserVehicleId', as: 'userVehicle' })
     }
   })
   return UserVoucher

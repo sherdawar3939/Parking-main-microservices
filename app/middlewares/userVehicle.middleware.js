@@ -12,7 +12,7 @@ const validateGetUserVehicle = (req, res, done) => {
     if (isNaN(query.UserId)) {
       errorArray.push({
         field: 'UserId',
-        error: 25,
+        error: 'MVGV-8080',
         message: 'Please provide only valid \'UserId\' as integer.'
       })
     }
@@ -47,7 +47,7 @@ const validatePostUserVehicle = (req, res, done) => {
   if (!_.isString(body.licensePlate) || body.licensePlate.length < 2 || body.licensePlate.length > 20) {
     errorArray.push({
       field: 'licensePlate',
-      error: 25,
+      error: 'MVPUV-8080',
       message: 'Please provide only valid \'licensePlate\' as string, length must be between 2 and 20.'
     })
   }
@@ -55,7 +55,7 @@ const validatePostUserVehicle = (req, res, done) => {
   if (!body.quantity || isNaN(body.quantity)) {
     errorArray.push({
       field: 'quantity',
-      error: 26,
+      error: 'MVPUV-8080',
       message: 'Please provide only valid \'quantity\' as numeric, length must be between 0 and 2.'
     })
   }
@@ -63,7 +63,7 @@ const validatePostUserVehicle = (req, res, done) => {
   if (!body.VehicleCategoryId || !isInteger(body.VehicleCategoryId)) {
     errorArray.push({
       field: 'VehicleCategoryId',
-      error: 26,
+      error: 'MVPUV-8081',
       message: 'Please provide only valid \'VehicleCategoryId\' as numeric,.'
     })
   }
@@ -71,7 +71,7 @@ const validatePostUserVehicle = (req, res, done) => {
   if (!body.UserId || isNaN(body.UserId)) {
     errorArray.push({
       field: 'UserId',
-      error: 26,
+      error: 'MVPUV-8082',
       message: 'Please provide only valid \'UserId\' as numeric,.'
     })
   }
@@ -96,13 +96,13 @@ const validateUpdateUserVehicleId = (req, res, done) => {
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVUUV-8080',
       message: 'Please provide only valid \'UserVehicleId\' as numeric.'
     })
     if (!body) {
       errorArray.push({
         field: 'id',
-        error: 80140,
+        error: 'MVUUV-8081',
         message: 'Please provide data for update \'UserVehicle\'.'
       })
     }
@@ -110,7 +110,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
       if (isNaN(body.VehicleCategoryId)) {
         errorArray.push({
           field: 'VehicleCategoryId',
-          error: 26,
+          error: 'MVUUV-8082',
           message: 'Please provide only valid \'VehicleCategoryId\' as numeric.'
         })
       }
@@ -121,7 +121,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     if (!_.isString(body.licensePlate) || body.licensePlate.length < 2 || body.licensePlate.length > 20) {
       errorArray.push({
         field: 'licensePlate',
-        error: 25,
+        error: 'MVUUV-8083',
         message: 'Please provide only valid \'licensePlate\' as string, length must be between 2 and 20.'
       })
     }
@@ -131,7 +131,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     if (!body.quantity || isNaN(body.quantity)) {
       errorArray.push({
         field: 'quantity',
-        error: 26,
+        error: 'MVUUV-8084',
         message: 'Please provide only valid \'quantity\' as numeric, length must be between 0 and 2.'
       })
     }
@@ -141,7 +141,7 @@ const validateUpdateUserVehicleId = (req, res, done) => {
     if (!body.UserId || isNaN(body.UserId)) {
       errorArray.push({
         field: 'UserId',
-        error: 26,
+        error: 'MVUUV-8085',
         message: 'Please provide only valid \'UserId\' as numeric,.'
       })
     }
@@ -160,7 +160,7 @@ const validateDeleteUserVehicleId = (req, res, done) => {
   if (!params.id || isNaN(params.id)) {
     errorArray.push({
       field: 'id',
-      error: 80140,
+      error: 'MVDUV-8080',
       message: 'Please provide only valid \'UserVehicleId\' as numeric.'
     })
   }

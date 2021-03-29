@@ -6,6 +6,7 @@ const db = require('../config/sequelize.config')
 const generalMiddleware = require('../middlewares/general.middleware')
 const generalHelpingMethods = require('../helpers/general.helper')
 const fs = require('fs')
+const generalHelper = require('./general.helper')
 // Get Client List
 const getClientList = (conditions) => {
   const where = {}
@@ -82,7 +83,7 @@ const postClient = (body, files, uid) => {
       await fs.unlinkSync(files.files[0].path)
       return generalHelpingMethods.rejectPromise([{
         field: 'phone',
-        error: 1540,
+        error: 'HPC-0002',
         message: 'Phone already exist '
       }])
     }
@@ -91,17 +92,25 @@ const postClient = (body, files, uid) => {
       await fs.unlinkSync(files.files[0].path)
       return generalHelpingMethods.rejectPromise([{
         field: 'Email',
-        error: 1540,
+        error: 'HPC-0001',
         message: 'Email already exist '
       }])
     }
-  }).then(createdClient => {
+  }).then(async createdClient => {
     const client = JSON.stringify(createdClient)
     contract.data = client
     contract.uid = uid
     contract.UserId = body.UserId
     contract.ClientId = createdClient.dataValues.id
     contract.contractUrl = files.files[0].filename
+    await db.Contract.create(contract)
+    contract.uid = 'I-001'
+    contract.contractUrl = `${Date.now()}-I-001.pdf`
+    await generalHelper.generateContractOne(contract.contractUrl)
+    await db.Contract.create(contract)
+    contract.uid = 'IV-001'
+    contract.contractUrl = `${Date.now()}-IV-001.pdf`
+    await generalHelper.generateContractTwo(contract.contractUrl)
     return db.Contract.create(contract)
   })
     .catch(generalHelpingMethods.catchException)
@@ -140,7 +149,7 @@ const updateClient = async (id, body, res, next) => {
 
       errorsArray.push({
         field: 'phone',
-        error: 1500,
+        error: 'HUC-0003',
         message: 'phone already exist'
       })
     }
@@ -149,7 +158,7 @@ const updateClient = async (id, body, res, next) => {
       // user email already exist.
       errorsArray.push({
         field: 'email',
-        error: 1505,
+        error: 'HUC-0004',
         message: 'email already exist'
       })
     }
@@ -158,7 +167,7 @@ const updateClient = async (id, body, res, next) => {
       // user email already exist.
       errorsArray.push({
         field: 'secondaryEmail',
-        error: 1506,
+        error: 'HUC-0005',
         message: 'secondaryEmail already exist'
       })
     }
@@ -167,7 +176,7 @@ const updateClient = async (id, body, res, next) => {
       // user email already exist.
       errorsArray.push({
         field: 'secondaryPhone',
-        error: 1506,
+        error: 'HUC-0006',
         message: 'secondaryPhone already exist'
       })
     }

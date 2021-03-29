@@ -8,7 +8,7 @@ module.exports = function (sequelize, DataTypes) {
       }
     }, {
       associate: function (models) {
-        City.belongsTo(models.Country, { foreignKey: 'CountryId', as: 'countryCities' })
+        City.belongsTo(models.Country, { foreignKey: 'CountryId', as: 'cityCountry' })
         City.hasMany(models.ParkingZone, { foreignKey: 'CityId', as: 'cityParkingZone' })
       }
     }

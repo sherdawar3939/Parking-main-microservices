@@ -8,4 +8,5 @@ module.exports = function (app, apiVersion) {
   app.post(`${route}/voucher`, passport.authenticate('jwt', { session: false }), voucherMiddleware.validatePostVoucher, voucherController.createVoucher)
   app.get(`${route}/voucher`, passport.authenticate('jwt', { session: false }), voucherMiddleware.validateGetVoucher, voucherController.getVoucher)
   app.get(`${route}/voucher/:id`, passport.authenticate('jwt', { session: false }), voucherMiddleware.validateByIdVoucher, voucherController.getVoucherById)
+  app.delete(`${route}/voucher/:id`, passport.authenticate('jwt', { session: false }), voucherMiddleware.validateByIdVoucher, voucherController.deleteVoucher)
 }

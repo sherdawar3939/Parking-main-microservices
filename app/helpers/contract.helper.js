@@ -19,7 +19,7 @@ const addContract = (data) => {
     if (!_client) {
       return generalHelpingMethods.rejectPromise([{
         field: 'createContract',
-        error: 1540,
+        error: 'HACT-0001',
         message: 'no record found'
       }])
     }

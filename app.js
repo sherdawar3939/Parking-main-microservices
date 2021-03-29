@@ -12,9 +12,9 @@ app.get('/main/api/v1/health', function (req, res) {
   return res.status(200).send('Admin micro-service working 100%... \n 1 September, 2020 - 12:00 AM')
 })
 
-app.get('/main/images/:name', function (req, res) {
+app.get('/main/contract/:name', function (req, res) {
   var fs = require('fs')
-  var data = fs.readFileSync('./images/' + req.params.name)
+  var data = fs.readFileSync('./contracts/' + req.params.name)
   res.contentType('application/pdf')
   res.send(data)
 })

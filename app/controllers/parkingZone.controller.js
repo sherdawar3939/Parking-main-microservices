@@ -25,6 +25,7 @@ const getParkingZone = function (req, res) {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'ParkingZone.controller.getParkingZone', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+
 const getParkingZoneById = (req, res) => {
   return ParkingZoneHelper.getParkingZoneId(req.params.id)
     .then(function (data) {
@@ -33,6 +34,17 @@ const getParkingZoneById = (req, res) => {
       generalController.errorResponse(res, err, null, 'ParkingZone.controller.getParkingZoneById', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'ParkingZone.controller.getParkingZoneById', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
+const deleteParkingZone = (req, res) => {
+  return ParkingZoneHelper.deleteParkingZone(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'Parking zone deleted successfully.', data, 'parkingZone.controller.deleteParkingZone')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'ParkingZone.controller.deleteParkingZone', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'ParkingZone.controller.deleteParkingZone', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
 
@@ -46,9 +58,11 @@ const updateParkingZone = (req, res) => {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'parkingZone.controller.updateParkingZone', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+
 module.exports = {
   addParkingZone,
   getParkingZone,
   getParkingZoneById,
+  deleteParkingZone,
   updateParkingZone
 }

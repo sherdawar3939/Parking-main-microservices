@@ -112,3 +112,4 @@ app/middlewares/parking.middleware.js
 assets/.DS_Store
 Archive.zip
 images/
+contracts/

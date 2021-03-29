@@ -12,6 +12,7 @@ const config = require('../config/config')
 const AWS = require('aws-sdk')
 const db = require('../config/sequelize.config')
 const _ = require('lodash')
+const { DATE } = require('sequelize')
 
 // Check if user has permission or not
 function checkIfUserHasPermission (permissionName, permissionsArray) {
@@ -151,17 +152,23 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
         alignment: 'center'
       },
       {
-        text: 'ÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t törölte:'
-      },
-      {
-        // text: ['73120007 - 19 March, 2020\n', '73120007 - 19 March, 2020\n']
-        text: deletedZipCodes
-      },
-      {
         text: '\n\nÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t hozta létre:'
       },
       {
         text: newZipCodes
+      },
+      {
+        text: '\n\nAVEVŐ frissítette a következő parkolási zónákat:'
+      },
+      {
+        text: updatedZipCodes
+      },
+      {
+        text: '\n\nÜGYFÉL a regisztrációja során a következő kódszámú parkolási zóná(ka)t törölte:'
+      },
+      {
+        // text: ['73120007 - 19 March, 2020\n', '73120007 - 19 March, 2020\n']
+        text: deletedZipCodes
       }
     ]
   }
@@ -179,8 +186,10 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
 
     const doc = printer.createPdfKitDocument(docDefinition)
 
+    console.log(updatedZipCodes)
+
     doc.pipe(
-      fs.createWriteStream(`images/${fileName}.pdf`).on('error', (err) => {
+      fs.createWriteStream(`contracts/${fileName}`).on('error', (err) => {
         console.log(err)
       })
     )
@@ -194,6 +203,7 @@ function generateParkingZoneContract (fileName, newZipCodes = [], updatedZipCode
     throw (err)
   }
 };
+
 function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = ['None'], deletedZipCodes = ['None']) {
   const docDefinition = {
     content: [
@@ -225,7 +235,7 @@ function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = 
         text: newZipCodes
       },
       {
-        text: `\n\nFürstenfeldbruck, ${DATE.now()}`
+        text: `\n\nFürstenfeldbruck, ${new Date()}`
       }
     ]
   }
@@ -244,7 +254,7 @@ function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = 
     const doc = printer.createPdfKitDocument(docDefinition)
 
     doc.pipe(
-      fs.createWriteStream(`images/${fileName}.pdf`).on('error', (err) => {
+      fs.createWriteStream(`contracts/${fileName}`).on('error', (err) => {
         console.log(err)
       })
     )
@@ -258,6 +268,176 @@ function generateVoucherContract (fileName, newZipCodes = [], updatedZipCodes = 
     throw (err)
   }
 };
+
+function generateContractOne (fileName) {
+  const docDefinition = {
+    content: [
+      {
+        text: '\nI. SZÁMÚ MELLÉKLET',
+        style: 'header',
+        alignment: 'center'
+      },
+      {
+        text: 'Verziószám: I.000',
+        style: 'header',
+        alignment: 'center'
+      },
+      {
+        text: 'Jelen melléklet a szerződés elválaszthatatlan részét képezi.\n\n\n\n\n',
+        alignment: 'center'
+      },
+      {
+        text: 'A SZOLGÁLTATÓ díjszabása:'
+      },
+      {
+
+        text: '•	Minden parkolási ciklus – kivétel a bérletvásárlás és bérlethasználat – kényelmi szolgáltatási díja: 	1 EURO + ÁFA.\n\n\n\n'
+      },
+      {
+        text: '•	Bérletvásárlás díjszabása:'
+      },
+      {
+        text: 'o	Heti bérletvásárlás kényelmi szolgáltatási díja: 	      3 EURO + ÁFA'
+      },
+      {
+        text: 'o	Havi bérletvásárlás kényelmi szolgáltatás díja: 	      10 EURO + ÁFA'
+      },
+      {
+        text: 'o	Negyedéves bérletvásárlás kényelmi szolgáltatás díja:   20 EURO + ÁFA'
+      },
+      {
+        text: 'o	Féléves bérletvásárlás kényelmi szolgáltatás díja: 	    40 EURO + ÁFA'
+      },
+      {
+        text: 'o	Éves bérletvásárlás kényelmi szolgáltatás díja: 	      50 EURO + ÁFA\n\n\n\n'
+      },
+      {
+        text: '•	A bérletvásárlási lehetőséget a parkolni szándékozó gépkocsi vezetőjének mobilapplikációja kínálja fel.'
+      },
+      {
+        text: `\n\n\nFürstenfeldbruck,  ${new Date()}`
+      }
+    ]
+  }
+
+  try {
+    const fontDescriptors = {
+      Roboto: {
+        normal: 'assets/fonts/Roboto-Regular.ttf',
+        bold: 'assets/fonts/Roboto-Medium.ttf',
+        italics: 'assets/fonts/Roboto-Italic.ttf',
+        bolditalics: 'assets/fonts/Roboto-Italic.ttf'
+      }
+    }
+    const printer = new PdfPrinter(fontDescriptors)
+
+    const doc = printer.createPdfKitDocument(docDefinition)
+
+    doc.pipe(
+      fs.createWriteStream(`contracts/${fileName}`).on('error', (err) => {
+        console.log(err)
+      })
+    )
+
+    doc.on('end', () => {
+      console.log('PDF successfully created and stored')
+    })
+
+    doc.end()
+  } catch (err) {
+    throw (err)
+  }
+};
+
+function generateContractTwo (fileName) {
+  const docDefinition = {
+    content: [
+      {
+        text: '\nIV. SZÁMÚ MELLÉKLET',
+        style: 'header',
+        alignment: 'center'
+      },
+      {
+        text: 'Ajánlott határozati javaslat tartalom önkormányzatok számára\n\n\n\n',
+        alignment: 'center'
+      },
+      {
+        text: 'Szokásos fejléc\n\n'
+      },
+      {
+
+        text: 'Tárgy: Kivonat a ____________________ számú képviselőtestületi határozatból.\n\n\n\n'
+      },
+      {
+        text: 'CITY NAME város képviselőtestülete megtárgyalta a SZARVAS Parking System Germany GmbH által működtetett Egységes'
+      },
+      {
+        text: 'Parkolási Rendszer alkalmazásának lehetőségét. A képviselőtestület a ___________________ számú határozatával '
+      },
+      {
+        text: 'felhatalmazza és kötelezi a Polgármestert a jelen képviselőtestületi határozattal szorosan összefüggő „Együttműködési '
+      },
+      {
+        text: 'Szolgáltatási Szerződés” aláírására.'
+      },
+      {
+        text: 'A képviselőtestület felkéri a Polgármestert, hogy a város '
+      },
+      {
+        text: '   •	minél kedvezőbb előnyének'
+      },
+      {
+        text: '   •	minél nagyobb díjbevételének '
+      },
+      {
+        text: '   •	a lakosság nagyobb kényelmi és komfortérzetének '
+      },
+      {
+        text: 'érdekében működjön együtt a SZOLGÁLTATÓ-val, azaz a SZARVAS Parking System Germany GmbH-val.\n\n\n\n\n'
+      },
+      {
+        text: '______________________, 20__.  __________________.	_________________________'
+
+      },
+      {
+        text: '  (Ügyfél városnév)        	        (Dátum)	             (Név, Titulus) \n\n\n'
+
+      },
+      {
+        text: '                                        Bélyegző'
+      }
+    ]
+  }
+
+  try {
+    const fontDescriptors = {
+      Roboto: {
+        normal: 'assets/fonts/Roboto-Regular.ttf',
+        bold: 'assets/fonts/Roboto-Medium.ttf',
+        italics: 'assets/fonts/Roboto-Italic.ttf',
+        bolditalics: 'assets/fonts/Roboto-Italic.ttf'
+      }
+    }
+    const printer = new PdfPrinter(fontDescriptors)
+
+    const doc = printer.createPdfKitDocument(docDefinition)
+
+    doc.pipe(
+      fs.createWriteStream(`contracts/${fileName}`).on('error', (err) => {
+        console.log(err)
+      })
+    )
+
+    doc.on('end', () => {
+      console.log('PDF successfully created and stored')
+    })
+
+    doc.end()
+  } catch (err) {
+    throw (err)
+  }
+};
+
 module.exports = {
   checkIfUserHasPermission,
   rejectPromise,
@@ -268,5 +448,7 @@ module.exports = {
   getLatLonCenterFromGeometry,
   generateParkingZoneContract,
   createUid,
-  generateVoucherContract
+  generateVoucherContract,
+  generateContractOne,
+  generateContractTwo
 }
