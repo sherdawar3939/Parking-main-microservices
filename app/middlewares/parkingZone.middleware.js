@@ -163,12 +163,6 @@ const validateGetParkingZone = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'area.middleware.validateGetParkingZone')
   }
-
-  req.conditions = validatedConditions
-  req.limit = limit
-  req.offset = offset
-
-  done()
 }
 
 const validateGetParkingZoneId = (req, res, done) => {

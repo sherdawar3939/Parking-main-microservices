@@ -50,8 +50,16 @@ const addParkingZone = (data) => {
         }])
       } else if (client.type === 'Private') {
         const parkingZone = await db.ParkingZone.findAll({
-          where: { zip: data.zip, clientCount: { [Op.ne]: 0 }, CityId: data.CityId },
-          order: [['clientCount', 'ASC']]
+          where: {
+            zip: data.zip,
+            clientCount: {
+              [Op.ne]: 0
+            },
+            CityId: data.CityId
+          },
+          order: [
+            ['clientCount', 'ASC']
+          ]
         })
         if (parkingZone.length < 1) {
           data.clientCount = 9
@@ -84,7 +92,8 @@ const addParkingZone = (data) => {
       }
 
       const contractUid = await generalHelper.getUid('Contract', 'uid', {
-        type: 'ParkingZone', ClientId: data.ClientId
+        type: 'ParkingZone',
+        ClientId: data.ClientId
       }, 'II')
       const fileName = `${data.ClientId}-${contractUid}.pdf`
       const contract = {
@@ -166,12 +175,10 @@ function getparkingZone (conditions, limit, offset) {
     order: [
       ['id', 'DESC']
     ],
-    include: [
-      {
-        model: db.Client,
-        as: 'parkingZoneClient'
-      }
-    ],
+    include: [{
+      model: db.Client,
+      as: 'parkingZoneClient'
+    }],
     limit: limit,
     offset: offset
   })
@@ -213,7 +220,7 @@ function updateParkingZone (id, data) {
 
       previousValues = JSON.parse(JSON.stringify(parkingZone))
 
-      if (data.fee || data.maxTime || (data.fee != previousValues.fee) || (data.maxTime != previousValues.maxTime)) {
+      if (data.fee || data.maxTime || (data.fee !== previousValues.fee) || (data.maxTime !== previousValues.maxTime)) {
         let maxTime = data.maxTime.toString() || previousValues.maxTime.toString()
 
         let feeNumber = data.fee || previousValues.fee
@@ -233,7 +240,7 @@ function updateParkingZone (id, data) {
         data.uid = maxTime + feeString + zip
       }
 
-      if (data.uid && data.uid != previousValues.uid) {
+      if (data.uid && data.uid !== previousValues.uid) {
         await db.ParkingZone.findOne({ where: { uid: data.uid } })
           .then((foundZone) => {
             if (foundZone) {
