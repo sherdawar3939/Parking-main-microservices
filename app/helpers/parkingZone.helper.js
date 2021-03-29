@@ -213,7 +213,7 @@ function updateParkingZone (id, data) {
 
       previousValues = JSON.parse(JSON.stringify(parkingZone))
 
-      if (data.fee || data.maxTime || (data.fee != previousValues.fee) || (data.maxTime != previousValues.maxTime)) {
+      if (data.fee || data.maxTime || (data.fee !== previousValues.fee) || (data.maxTime !== previousValues.maxTime)) {
         let maxTime = data.maxTime.toString() || previousValues.maxTime.toString()
 
         let feeNumber = data.fee || previousValues.fee
@@ -233,7 +233,7 @@ function updateParkingZone (id, data) {
         data.uid = maxTime + feeString + zip
       }
 
-      if (data.uid && data.uid != previousValues.uid) {
+      if (data.uid && data.uid !== previousValues.uid) {
         await db.ParkingZone.findOne({ where: { uid: data.uid } })
           .then((foundZone) => {
             if (foundZone) {
