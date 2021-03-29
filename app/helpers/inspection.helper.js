@@ -56,8 +56,20 @@ function getInspectionHelper (conditions, limit, offset) {
 
   includes.push({
     model: db.Inspector,
-    as: 'Inspections',
-    where: inspectorWhere
+    as: 'inspector',
+    where: inspectorWhere,
+    include: [{
+      model: db.User,
+      as: 'userInspector',
+      attributes: ['id', 'fName', 'lName', 'email']
+    }]
+  })
+
+  includes.push({
+    model: db.ParkingZone,
+    as: 'inspectedParkingZone',
+    attributes: ['id', 'uid'],
+    required: false
   })
 
   return db.Inspection.findAndCountAll({
