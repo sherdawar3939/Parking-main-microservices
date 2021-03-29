@@ -70,6 +70,42 @@ const validateGetVoucher = (req, res, done) => {
     validatedConditions.ClientId = query.ClientId
   }
 
+  // validating as optional number field
+  if (query.hasOwnProperty('validityDays') && query.validityDays) {
+    if (isNaN(query.validityDays) || query.validityDays < 1) {
+      errorArray.push({
+        field: 'validityDays',
+        error: 'MGV-0005',
+        message: 'The validityDays should be number with min value 1.'
+      })
+    }
+    validatedConditions.validityDays = query.validityDays
+  }
+
+  // validating as optional number field
+  if (query.hasOwnProperty('CityId') && query.CityId) {
+    if (isNaN(query.CityId) || query.CityId < 1) {
+      errorArray.push({
+        field: 'CityId',
+        error: 'MGV-0010',
+        message: 'The CityId should be number with min value 1.'
+      })
+    }
+    validatedConditions.CityId = query.CityId
+  }
+
+  // validating as optional number field
+  if (query.hasOwnProperty('zip') && query.zip) {
+    if (isNaN(query.zip) || query.zip < 10000 || query.zip > 99999) {
+      errorArray.push({
+        field: 'zip',
+        error: 'MGV-0015',
+        message: 'The zip should be number with min 10000 and max 99999 value.'
+      })
+    }
+    validatedConditions.zip = query.zip
+  }
+
   if (query.limit && query.limit > 0) {
     limit = parseInt(query.limit)
   }

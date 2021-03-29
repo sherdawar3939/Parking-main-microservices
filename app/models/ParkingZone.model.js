@@ -52,6 +52,7 @@ module.exports = function (sequelize, DataTypes) {
     associate: function (models) {
       ParkingZone.belongsTo(models.Client, { foreignKey: 'ClientId', as: 'parkingZoneClient' })
       ParkingZone.hasMany(models.Parking, { foreignKey: 'ParkingZoneId', as: 'parkingZoneParkings' })
+      ParkingZone.hasMany(models.Inspection, { foreignKey: 'ParkingZoneId', as: 'parkingZoneInspections' })
       ParkingZone.hasMany(models.CreativeRequest, { foreignKey: 'ParkingZoneId', as: 'parkingCreatives' })
       ParkingZone.belongsTo(models.City, { foreignKey: 'CityId', as: 'cityParkingZone' })
       ParkingZone.hasMany(models.ParkingZoneHoliday, { foreignKey: 'ParkingZoneId', as: 'parkingHolidays' })

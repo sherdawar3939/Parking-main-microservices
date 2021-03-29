@@ -124,74 +124,74 @@ module.exports = async function dbseed (db, sequelize) {
       console.log(error)
     })
 
-  const client = [{
-    companyName: 'visionBotix',
-    email: 'vision@gmail.com',
-    phone: '23456788978',
-    secondaryContactPersonName: 'Adnan',
-    secondaryEmail: 'adnan@gmail.com',
-    secondaryPhone: '34567893456',
-    address: 'Capital Technology Park Islamabad',
-    iban: '1234-4566',
-    isProfile: 'true',
-    balance: 12000,
-    UserId: 1
+  // const client = [{
+  //   companyName: 'visionBotix',
+  //   email: 'vision@gmail.com',
+  //   phone: '23456788978',
+  //   secondaryContactPersonName: 'Adnan',
+  //   secondaryEmail: 'adnan@gmail.com',
+  //   secondaryPhone: '34567893456',
+  //   address: 'Capital Technology Park Islamabad',
+  //   iban: '1234-4566',
+  //   isProfile: 'true',
+  //   balance: 12000,
+  //   UserId: 1
 
-  }, {
-    companyName: 'infinity',
-    email: 'infinity@gmail.com',
-    phone: '12344578989',
-    secondaryContactPersonName: 'Arsalan',
-    secondaryEmail: 'Arsalan@gmail.com',
-    secondaryPhone: '12345566789456',
-    address: 'Capital Technology Park Rawalpindi',
-    iban: '7788-4566',
-    isProfile: 'true',
-    balance: 34567,
-    UserId: 2
+  // }, {
+  //   companyName: 'infinity',
+  //   email: 'infinity@gmail.com',
+  //   phone: '12344578989',
+  //   secondaryContactPersonName: 'Arsalan',
+  //   secondaryEmail: 'Arsalan@gmail.com',
+  //   secondaryPhone: '12345566789456',
+  //   address: 'Capital Technology Park Rawalpindi',
+  //   iban: '7788-4566',
+  //   isProfile: 'true',
+  //   balance: 34567,
+  //   UserId: 2
 
-  }, {
-    companyName: 'best',
-    email: 'best@gmail.com',
-    phone: '12344578989',
-    secondaryContactPersonName: 'Amir',
-    secondaryEmail: 'amir@gmail.com',
-    secondaryPhone: '12345566789456',
-    address: 'Capital Technology Park lahore',
-    iban: '2345-4566',
-    isProfile: 'true',
-    balance: 78907,
-    UserId: 3
+  // }, {
+  //   companyName: 'best',
+  //   email: 'best@gmail.com',
+  //   phone: '12344578989',
+  //   secondaryContactPersonName: 'Amir',
+  //   secondaryEmail: 'amir@gmail.com',
+  //   secondaryPhone: '12345566789456',
+  //   address: 'Capital Technology Park lahore',
+  //   iban: '2345-4566',
+  //   isProfile: 'true',
+  //   balance: 78907,
+  //   UserId: 3
 
-  }]
-  await db.Client.bulkCreate(client)
-    .catch((error) => {
-      console.log(error)
-    })
+  // }]
+  // await db.Client.bulkCreate(client)
+  //   .catch((error) => {
+  //     console.log(error)
+  //   })
 
-  const contract = [{
-    data: 'Contract is pending',
-    status: 'pending',
-    ClientId: 1,
-    UserId: 1
+  // const contract = [{
+  //   data: 'Contract is pending',
+  //   status: 'pending',
+  //   ClientId: 1,
+  //   UserId: 1
 
-  },
-  {
-    data: 'Contract is Approved',
-    status: 'Approved',
-    ClientId: 2,
-    UserId: 2
+  // },
+  // {
+  //   data: 'Contract is Approved',
+  //   status: 'Approved',
+  //   ClientId: 2,
+  //   UserId: 2
 
-  },
-  {
-    data: 'Contract is Rejected',
-    status: 'Rejected',
-    ClientId: 3,
-    UserId: 3
+  // },
+  // {
+  //   data: 'Contract is Rejected',
+  //   status: 'Rejected',
+  //   ClientId: 3,
+  //   UserId: 3
 
-  }
-  ]
-  await db.Contract.bulkCreate(contract)
+  // }
+  // ]
+  // await db.Contract.bulkCreate(contract)
 
   // const clientZipCode = [{
   //   id: 1,
@@ -213,69 +213,69 @@ module.exports = async function dbseed (db, sequelize) {
   // }
   // ]
 
-  const parkingZone = [{
-    uid: '34',
-    days: ['sunday', 'saturday'].join(', '),
-    fee: 1200,
-    maxTime: 53,
-    zip: 1400,
-    polygons: '1234',
-    ClientId: 1,
-    ClientZipCodeId: 1
-  },
-  {
+  // const parkingZone = [{
+  //   uid: '34',
+  //   days: ['sunday', 'saturday'].join(', '),
+  //   fee: 1200,
+  //   maxTime: 53,
+  //   zip: 1400,
+  //   polygons: '1234',
+  //   ClientId: 1,
+  //   ClientZipCodeId: 1
+  // },
+  // {
 
-    uid: '36',
-    days: ['Friday', 'Monday'].join(', '),
-    fee: 1400,
-    maxTime: 60,
-    zip: 1000,
-    polygons: '2345',
-    ClientId: 2,
-    ClientZipCodeId: 2
-  },
-  {
-    uid: '33',
-    days: ['Tuesday', 'Wednesday'].join(', '),
-    fee: 1234,
-    maxTime: 44,
-    zip: 5000,
-    polygons: '6789',
-    ClientId: 3,
-    ClientZipCodeId: 3
-  }
-  ]
-  await db.ParkingZone.bulkCreate(parkingZone)
-    .catch((error) => {
-      console.log(error)
-    })
+  //   uid: '36',
+  //   days: ['Friday', 'Monday'].join(', '),
+  //   fee: 1400,
+  //   maxTime: 60,
+  //   zip: 1000,
+  //   polygons: '2345',
+  //   ClientId: 2,
+  //   ClientZipCodeId: 2
+  // },
+  // {
+  //   uid: '33',
+  //   days: ['Tuesday', 'Wednesday'].join(', '),
+  //   fee: 1234,
+  //   maxTime: 44,
+  //   zip: 5000,
+  //   polygons: '6789',
+  //   ClientId: 3,
+  //   ClientZipCodeId: 3
+  // }
+  // ]
+  // await db.ParkingZone.bulkCreate(parkingZone)
+  //   .catch((error) => {
+  //     console.log(error)
+  //   })
 
-  const creativeRequest = [{
-    uid: '3484',
-    qty: 1,
-    status: 'InProcess',
-    ClientId: 1,
-    ParkingZoneId: 1
-  },
-  {
-    uid: '3456',
-    qty: 5,
-    status: 'pending',
-    ClientId: 2,
-    ParkingZoneId: 2
-  },
-  {
-    uid: '9a69',
-    qty: 6,
-    status: 'dispatched',
-    ClientId: 3,
-    ParkingZoneId: 3
-  }
-  ]
-  await db.CreativeRequest.bulkCreate(creativeRequest)
-    .catch((error) => {
-      console.log(error)
-    })
+  // const creativeRequest = [{
+  //   uid: '3484',
+  //   qty: 1,
+  //   status: 'InProcess',
+  //   ClientId: 1,
+  //   ParkingZoneId: 1
+  // },
+  // {
+  //   uid: '3456',
+  //   qty: 5,
+  //   status: 'pending',
+  //   ClientId: 2,
+  //   ParkingZoneId: 2
+  // },
+  // {
+  //   uid: '9a69',
+  //   qty: 6,
+  //   status: 'dispatched',
+  //   ClientId: 3,
+  //   ParkingZoneId: 3
+  // }
+  // ]
+  // await db.CreativeRequest.bulkCreate(creativeRequest)
+  //   .catch((error) => {
+  //     console.log(error)
+  //   })
 
   const vehicle = [{
     id: 1,
@@ -298,96 +298,96 @@ module.exports = async function dbseed (db, sequelize) {
       console.log(error)
     })
 
-  const userVehicle = [{
-    id: 1,
-    licensePlate: 'BD-2344',
-    quantity: 1,
-    isDeleted: false,
-    VehicleCategoryId: 1,
-    UserId: 1
-  },
-  {
-    id: 2,
-    licensePlate: 'MN-234',
-    quantity: 1,
-    isDeleted: false,
-    VehicleCategoryId: 2,
-    UserId: 2
-  },
-  {
-    id: 3,
-    licensePlate: 'LYK-786',
-    quantity: 1,
-    isDeleted: false,
-    VehicleCategoryId: 3,
-    UserId: 3
-  }
-  ]
-  await db.UserVehicle.bulkCreate(userVehicle)
-    .catch((error) => {
-      console.log(error)
-    })
+  // const userVehicle = [{
+  //   id: 1,
+  //   licensePlate: 'BD-2344',
+  //   quantity: 1,
+  //   isDeleted: false,
+  //   VehicleCategoryId: 1,
+  //   UserId: 1
+  // },
+  // {
+  //   id: 2,
+  //   licensePlate: 'MN-234',
+  //   quantity: 1,
+  //   isDeleted: false,
+  //   VehicleCategoryId: 2,
+  //   UserId: 2
+  // },
+  // {
+  //   id: 3,
+  //   licensePlate: 'LYK-786',
+  //   quantity: 1,
+  //   isDeleted: false,
+  //   VehicleCategoryId: 3,
+  //   UserId: 3
+  // }
+  // ]
+  // await db.UserVehicle.bulkCreate(userVehicle)
+  //   .catch((error) => {
+  //     console.log(error)
+  //   })
 
-  const parking = [{
-    totalSeconds: 1200,
-    licensePlate: 'white',
-    status: 'Started',
-    quantity: 5,
-    parkingCharges: 345,
-    total: 20,
-    PayerID: '2367',
-    startedOn: '6-3-2021',
-    endedOn: '6-3-2021',
-    paymentStatus: 'Paid',
-    clientProfit: 25,
-    clientTax: 23,
-    adminProfit: 44,
-    adminTax: 40,
-    UserId: 1,
-    ParkingZoneId: 1,
-    UserVehicleId: 1
-  },
-  {
-    totalSeconds: 1500,
-    licensePlate: 'yellow',
-    status: 'Ended',
-    quantity: 4,
-    parkingCharges: 400,
-    total: 26,
-    PayerID: '2399',
-    startedOn: '6-3-2021',
-    endedOn: '6-3-2021',
-    paymentStatus: 'Paid',
-    clientProfit: 30,
-    clientTax: 23,
-    adminProfit: 50,
-    adminTax: 42,
-    UserId: 2,
-    ParkingZoneId: 2,
-    UserVehicleId: 2
-  },
-  {
-    totalSeconds: 1700,
-    licensePlate: 'Red',
-    status: 'Started',
-    quantity: 3,
-    parkingCharges: 600,
-    total: 29,
-    PayerID: '2345',
-    startedOn: '6-3-2021',
-    endedOn: '6-3-2021',
-    paymentStatus: 'Pending',
-    clientProfit: 28,
-    clientTax: 22,
-    adminProfit: 48,
-    adminTax: 41,
-    UserId: 3,
-    ParkingZoneId: 3,
-    UserVehicleId: 3
-  }
-  ]
-  await db.Parking.bulkCreate(parking)
-    .catch((error) => {
-      console.log(error)
-    })
+  // const parking = [{
+  //   totalSeconds: 1200,
+  //   licensePlate: 'white',
+  //   status: 'Started',
+  //   quantity: 5,
+  //   parkingCharges: 345,
+  //   total: 20,
+  //   PayerID: '2367',
+  //   startedOn: '6-3-2021',
+  //   endedOn: '6-3-2021',
+  //   paymentStatus: 'Paid',
+  //   clientProfit: 25,
+  //   clientTax: 23,
+  //   adminProfit: 44,
+  //   adminTax: 40,
+  //   UserId: 1,
+  //   ParkingZoneId: 1,
+  //   UserVehicleId: 1
+  // },
+  // {
+  //   totalSeconds: 1500,
+  //   licensePlate: 'yellow',
+  //   status: 'Ended',
+  //   quantity: 4,
+  //   parkingCharges: 400,
+  //   total: 26,
+  //   PayerID: '2399',
+  //   startedOn: '6-3-2021',
+  //   endedOn: '6-3-2021',
+  //   paymentStatus: 'Paid',
+  //   clientProfit: 30,
+  //   clientTax: 23,
+  //   adminProfit: 50,
+  //   adminTax: 42,
+  //   UserId: 2,
+  //   ParkingZoneId: 2,
+  //   UserVehicleId: 2
+  // },
+  // {
+  //   totalSeconds: 1700,
+  //   licensePlate: 'Red',
+  //   status: 'Started',
+  //   quantity: 3,
+  //   parkingCharges: 600,
+  //   total: 29,
+  //   PayerID: '2345',
+  //   startedOn: '6-3-2021',
+  //   endedOn: '6-3-2021',
+  //   paymentStatus: 'Pending',
+  //   clientProfit: 28,
+  //   clientTax: 22,
+  //   adminProfit: 48,
+  //   adminTax: 41,
+  //   UserId: 3,
+  //   ParkingZoneId: 3,
+  //   UserVehicleId: 3
+  // }
+  // ]
+  // await db.Parking.bulkCreate(parking)
+  //   .catch((error) => {
+  //     console.log(error)
+  //   })
 }

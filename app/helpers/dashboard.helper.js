@@ -135,9 +135,11 @@ const getReportListing = async (conditions) => {
 
   if (conditions.startDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)]
-  } if (conditions.endDate) {
+  }
+  if (conditions.endDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.endDate)]
-  } if (conditions.startDate && conditions.endDate) {
+  }
+  if (conditions.startDate && conditions.endDate) {
     where = {
       [Op.and]: [
         [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)],

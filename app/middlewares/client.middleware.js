@@ -56,6 +56,14 @@ const validatePostClient = async (req, res, done) => {
     validatedBody.UserId = req.user.id
     validatedBody.isProfile = true
   }
+  // validating as required string field
+  if (!body.type || body.type.length < 5 || body.type.length > 20) {
+    errorArray.push({
+      field: 'type',
+      error: 'MVPC-8060',
+      message: 'The type is required with min 5 and max 20 characters.'
+    })
+  }
   if (!body.companyName || body.companyName.length < 3 || body.companyName.length > 30) {
     errorArray.push({
       field: 'companyName',
@@ -177,6 +185,7 @@ const validatePostClient = async (req, res, done) => {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient', 400)
   }
   validatedBody.companyName = body.companyName
+  validatedBody.type = body.type
   validatedBody.email = body.email
   validatedBody.phone = body.phone
   validatedBody.secondaryContactPersonName = body.secondaryContactPersonName
