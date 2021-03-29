@@ -349,7 +349,7 @@ function generateContractOne (fileName) {
   }
 };
 
-function generateContractTwo (fileName) {
+function generateContractTwo (fileName, countryName) {
   const docDefinition = {
     content: [
       {
@@ -369,7 +369,7 @@ function generateContractTwo (fileName) {
         text: 'Tárgy: Kivonat a ____________________ számú képviselőtestületi határozatból.\n\n\n\n'
       },
       {
-        text: 'CITY NAME város képviselőtestülete megtárgyalta a SZARVAS Parking System Germany GmbH által működtetett Egységes'
+        text: `${countryName} város képviselőtestülete megtárgyalta a SZARVAS Parking System Germany GmbH által működtetett Egységes1`
       },
       {
         text: 'Parkolási Rendszer alkalmazásának lehetőségét. A képviselőtestület a ___________________ számú határozatával '
