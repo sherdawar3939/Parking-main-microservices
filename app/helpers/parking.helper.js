@@ -100,8 +100,6 @@ function ActiveParkingListHelper (conditions, limit, offset) {
       required: true
     })
   }
-
-  console.log('include', includes)
   return db.Parking.findAndCountAll({
     where: parkingWhere,
     include: includes,
