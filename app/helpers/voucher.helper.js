@@ -118,7 +118,7 @@ function deleteVoucher (id) {
     })
 }
 
-function updateSeasonalPass (id, data) {
+function updateSeasonalPass (id, data, status) {
   let previousValues
   return db.Voucher.findOne({ where: { id } })
     .then(async (voucher) => {
@@ -132,32 +132,23 @@ function updateSeasonalPass (id, data) {
 
       previousValues = JSON.parse(JSON.stringify(voucher))
 
-      if (data.fee || (data.fee !== previousValues.fee)) {
-        let feeNumber = data.fee || previousValues.fee
-        let feeString = ''
-        if (feeNumber < 0) {
-          feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
-          feeString = feeNumber.toString().split('.').join('')
-        } else {
-          feeNumber = (Math.round(feeNumber * 100) / 100).toFixed(1)
-          feeString = feeNumber.toString().split('.').join('')
-        }
-        if (feeString.length < 2) {
-          feeString = feeString + '0'
-        }
-        let zip = previousValues.zip.toString()
-
-        data.uid = feeString + zip
+      if (data.fee === previousValues.fee) {
+        return generalHelper.rejectPromise({
+          field: 'id',
+          error: 'voucher-0004',
+          message: 'This fee Already Exist.'
+        })
       }
 
       if (data.uid && data.uid !== previousValues.uid) {
+        data.uid = generalHelper.createUid(0, voucher.zip, status)
         await db.Voucher.findOne({ where: { uid: data.uid } })
           .then((foundVoucher) => {
-            if (foundVoucher) {
+            if (!foundVoucher) {
               return generalHelper.rejectPromise({
                 field: 'id',
                 error: 'voucher-0005',
-                message: 'A voucher in this zip code already exist with this fee.'
+                message: 'A voucher exist with this uid.'
               })
             }
 
