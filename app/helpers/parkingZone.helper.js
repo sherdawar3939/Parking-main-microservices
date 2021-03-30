@@ -42,12 +42,13 @@ const addParkingZone = (data) => {
         const parkingZone = await db.ParkingZone.findOne({ where: { zip: data.zip, clientCount: 0, CityId: data.CityId } })
         if (!parkingZone) {
           data.clientCount = 0
+        } else {
+          return generalHelper.rejectPromise([{
+            field: 'clientCount',
+            error: 'HAPZ-010',
+            message: 'already created parkingZone for govt'
+          }])
         }
-        return generalHelper.rejectPromise([{
-          field: 'clientCount',
-          error: 'HAPZ-010',
-          message: 'already created parkingZone for govt'
-        }])
       } else if (client.type === 'Private') {
         const parkingZone = await db.ParkingZone.findAll({
           where: {
@@ -133,6 +134,7 @@ const addParkingZone = (data) => {
 }
 
 function getparkingZone (conditions, limit, offset) {
+  console.log('hamza nas;a', conditions.ClientId)
   const where = {}
   const cityIdWhere = {}
   if (conditions.ClientId) {

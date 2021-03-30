@@ -4,7 +4,6 @@ const _ = require('lodash')
 const multer = require('multer')
 const fs = require('fs')
 const { promisify } = require('util')
-const generalHelper = require('./../helpers/general.helper')
 const unlinkAsync = promisify(fs.unlink)
 const validateGetClient = (req, res, done) => {
   const errorArray = []
@@ -181,6 +180,7 @@ const validatePostClient = async (req, res, done) => {
     })
   }
   if (!_.isEmpty(errorArray)) {
+    console.log(req.files)
     await unlinkAsync(req.files.files[0].path)
     return generalMiddleware.standardErrorResponse(res, errorArray, 'client.middleware.validatePostClient', 400)
   }

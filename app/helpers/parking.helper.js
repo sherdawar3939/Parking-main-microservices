@@ -65,9 +65,7 @@ const createParkingHelper = (data) => {
 function ActiveParkingListHelper (conditions, limit, offset) {
   let parkingWhere = {}
   const parkingZoneWhere = {}
-  let includes = [{
-    where: parkingZoneWhere
-  }]
+  let includes = []
 
   if (conditions.ClientId) {
     parkingZoneWhere.ClientId = conditions.ClientId
@@ -98,13 +96,19 @@ function ActiveParkingListHelper (conditions, limit, offset) {
     })
   }
 
-  console.log('include', includes)
+  includes.push({
+    model: db.ParkingZone,
+    as: 'parkingZone',
+    where: parkingZoneWhere
+  })
+
   return db.Parking.findAndCountAll({
     where: parkingWhere,
     include: includes,
     limit: limit,
     offset: offset
   })
+    .catch(generalHelper.catchException)
 }
 
 const endParkingHelper = (id) => {
