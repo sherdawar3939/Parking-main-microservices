@@ -40,10 +40,12 @@ function getInspectionHelper (conditions, limit, offset) {
     inspectionWhere[Op.and] = [sequelize.Where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '<=', conditions.toDate)]
   }
 
+  console.log(inspectionWhere)
+
   includes.push({
     model: db.Inspector,
     as: 'inspector',
-    where: inspectorWhere,
+    inspectorWhere,
     include: [{
       model: db.User,
       as: 'userInspector',
@@ -59,7 +61,7 @@ function getInspectionHelper (conditions, limit, offset) {
   })
 
   return db.Inspection.findAndCountAll({
-    where: inspectionWhere,
+    inspectionWhere,
     include: includes,
     limit: limit,
     offset: offset
