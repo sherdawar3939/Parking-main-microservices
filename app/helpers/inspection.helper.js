@@ -3,24 +3,6 @@ const db = require('../config/sequelize.config')
 const Op = db.Sequelize.Op
 var sequelize = require('sequelize')
 
-/** Fetch Parking Status */
-function ParkingStatusInspection (conditions) {
-  const where = {}
-  if (conditions.licensePlate) {
-    where.licensePlate = conditions.licensePlate
-  }
-
-  return db.Inspection.findAll({
-    where,
-    include: [{
-      model: db.Parking,
-      as: 'parkingInspections',
-      attributes: ['status']
-      //   where: {}
-    }]
-  })
-}
-
 // Fetch Inspection
 function getInspectionHelper (conditions, limit, offset) {
   const includes = []
@@ -37,6 +19,10 @@ function getInspectionHelper (conditions, limit, offset) {
 
   if (conditions.ParkingZoneId) {
     inspectionWhere.ParkingZoneId = conditions.ParkingZoneId
+  }
+
+  if (conditions.licensePlate) {
+    inspectionWhere.licensePlate = conditions.licensePlate
   }
 
   if (conditions.result) {
@@ -80,4 +66,27 @@ function getInspectionHelper (conditions, limit, offset) {
   })
 }
 
-module.exports = { getInspectionHelper, ParkingStatusInspection }
+// Create Inspection
+function createInspectionHelper (userData) {
+  return db.Parking.findOne({
+    where: { licensePlate: userData.licensePlate, status: 'Started' },
+    raw: true
+  })
+    .then((foundStatus) => {
+      const inspection = {
+        InspectorId: foundStatus.InspectorId,
+        licensePlate: foundStatus.licensePlate,
+        result: 'illegal'
+      }
+
+      if (foundStatus) {
+        inspection.result = 'legal'
+        inspection.ParkingId = foundStatus.ParkingId
+        inspection.ParkingZoneId = foundStatus.ParkingZoneId
+      }
+
+      return db.Inspection.create(inspection)
+    })
+}
+
+module.exports = { getInspectionHelper, createInspectionHelper }
