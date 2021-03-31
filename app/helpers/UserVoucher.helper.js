@@ -1,18 +1,41 @@
 const db = require('../config/sequelize.config')
+const Op = db.Sequelize.Op
 const generalHelpingMethods = require('./general.helper')
 
 const createUserVoucher = (userData) => {
+  let foundVoucher
   return db.Voucher.findOne({
     where: { id: userData.VoucherId },
     raw: true
   })
-    .then((foundVoucher) => {
-      if (!foundVoucher) {
+    .then((_foundVoucher) => {
+      if (!_foundVoucher) {
         return generalHelpingMethods.rejectPromise({
           field: 'VoucherId',
-          error: 3456,
+          error: 'HCUV-0005',
           message: 'No Record Exists.'
         })
+      }
+
+      foundVoucher = _foundVoucher
+
+      return db.UserVoucher.findOne({
+        where: {
+          UserVehicleId: userData.UserVehicleId,
+          VoucherId: userData.VoucherId,
+          expiryDate: {
+            [Op.gte]: new Date()
+          }
+        }
+      })
+    })
+    .then((foundUserVoucher) => {
+      if (foundUserVoucher) {
+        return generalHelpingMethods.rejectPromise([{
+          field: 'general',
+          error: 'HCUV-0010',
+          message: 'You have already purchased a voucher for this vehicle.'
+        }])
       }
       var date = new Date()
 
@@ -106,12 +129,12 @@ function getUserVoucherList (conditions) {
     }, {
       model: db.Voucher,
       as: 'voucher',
-      attributes: ['zip']
+      attributes: ['zip', 'uid']
     },
     {
       model: db.User,
       as: 'UserVouchersUser',
-      attributes: ['fname','lname']
+      attributes: ['fname', 'lname']
     }]
   })
 }
