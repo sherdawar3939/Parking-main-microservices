@@ -57,7 +57,6 @@ const validatePostInspection = (req, res, done) => {
     const errorArray = []
     const body = req.body
     const validatedBody = {}
-        // const validatedConditions = {}
     if (req.user && req.user.RoleId === 3 && req.user.id) {
         validatedBody.InspectorId = req.user.id
     }

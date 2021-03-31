@@ -39,8 +39,6 @@ function getInspectionHelper(conditions, limit, offset) {
     } else if (conditions.toDate) {
         inspectionWhere[Op.and] = [sequelize.Where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '<=', conditions.toDate)]
     }
-    console.log(inspectionWhere)
-    console.log(inspectorWhere)
 
     includes.push({
         model: db.Inspector,
@@ -56,7 +54,7 @@ function getInspectionHelper(conditions, limit, offset) {
         model: db.ParkingZone,
         as: 'inspectedParkingZone',
         attributes: ['id', 'uid'],
-        // required: false
+        required: false
     })
 
     return db.Inspection.findAndCountAll({
@@ -74,8 +72,6 @@ function createInspectionHelper(userData) {
             raw: true
         })
         .then((foundStatus) => {
-            // console.log(foundStatus);
-            console.log(userData)
             const inspection = {
                 InspectorId: userData.InspectorId,
                 licensePlate: foundStatus.licensePlate,
