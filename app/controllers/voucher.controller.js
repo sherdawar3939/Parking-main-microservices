@@ -38,7 +38,7 @@ const getVoucherById = (req, res) => {
 }
 /** Updated Seasonal Pass T */
 const updateSeasonalPass = (req, res) => {
-  return voucherHelper.updateSeasonalPass(req.params.id, req.validatedBody)
+  return voucherHelper.updateSeasonalPass(req.params.id, req.validatedBody, req.status)
     .then((data) => {
       generalController.successResponse(res, 'Voucher Updated successfully.', data, 'voucher.controller.updateSeasonalPass')
     }).catch(StandardError, (err) => {

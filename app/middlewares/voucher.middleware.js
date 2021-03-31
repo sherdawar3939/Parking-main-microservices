@@ -168,6 +168,19 @@ const validateUpdateSeasonalPass = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'voucher.middleware.validateUpdateSeasonalPass')
   }
+  if (body.validityDays === 1) {
+    req.status = 'daily'
+  } else if (body.validityDays === 7) {
+    req.status = 'weekly'
+  } else if (body.validityDays === 30) {
+    req.status = 'monthly'
+  } else if (body.validityDays === 90) {
+    req.status = '3 month'
+  } else if (body.validityDays === 180) {
+    req.status = '6 month'
+  } else {
+    req.status = 'yearly'
+  }
   req.validatedBody = validatedBody
   done()
 }

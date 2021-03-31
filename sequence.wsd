@@ -1,9 +1,12 @@
-@startuml
+@startuml Uml Diagram
 (*) --> "Initialization"
 
-if "Some Test" then
-  -->[true] "Some Action"
-  --> "Another Action"
+if "days" then
+ -->[true] "WorkingDays"
+ -->[false] "OffDays"
+ if "workingDays" then
+  --> "startTime"
+  if "workingDays"
   -right-> (*)
 else
   ->[false] "Something else"
