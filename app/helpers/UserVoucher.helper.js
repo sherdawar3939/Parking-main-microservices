@@ -78,9 +78,15 @@ function getUserVoucherID (id) {
 
 function getUserVoucherList (conditions) {
   let where = {}
+  let parkingwhere = {}
+  let whereClient = {}
 
   if (conditions.UserId) {
     where.UserId = conditions.UserId
+  }
+
+  if (conditions.ClientId) {
+    whereClient.ClientId = conditions.ClientId
   }
 
   if (conditions.UserVehicleId) {
@@ -89,6 +95,10 @@ function getUserVoucherList (conditions) {
 
   if (conditions.VoucherId) {
     where.VoucherId = conditions.VoucherId
+  }
+
+  if (conditions.licensePlate) {
+    parkingwhere.licensePlate = conditions.licensePlate
   }
 
   if (conditions.paymentStatus) {
@@ -101,17 +111,18 @@ function getUserVoucherList (conditions) {
       model: db.UserVehicle,
       as: 'userVehicle',
       attributes: ['licensePlate'],
-      where: { isDeleted: false },
+      where: parkingwhere,
       required: true
     }, {
       model: db.Voucher,
       as: 'voucher',
-      attributes: ['zip']
+      attributes: ['zip', 'ClientId'],
+      where: whereClient
     },
     {
       model: db.User,
       as: 'UserVouchersUser',
-      attributes: ['fname','lname']
+      attributes: ['fname', 'lname']
     }]
   })
 }

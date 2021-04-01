@@ -15,7 +15,7 @@ const getActiveParkingStatus = function (req, res) {
     })
 }
 const getInspection = function (req, res) {
-  return getInspectionHelper(req.conditions)
+  return getInspectionHelper(req.conditions, req.limit, req.offset)
     .then(function (data) {
       generalController.successResponse(res, 'Inspection fetched successfully.', data, 'inspection.controller.getInspectionHelper')
     }).catch(StandardError, function (err) {

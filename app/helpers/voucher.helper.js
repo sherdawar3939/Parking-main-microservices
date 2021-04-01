@@ -165,7 +165,7 @@ function updateSeasonalPass (id, data, status) {
               message: 'A voucher exist with this uid.'
             })
           }
-
+          console.log(foundVoucher)
           return db.Contract.findOne({
             where: {
               type: 'Voucher',

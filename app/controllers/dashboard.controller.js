@@ -1,6 +1,6 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { getDashboardDetails, getDashboardClientCounts, getClientRevenueDetails, getParkingCounts, getReportListing } = require('../helpers/dashboard.helper')
+const { getDashboardDetails, getDashboardClientCounts, getClientRevenueDetails, getParkingCounts, getReportListing, parkingZoneOverview } = require('../helpers/dashboard.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
@@ -59,10 +59,26 @@ const profitReportListing = function (req, res) {
     })
 }
 
+/** ********************* */
+/** parking Zone Reporting */
+/** ********************* */
+
+const parkingZoneReport = function (req, res) {
+  return parkingZoneOverview(req.conditions)
+    .then(function (data) {
+      generalController.successResponse(res, 'Parking Zone Report Details fetched successfully.', data, 'dashboard.controller.parkingZoneReport')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'dashboard.controller.ProfitReportListing', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'dashboard.controller.ProfitReportListing', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
 module.exports = {
   adminDashboardDetail,
   clientDashboardDetails,
   clientRevenueDetails,
   dashboardParkingCounts,
-  profitReportListing
+  profitReportListing,
+  parkingZoneReport
 }

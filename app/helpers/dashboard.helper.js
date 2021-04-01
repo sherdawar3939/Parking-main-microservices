@@ -1,4 +1,5 @@
 'use strict'
+const { sum } = require('lodash')
 // const _ = require('lodash')
 var sequelize = require('sequelize')
 const Op = sequelize.Op
@@ -186,10 +187,63 @@ const getReportListing = async (conditions) => {
   })
   return detail
 }
+
+/** ********************* */
+/** parking Zone Reporting */
+/** ********************* */
+const parkingZoneOverview = async (conditions) => {
+  let where = {}
+
+  // if (conditions.fromDate) {
+  //   where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)]
+  // }
+  // if (conditions.toDate) {
+  //   where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
+  // }
+  // if (conditions.fromDate && conditions.toDate) {
+  //   where = {
+  //     [Op.and]: [
+  //       [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)],
+  //       [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
+  //     ]
+  //   }
+  // }
+
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+
+  const listingParkingZone = await db.ParkingZone.findAll({
+    where,
+    raw: true,
+    include: [{
+      model: db.City,
+      attributes: ['name'],
+      as: 'cityParkingZone'
+    }]
+  }).catch((error) => {
+    console.log(error)
+  })
+
+  for (let i = 0; i < listingParkingZone.length; i++) {
+    const ParkingCounts = await db.Parking.count({ where: { ParkingZoneId: listingParkingZone[i].id } })
+    listingParkingZone[i].parkingCount = ParkingCounts
+
+    const InspectionCounts = await db.Inspection.count({ where: { ParkingZoneId: listingParkingZone[i].id } })
+    listingParkingZone[i].inspections = InspectionCounts
+
+    let calculationsQuery = `SELECT SUM(adminProfit + clientProfit) as profit, SUM(clientTax+adminTax) as tax, SUM(total) as total FROM parkings WHERE ParkingZoneId=${listingParkingZone[i].id}`
+    listingParkingZone[i].calculationsQuery = await db.sequelize.query(calculationsQuery, {
+      type: db.sequelize.QueryTypes.SELECT
+    })
+  }
+  return listingParkingZone
+}
 module.exports = {
   getDashboardDetails,
   getDashboardClientCounts,
   getClientRevenueDetails,
   getParkingCounts,
-  getReportListing
+  getReportListing,
+  parkingZoneOverview
 }

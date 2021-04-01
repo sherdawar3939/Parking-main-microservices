@@ -23,7 +23,7 @@ function ParkingStatusInspection (conditions) {
 
 // Fetch Inspection
 function getInspectionHelper (conditions, limit, offset) {
-  const includes = []
+  let includes = []
   const inspectionWhere = {}
   const inspectorWhere = {}
 
@@ -57,7 +57,7 @@ function getInspectionHelper (conditions, limit, offset) {
   includes.push({
     model: db.Inspector,
     as: 'inspector',
-    where: inspectorWhere,
+    inspectorWhere,
     include: [{
       model: db.User,
       as: 'userInspector',
@@ -65,15 +65,15 @@ function getInspectionHelper (conditions, limit, offset) {
     }]
   })
 
-  includes.push({
-    model: db.ParkingZone,
-    as: 'inspectedParkingZone',
-    attributes: ['id', 'uid'],
-    required: false
-  })
+  // includes.push({
+  //   model: db.ParkingZone,
+  //   as: 'inspectedParkingZone',
+  //   attributes: ['id', 'uid'],
+  //   required: false
+  // })
 
   return db.Inspection.findAndCountAll({
-    where: inspectionWhere,
+    inspectionWhere,
     include: includes,
     limit: limit,
     offset: offset

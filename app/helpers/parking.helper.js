@@ -1,10 +1,6 @@
 'use strict'
-
-// var Sequelize = require('sequelize')
-// const Op = Sequelize.Op
 const db = require('../config/sequelize.config')
 const Op = db.Sequelize.Op
-const _ = require('lodash')
 const generalHelper = require('./general.helper')
 const paypal = require('paypal-rest-sdk')
 paypal.configure({
@@ -158,7 +154,7 @@ const endParkingHelper = (id) => {
         bill, { where: { id: id } }
       )
 
-      const create_payment_json = JSON.stringify({
+      const createPaymentJson = JSON.stringify({
         intent: 'sale',
         payer: {
           payment_method: 'paypal'
@@ -176,7 +172,7 @@ const endParkingHelper = (id) => {
         }]
       })
 
-      return getPaypalLink(create_payment_json)
+      return getPaypalLink(createPaymentJson)
       // return bill
     })
     .then((payment) => {
@@ -193,9 +189,9 @@ const endParkingHelper = (id) => {
     })
 }
 
-const getPaypalLink = (create_payment_json) => {
+const getPaypalLink = (createPaymentJson) => {
   return new Promise((resolve, reject) => {
-    paypal.payment.create(create_payment_json, function (error, payment) {
+    paypal.payment.create(createPaymentJson, function (error, payment) {
       if (error) {
         reject(error)
       } else {
@@ -207,9 +203,9 @@ const getPaypalLink = (create_payment_json) => {
   })
 }
 
-const executeTransaction = (execute_payment_json, paymentId) => {
+const executeTransaction = (executePaymentJson, paymentId) => {
   return new Promise((resolve, reject) => {
-    paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+    paypal.payment.execute(paymentId, executePaymentJson, function (error, payment) {
       if (error) {
         console.log(error.response)
         reject(error)
@@ -229,7 +225,7 @@ const paymentVerifiedHelper = (data) => {
   })
     .then((foundParking) => {
       console.log('===>', parseFloat(foundParking.total), parseFloat(foundParking.total).toFixed(2))
-      const execute_payment_json = {
+      const executePaymentJson = {
         'payer_id': data.PayerID,
         'transactions': [{
           'amount': {
@@ -239,7 +235,7 @@ const paymentVerifiedHelper = (data) => {
         }]
       }
 
-      executeTransaction(execute_payment_json, data.paymentId)
+      executeTransaction(executePaymentJson, data.paymentId)
         .then((result) => {
           console.log('----------- Done -------')
         })
@@ -256,9 +252,18 @@ const paymentVerifiedHelper = (data) => {
   // )
 }
 
+const parkingCharges = (data, id) => {
+  return db.Parking.findOne({
+    where: { id: id }
+  })
+    .then((parkingExist) => {
+      console.log(parkingExist)
+    })
+}
 module.exports = {
   createParkingHelper,
   ActiveParkingListHelper,
   endParkingHelper,
-  paymentVerifiedHelper
+  paymentVerifiedHelper,
+  parkingCharges
 }
