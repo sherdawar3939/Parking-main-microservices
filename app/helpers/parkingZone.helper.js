@@ -134,7 +134,6 @@ const addParkingZone = (data) => {
 }
 
 function getparkingZone (conditions, limit, offset) {
-  console.log('hamza nas;a', conditions.ClientId)
   const where = {}
   const cityIdWhere = {}
   if (conditions.ClientId) {
@@ -169,8 +168,6 @@ function getparkingZone (conditions, limit, offset) {
 
     }
   }
-
-  console.log(where)
 
   return db.ParkingZone.findAndCountAll({
     where,
