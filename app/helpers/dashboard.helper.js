@@ -191,18 +191,28 @@ const getReportListing = async (conditions) => {
 /** ********************* */
 const parkingZoneOverview = async (conditions) => {
   let where = {}
+  let parkingWhere = {}
+  let inspectionWhere = {}
 
   if (conditions.fromDate) {
-    where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)]
+    parkingWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.fromDate)]
+    inspectionWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '>=', conditions.fromDate)]
   }
   if (conditions.toDate) {
-    where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
+    parkingWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.toDate)]
+    inspectionWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '>=', conditions.toDate)]
   }
   if (conditions.fromDate && conditions.toDate) {
-    where = {
+    parkingWhere = {
       [Op.and]: [
-        [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)],
-        [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.fromDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.toDate)]
+      ]
+    }
+    inspectionWhere = {
+      [Op.and]: [
+        [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '>=', conditions.fromDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '<=', conditions.toDate)]
       ]
     }
   }
@@ -224,19 +234,41 @@ const parkingZoneOverview = async (conditions) => {
   })
 
   for (let i = 0; i < listingParkingZone.length; i++) {
-    const ParkingCounts = await db.Parking.count({ where: { ParkingZoneId: listingParkingZone[i].id } })
+    const ParkingCounts = await db.Parking.count({ where: { ...{ ParkingZoneId: listingParkingZone[i].id }, ...parkingWhere } }).catch((error) => {
+      console.log(error)
+    })
     listingParkingZone[i].parkingCount = ParkingCounts
 
-    const InspectionCounts = await db.Inspection.count({ where: { ParkingZoneId: listingParkingZone[i].id } })
+    const InspectionCounts = await db.Inspection.count({ where: { ...{ ParkingZoneId: listingParkingZone[i].id }, ...inspectionWhere } }).catch((error) => {
+      console.log(error)
+    })
     listingParkingZone[i].inspections = InspectionCounts
+    let WHERE = []
+    let calculationsQuery = `SELECT SUM(adminProfit + clientProfit) as profit, SUM(clientTax+adminTax) as tax, SUM(total) as total 
+    FROM parkings as p WHERE ParkingZoneId=${listingParkingZone[i].id}`
 
-    let calculationsQuery = `SELECT SUM(adminProfit + clientProfit) as profit, SUM(clientTax+adminTax) as tax, SUM(total) as total FROM parkings WHERE ParkingZoneId=${listingParkingZone[i].id}`
+    if (conditions.fromDate) {
+      WHERE.push(` p.createdAt >= '${conditions.fromDate}'`)
+    }
+    if (conditions.toDate) {
+      WHERE.push(` p.createdAt <= '${conditions.toDate}'`)
+    }
+
+    if (WHERE.length) {
+      calculationsQuery = calculationsQuery + ' AND ' + WHERE.join(' AND ')
+    }
+
+    // calculationsQuery += ` GROUP BY DATE(p.createdAt)
+    // ORDER BY DATE(p.createdAt) ASC`
     listingParkingZone[i].calculationsQuery = await db.sequelize.query(calculationsQuery, {
       type: db.sequelize.QueryTypes.SELECT
+    }).catch((error) => {
+      console.log(error)
     })
   }
   return listingParkingZone
 }
+
 module.exports = {
   getDashboardDetails,
   getDashboardClientCounts,
