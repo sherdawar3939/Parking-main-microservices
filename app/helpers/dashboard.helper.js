@@ -258,8 +258,6 @@ const parkingZoneOverview = async (conditions) => {
       calculationsQuery = calculationsQuery + ' AND ' + WHERE.join(' AND ')
     }
 
-    // calculationsQuery += ` GROUP BY DATE(p.createdAt)
-    // ORDER BY DATE(p.createdAt) ASC`
     listingParkingZone[i].calculationsQuery = await db.sequelize.query(calculationsQuery, {
       type: db.sequelize.QueryTypes.SELECT
     }).catch((error) => {
