@@ -77,10 +77,10 @@ function getInspector (id) {
 }
 
 function getInspectorList (conditions, limit, offset) {
-  const where = {}
-
+  const userwhere = { isDeleted: false }
+  const InspectorWhere = {}
   if (conditions.search) {
-    where[Op.or] = {
+    userwhere[Op.or] = {
       fName: {
         [Op.like]: '%' + conditions.search + '%'
       },
@@ -92,16 +92,18 @@ function getInspectorList (conditions, limit, offset) {
       }
     }
   }
-
+  if (conditions.ClientId) {
+    InspectorWhere.ClientId = conditions.ClientId
+  }
   return db.Inspector.findAll({
-    where,
+    where: InspectorWhere,
     limit: limit,
     offset: offset,
     include: [{
       model: db.User,
       as: 'userInspector',
       attributes: ['fName', 'lName', 'email', 'isVerified', 'isBlocked', 'isDeleted', 'createdAt', 'updatedAt', 'roleId'],
-      where: { isDeleted: false }
+      where: userwhere
     }]
   })
 }
