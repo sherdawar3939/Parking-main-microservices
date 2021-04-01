@@ -135,6 +135,7 @@ function updateSeasonalPass (id, data, status) {
         return voucher
       }
 
+<<<<<<< HEAD
       return db.Client.findOne({ raw: true, where: { id: foundVoucher.ClientId } })
         .then(async client => {
           console.log(client)
@@ -188,6 +189,67 @@ function updateSeasonalPass (id, data, status) {
           foundVoucher.set(data)
           return foundVoucher.save()
         })
+=======
+      foundVoucher.set({
+        fee: data.fee
+      })
+      return foundVoucher.save()
+
+      // return db.Client.findOne({ raw: true, where: { id: foundVoucher.ClientId } })
+      //   .then(async client => {
+      //     console.log(client)
+      //     if (client.type === 'Government') {
+      //       data.uid = generalHelper.createUid(0, foundVoucher.zip, status)
+      //     } else if (client.type === 'Private') {
+      //       await db.ParkingZone.findOne({ raw: true, where: { zip: foundVoucher.zip, ClientId: foundVoucher.ClientId } })
+      //         .then(parkingZone => {
+      //           console.log(parkingZone)
+      //           if (!parkingZone) {
+      //             return generalHelper.rejectPromise([{
+      //               field: 'UpdateVoucherHelper',
+      //               error: 'UPVH-0002',
+      //               message: 'First create parking zone'
+      //             }])
+      //           }
+      //           data.uid = generalHelper.createUid(parkingZone.clientCount, foundVoucher.zip, status)
+      //           console.log(data.uid)
+      //         })
+      //     }
+      //     console.log({ where: { uid: data.uid } });
+      //     return db.Voucher.findOne({ where: { uid: data.uid } })
+      //   })
+      //   .then((foundVoucher) => {
+      //     if (!foundVoucher) {
+      //       return generalHelper.rejectPromise({
+      //         field: 'id',
+      //         error: 'voucher-0005',
+      //         message: 'A voucher exist with this uid.'
+      //       })
+      //     }
+
+      //     return db.Contract.findOne({
+      //       where: {
+      //         type: 'Voucher',
+      //         ClientId: foundVoucher.ClientId,
+      //         RefId: foundVoucher.id
+      //       } })
+      //   })
+      //   .then((foundContract) => {
+      //     console.log(foundContract)
+      //     const currentDate = new Date()
+      //     const contractData = { updated: [], created: [] }
+      //     contractData.updated.push(`${data.uid} ${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}\n`)
+
+      //     generalHelper.generateVoucherContract(foundContract.dataValues.contractUrl, JSON.parse(JSON.stringify(contractData.created)), JSON.parse(JSON.stringify(contractData.updated)))
+      //     foundContract.set({
+      //       data: JSON.stringify(contractData)
+      //     })
+      //     foundContract.save()
+
+      //     foundVoucher.set(data)
+      //     return foundVoucher.save()
+      //   })
+>>>>>>> dev
     })
     .catch(generalHelper.catchException)
 }
