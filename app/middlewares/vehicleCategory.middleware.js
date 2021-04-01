@@ -26,7 +26,7 @@ const validateGetVehicleCategory = (req, res, done) => {
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'vehicleCategory.middleware.validateGetVehicleCategory')
   }
-
+  validatedConditions.isDeleted = false
   req.conditions = validatedConditions
   req.limit = limit
   req.offset = offset
