@@ -135,7 +135,6 @@ const addParkingZone = (data) => {
 
 function getparkingZone (conditions, limit, offset) {
   const where = {}
-  console.log('cityid', conditions.CityId)
   if (conditions.ClientId) {
     where.ClientId = conditions.ClientId
   }
