@@ -139,12 +139,7 @@ function getUserVoucherList (conditions) {
     }, {
       model: db.Voucher,
       as: 'voucher',
-<<<<<<< HEAD
-      attributes: ['zip', 'ClientId'],
-      where: whereClient
-=======
       attributes: ['zip', 'uid']
->>>>>>> dev
     },
     {
       model: db.User,

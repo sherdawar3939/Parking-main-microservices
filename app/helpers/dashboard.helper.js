@@ -1,6 +1,4 @@
 'use strict'
-const { sum } = require('lodash')
-// const _ = require('lodash')
 var sequelize = require('sequelize')
 const Op = sequelize.Op
 const db = require('../config/sequelize.config')
@@ -194,20 +192,20 @@ const getReportListing = async (conditions) => {
 const parkingZoneOverview = async (conditions) => {
   let where = {}
 
-  // if (conditions.fromDate) {
-  //   where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)]
-  // }
-  // if (conditions.toDate) {
-  //   where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
-  // }
-  // if (conditions.fromDate && conditions.toDate) {
-  //   where = {
-  //     [Op.and]: [
-  //       [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)],
-  //       [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
-  //     ]
-  //   }
-  // }
+  if (conditions.fromDate) {
+    where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)]
+  }
+  if (conditions.toDate) {
+    where = [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
+  }
+  if (conditions.fromDate && conditions.toDate) {
+    where = {
+      [Op.and]: [
+        [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '>=', conditions.fromDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('ParkingZone.createdAt')), '<=', conditions.toDate)]
+      ]
+    }
+  }
 
   if (conditions.ClientId) {
     where.ClientId = conditions.ClientId
