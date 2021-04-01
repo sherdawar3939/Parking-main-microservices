@@ -160,7 +160,7 @@ const endParkingHelper = (id) => {
           payment_method: 'paypal'
         },
         redirect_urls: {
-          return_url: 'http://parking-user.webhudlab.com/parking/paid/' + id,
+          return_url: 'https://parking-user.gplroad.com/parking/paid/' + id,
           cancel_url: 'http://localhost:3000/cancel'
         },
         transactions: [{
