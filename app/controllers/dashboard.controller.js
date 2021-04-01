@@ -1,6 +1,14 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { getDashboardDetails, getDashboardClientCounts, getClientRevenueDetails, getParkingCounts, getReportListing, parkingZoneOverview } = require('../helpers/dashboard.helper')
+const { getDashboardDetails,
+  getDashboardClientCounts,
+  getClientRevenueDetails,
+  getParkingCounts,
+  getReportListing,
+  parkingZoneOverview,
+  seasonalVoucherSold,
+  validSeasonalPass
+} = require('../helpers/dashboard.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
@@ -68,17 +76,44 @@ const parkingZoneReport = function (req, res) {
     .then(function (data) {
       generalController.successResponse(res, 'Parking Zone Report Details fetched successfully.', data, 'dashboard.controller.parkingZoneReport')
     }).catch(StandardError, function (err) {
-      generalController.errorResponse(res, err, null, 'dashboard.controller.ProfitReportListing', SERVER_RESPONSE.VALIDATION_ERROR)
+      generalController.errorResponse(res, err, null, 'dashboard.controller.parkingZoneReport', SERVER_RESPONSE.VALIDATION_ERROR)
     }).catch(function (err) {
-      generalController.errorResponse(res, err, 'Please check originalError for details', 'dashboard.controller.ProfitReportListing', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'dashboard.controller.parkingZoneReport', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
 
+/** parking Zone Reporting */
+
+const seasonalTicketSold = function (req, res) {
+  return seasonalVoucherSold(req.conditions)
+    .then(function (data) {
+      generalController.successResponse(res, 'Seasonal Voucher Sold Details fetched successfully.', data, 'dashboard.controller.seasonalTicketSold')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'dashboard.controller.seasonalTicketSold', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'dashboard.controller.seasonalTicketSold', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
+/** parking Zone Reporting */
+
+const validSeasonalTicket = function (req, res) {
+  return validSeasonalPass(req.conditions)
+    .then(function (data) {
+      generalController.successResponse(res, 'Valid Seasonal Tickets fetched successfully.', data, 'dashboard.controller.validSeasonalTicket')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'dashboard.controller.validSeasonalTicket', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'dashboard.controller.validSeasonalTicket', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
   adminDashboardDetail,
   clientDashboardDetails,
   clientRevenueDetails,
   dashboardParkingCounts,
   profitReportListing,
-  parkingZoneReport
+  parkingZoneReport,
+  seasonalTicketSold,
+  validSeasonalTicket
 }

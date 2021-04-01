@@ -186,9 +186,7 @@ const getReportListing = async (conditions) => {
   return detail
 }
 
-/** ********************* */
 /** parking Zone Reporting */
-/** ********************* */
 const parkingZoneOverview = async (conditions) => {
   let where = {}
   let parkingWhere = {}
@@ -237,6 +235,7 @@ const parkingZoneOverview = async (conditions) => {
     const ParkingCounts = await db.Parking.count({ where: { ...{ ParkingZoneId: listingParkingZone[i].id }, ...parkingWhere } }).catch((error) => {
       console.log(error)
     })
+
     listingParkingZone[i].parkingCount = ParkingCounts
 
     const InspectionCounts = await db.Inspection.count({ where: { ...{ ParkingZoneId: listingParkingZone[i].id }, ...inspectionWhere } }).catch((error) => {
@@ -267,11 +266,101 @@ const parkingZoneOverview = async (conditions) => {
   return listingParkingZone
 }
 
+/** Seasonal Voucher Sold */
+const seasonalVoucherSold = async (conditions) => {
+  let where = {}
+  let voucherWhere = {}
+
+  if (conditions.fromDate) {
+    voucherWhere = [sequelize.where(sequelize.fn('date', sequelize.col('UserVoucher.createdAt')), '>=', conditions.fromDate)]
+  }
+  if (conditions.toDate) {
+    voucherWhere = [sequelize.where(sequelize.fn('date', sequelize.col('UserVoucher.createdAt')), '<=', conditions.toDate)]
+  }
+  if (conditions.fromDate && conditions.toDate) {
+    voucherWhere = {
+      [Op.and]: [
+        [sequelize.where(sequelize.fn('date', sequelize.col('UserVoucher.createdAt')), '>=', conditions.fromDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('UserVoucher.createdAt')), '>=', conditions.toDate)]
+      ]
+    }
+  }
+
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+
+  const listingVouchers = await db.Voucher.findAll({
+    where,
+    raw: true
+  }).catch((error) => {
+    console.log(error)
+  })
+
+  for (let i = 0; i < listingVouchers.length; i++) {
+    const SeasonalTicketSold = await db.UserVoucher.count({ where: { ...{ VoucherId: listingVouchers[i].id }, ...voucherWhere }
+    }).catch((error) => {
+      console.log(error)
+    })
+    listingVouchers[i].SeasonalTicketSold = SeasonalTicketSold
+    let WHERE = []
+    let calculationsQuery = `SELECT SUM(adminProfit + clientProfit) as profit, SUM(clientTax+adminTax) as tax, SUM(fee) as fee, count(id) as sold
+    FROM uservouchers as p WHERE VoucherId=${listingVouchers[i].id}`
+
+    if (conditions.fromDate) {
+      WHERE.push(` p.createdAt >= '${conditions.fromDate}'`)
+    }
+    if (conditions.toDate) {
+      WHERE.push(` p.createdAt <= '${conditions.toDate}'`)
+    }
+
+    if (WHERE.length) {
+      calculationsQuery = calculationsQuery + ' AND ' + WHERE.join(' AND ')
+    }
+
+    const finance = await db.sequelize.query(calculationsQuery, {
+      type: db.sequelize.QueryTypes.SELECT
+    }).catch((error) => {
+      console.log(error)
+    })
+
+    listingVouchers[i].finance = finance.length > 0 ? finance[0] : finance
+  }
+  return listingVouchers
+}
+
+// /** Valid Seasonal Voucher */
+const validSeasonalPass = async (conditions) => {
+  let where = {}
+
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+
+  const voucherData = await db.Voucher.findAll({
+    where,
+    include: [{
+      model: db.UserVoucher,
+      as: 'userVouchers'
+    }]
+  }).catch((error) => {
+    console.log(error)
+  })
+  let todayDate = new Date()
+  let userVoucherCounts = await db.UserVoucher.count({ expiryDate: {
+    [Op.lt]: todayDate
+  } }).catch((error) => { console.log(error) })
+
+  return { voucherData, userVoucherCounts }
+}
+
 module.exports = {
   getDashboardDetails,
   getDashboardClientCounts,
   getClientRevenueDetails,
   getParkingCounts,
   getReportListing,
-  parkingZoneOverview
+  parkingZoneOverview,
+  seasonalVoucherSold,
+  validSeasonalPass
 }
