@@ -129,4 +129,42 @@ const validateGetReportListing = (req, res, done) => {
 
   done()
 }
-module.exports = { validateGetClientsRevenue, validateGetParkingCounts, validateGetReportListing }
+
+/** ********************* */
+/** parking Zone Reporting */
+/** ********************* */
+
+const validateParkingZoneReport = (req, res, done) => {
+  const errorArray = []
+  const query = req.query
+  const validatedConditions = {}
+
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && query.ClientId) {
+    if (isNaN(query.ClientId) || query.ClientId < 1 || query.ClientId > 9999999999) {
+      errorArray.push({
+        field: 'ClientId',
+        error: 'VPZR-7414',
+        message: 'Please provide only valid \'ClientId\' as numeric.'
+      })
+    }
+    validatedConditions.ClientId = query.ClientId
+  }
+
+  if (query.hasOwnProperty('fromDate') && query.fromDate) {
+    validatedConditions.fromDate = query.fromDate
+  }
+  if (query.hasOwnProperty('toDate') && query.toDate) {
+    validatedConditions.toDate = query.toDate
+  }
+
+  if (!_.isEmpty(errorArray)) {
+    return generalMiddleware.standardErrorResponse(res, errorArray, 'dashboard.middleware.validateParkingZoneReport')
+  }
+
+  req.conditions = validatedConditions
+
+  done()
+}
+module.exports = { validateGetClientsRevenue, validateGetParkingCounts, validateGetReportListing, validateParkingZoneReport }

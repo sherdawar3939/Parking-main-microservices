@@ -1,5 +1,4 @@
 'use strict'
-// const _ = require('lodash')
 var sequelize = require('sequelize')
 const Op = sequelize.Op
 const db = require('../config/sequelize.config')
@@ -186,10 +185,93 @@ const getReportListing = async (conditions) => {
   })
   return detail
 }
+
+/** ********************* */
+/** parking Zone Reporting */
+/** ********************* */
+const parkingZoneOverview = async (conditions) => {
+  let where = {}
+  let parkingWhere = {}
+  let inspectionWhere = {}
+
+  if (conditions.fromDate) {
+    parkingWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.fromDate)]
+    inspectionWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '>=', conditions.fromDate)]
+  }
+  if (conditions.toDate) {
+    parkingWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.toDate)]
+    inspectionWhere = [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '>=', conditions.toDate)]
+  }
+  if (conditions.fromDate && conditions.toDate) {
+    parkingWhere = {
+      [Op.and]: [
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.fromDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '<=', conditions.toDate)]
+      ]
+    }
+    inspectionWhere = {
+      [Op.and]: [
+        [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '>=', conditions.fromDate)],
+        [sequelize.where(sequelize.fn('date', sequelize.col('Inspection.createdAt')), '<=', conditions.toDate)]
+      ]
+    }
+  }
+
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+
+  const listingParkingZone = await db.ParkingZone.findAll({
+    where,
+    raw: true,
+    include: [{
+      model: db.City,
+      attributes: ['name'],
+      as: 'cityParkingZone'
+    }]
+  }).catch((error) => {
+    console.log(error)
+  })
+
+  for (let i = 0; i < listingParkingZone.length; i++) {
+    const ParkingCounts = await db.Parking.count({ where: { ...{ ParkingZoneId: listingParkingZone[i].id }, ...parkingWhere } }).catch((error) => {
+      console.log(error)
+    })
+    listingParkingZone[i].parkingCount = ParkingCounts
+
+    const InspectionCounts = await db.Inspection.count({ where: { ...{ ParkingZoneId: listingParkingZone[i].id }, ...inspectionWhere } }).catch((error) => {
+      console.log(error)
+    })
+    listingParkingZone[i].inspections = InspectionCounts
+    let WHERE = []
+    let calculationsQuery = `SELECT SUM(adminProfit + clientProfit) as profit, SUM(clientTax+adminTax) as tax, SUM(total) as total 
+    FROM parkings as p WHERE ParkingZoneId=${listingParkingZone[i].id}`
+
+    if (conditions.fromDate) {
+      WHERE.push(` p.createdAt >= '${conditions.fromDate}'`)
+    }
+    if (conditions.toDate) {
+      WHERE.push(` p.createdAt <= '${conditions.toDate}'`)
+    }
+
+    if (WHERE.length) {
+      calculationsQuery = calculationsQuery + ' AND ' + WHERE.join(' AND ')
+    }
+
+    listingParkingZone[i].calculationsQuery = await db.sequelize.query(calculationsQuery, {
+      type: db.sequelize.QueryTypes.SELECT
+    }).catch((error) => {
+      console.log(error)
+    })
+  }
+  return listingParkingZone
+}
+
 module.exports = {
   getDashboardDetails,
   getDashboardClientCounts,
   getClientRevenueDetails,
   getParkingCounts,
-  getReportListing
+  getReportListing,
+  parkingZoneOverview
 }

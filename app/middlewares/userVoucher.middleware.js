@@ -83,10 +83,15 @@ const validateGetUserVoucherList = (req, res, done) => {
 
   if (query.hasOwnProperty('VoucherId') && query.VoucherId) {
     validatedConditions.VoucherId = query.VoucherId
+    validatedConditions.VoucherId = query.VoucherId
   }
 
   if (query.hasOwnProperty('UserVehicleId') && query.UserVehicleId) {
     validatedConditions.UserVehicleId = query.UserVehicleId
+  }
+
+  if (query.hasOwnProperty('licensePlate') && query.licensePlate) {
+    validatedConditions.licensePlate = query.licensePlate
   }
 
   if (query.hasOwnProperty('paymentStatus') && query.paymentStatus) {
@@ -95,6 +100,10 @@ const validateGetUserVoucherList = (req, res, done) => {
 
   if (query.hasOwnProperty('UserId') && query.UserId) {
     validatedConditions.UserId = query.UserId
+  }
+
+  if (query.hasOwnProperty('ClientId') && query.ClientId) {
+    validatedConditions.ClientId = query.ClientId
   }
 
   if (!_.isEmpty(errorArray)) {

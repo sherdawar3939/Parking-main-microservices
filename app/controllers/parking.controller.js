@@ -1,6 +1,6 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { createParkingHelper, ActiveParkingListHelper, endParkingHelper, paymentVerifiedHelper } = require('../helpers/parking.helper')
+const { createParkingHelper, ActiveParkingListHelper, endParkingHelper, paymentVerifiedHelper, parkingCharges } = require('../helpers/parking.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
 
@@ -49,9 +49,22 @@ const paymentVerified = function (req, res) {
     })
 }
 
+/* Get Active Parking List */
+const parkingChargesCollection = function (req, res) {
+  return parkingCharges(req.params.id)
+    .then(function (data) {
+      generalController.successResponse(res, 'Parking fetched successfully.', data, 'parking.controller.parkingChargesCollection')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'parking.controller.parkingChargesCollection', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'parking.controller.parkingChargesCollection', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
+
 module.exports = {
   createParking,
   getActiveParkingList,
   endParking,
-  paymentVerified
+  paymentVerified,
+  parkingChargesCollection
 }
