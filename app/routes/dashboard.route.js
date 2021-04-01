@@ -1,5 +1,5 @@
-const { adminDashboardDetail, clientDashboardDetails, clientRevenueDetails, dashboardParkingCounts, profitReportListing, parkingZoneReport } = require('../controllers/dashboard.controller')
-const { validateGetClientsRevenue, validateGetParkingCounts, validateGetReportListing, validateParkingZoneReport } = require('../middlewares/dashboard.middleware')
+const { adminDashboardDetail, clientDashboardDetails, clientRevenueDetails, dashboardParkingCounts, profitReportListing, parkingZoneReport, seasonalTicketSold, validSeasonalTicket } = require('../controllers/dashboard.controller')
+const { validateGetClientsRevenue, validateGetParkingCounts, validateGetReportListing, validateParkingZoneReport, validateSeasonalPassSold, validateValidSeasonalTicket } = require('../middlewares/dashboard.middleware')
 const passport = require('./../config/passport')
 module.exports = function (app, apiVersion) {
   const route = apiVersion
@@ -13,4 +13,6 @@ module.exports = function (app, apiVersion) {
   /** Reporting API started below */
 
   app.get(route + '/report/parking-zone/overview', passport.authenticate('jwt', { session: false }), validateParkingZoneReport, parkingZoneReport)
+  app.get(route + '/report/voucher-sold/detail', passport.authenticate('jwt', { session: false }), validateSeasonalPassSold, seasonalTicketSold)
+  app.get(route + '/report/valid-ticket/detail', passport.authenticate('jwt', { session: false }), validateValidSeasonalTicket, validSeasonalTicket)
 }
