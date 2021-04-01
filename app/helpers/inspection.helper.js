@@ -1,6 +1,7 @@
 'use strict'
 const db = require('../config/sequelize.config')
 const Op = db.Sequelize.Op
+const generalHelper = require('./general.helper')
 var sequelize = require('sequelize')
 
 // Fetch Inspection
@@ -74,7 +75,7 @@ function createInspectionHelper (userData) {
     .then((foundStatus) => {
       const inspection = {
         InspectorId: userData.InspectorId,
-        licensePlate: foundStatus.licensePlate,
+        licensePlate: userData.licensePlate,
         result: 'illegal'
       }
 
@@ -86,6 +87,7 @@ function createInspectionHelper (userData) {
 
       return db.Inspection.create(inspection)
     })
+    .catch(generalHelper.catchException)
 }
 
 module.exports = { getInspectionHelper, createInspectionHelper }

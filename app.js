@@ -9,7 +9,7 @@ const app = express()
 // Middleware to capture any HTTP responses
 
 app.get('/main/api/v1/health', function (req, res) {
-  return res.status(200).send('Admin micro-service working 100%... \n 1 September, 2020 - 12:00 AM')
+  return res.status(200).send('Main micro-service working 100%... \n 1 April, 2021 - 08:55 PM')
 })
 
 app.get('/main/contract/:name', function (req, res) {
@@ -36,7 +36,7 @@ require('./app/config/sequelize.config')
 /**
  * Get port from environment and store in Express.
  */
-const port = process.env.PORT || '3000'
+const port = process.env.PORT || '3002'
 
 app.set('port', port)
 /**
