@@ -139,20 +139,13 @@ const validateInspectorsList = (req, res, done) => {
 
   let limit = 50
   let offset = 0
-  if (query.hasOwnProperty('fName') && query.fName) {
+  if (req.user && req.user.RoleId === 2 && req.user.employeeId) {
+    validatedConditions.ClientId = req.user.employeeId
+  } else if (query.hasOwnProperty('ClientId') && query.ClientId && !isNaN(query.ClientId)) {
+    validatedConditions.ClientId = query.ClientId
+  }
+  if (query.hasOwnProperty('search') && query.search) {
     validatedConditions.search = query.search
-  }
-
-  if (query.hasOwnProperty('lName') && query.lName) {
-    validatedConditions.lName = query.lName
-  }
-
-  if (query.hasOwnProperty('status') && query.status) {
-    validatedConditions.status = query.status
-  }
-
-  if (query.hasOwnProperty('email') && query.email) {
-    validatedConditions.email = query.email
   }
 
   if (query.limit && query.limit > 0) {
