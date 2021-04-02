@@ -346,12 +346,16 @@ const validSeasonalPass = async (conditions) => {
   }).catch((error) => {
     console.log(error)
   })
-  let todayDate = new Date()
-  let userVoucherCounts = await db.UserVoucher.count({ expiryDate: {
-    [Op.lt]: todayDate
-  } }).catch((error) => { console.log(error) })
 
-  return { voucherData, userVoucherCounts }
+  for (let i = 0; i < voucherData.length; i++) {
+    let todayDate = new Date()
+    let userVoucherCounts = await db.UserVoucher.count({ expiryDate: {
+      [Op.lt]: todayDate
+    } }).catch((error) => { console.log(error) })
+    console.log(voucherData[0].dataValues)
+    voucherData[i].dataValues.userVoucherCounts = userVoucherCounts
+  }
+  return voucherData
 }
 
 module.exports = {
