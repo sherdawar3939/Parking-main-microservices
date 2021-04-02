@@ -46,7 +46,8 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: false
     },
     balance: {
-      type: DataTypes.DECIMAL(11, 4)
+      type: DataTypes.DECIMAL(11, 4),
+      defaultValue: 0
     },
     paymentFrequency: {
       type: DataTypes.ENUM('Daily', 'Weekly', 'Monthly')
