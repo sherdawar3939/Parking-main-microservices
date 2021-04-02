@@ -10,7 +10,7 @@ const validateGetTodayInspectionCount = (req, res, done) => {
   const validatedConditions = {}
   const query = req.query
 
-  if (req.user.RoleId && req.user.RoleId == 4) {
+  if (req.user.RoleId && req.user.RoleId === 4) {
     validatedConditions.InspectorId = req.user.employeeId
   } else if (query.hasOwnProperty('InspectorId') && query.InspectorId) {
     if (isNaN(query.InspectorId) || query.InspectorId < 0 || query.InspectorId > 9999999999) {
