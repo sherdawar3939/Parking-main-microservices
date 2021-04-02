@@ -4,12 +4,18 @@ const db = require('../config/sequelize.config')
 const generalHelpingMethods = require('./general.helper')
 
 const createInspector = (userData, ClientId) => {
+  let userObj = {
+    fName: userData.fName,
+    lName: userData.lName,
+    email: userData.email,
+    RoleId: userData.RoleId
+  }
   return db.User.findOne({
     where: {
       [Op.or]: [{ email: userData.email }]
     }
   })
-    .then((user) => {
+    .then(async (user) => {
       if (user) {
         return generalHelpingMethods.rejectPromise({
           field: 'email',
@@ -17,7 +23,11 @@ const createInspector = (userData, ClientId) => {
           message: 'Email already exist.'
         })
       }
-      return db.User.create(userData)
+      let newUser = db.User.build(userObj)
+      newUser.salt = newUser.makeSalt()
+      newUser.hashedPassword = newUser.encryptPassword(userData.password, newUser.salt)
+      await newUser.save()
+      return newUser
     })
     .then((user) => {
       return db.Inspector.create({ UserId: user.id, ClientId })
@@ -26,7 +36,8 @@ const createInspector = (userData, ClientId) => {
 
 const updateInspector = (id, data) => {
   return db.Inspector.findOne({ where: { id } })
-    .then((foundInspector) => {
+
+    .then(async (foundInspector) => {
       if (!foundInspector) {
         return generalHelpingMethods.rejectPromise({
           field: 'id',
@@ -35,11 +46,19 @@ const updateInspector = (id, data) => {
         })
       }
 
-      return db.User.update(data, {
+      const newUser = await db.User.findOne({
         where: {
           id: foundInspector.UserId
         }
       })
+      newUser.set(data)
+      await newUser.save()
+      if (data.password) {
+        newUser.salt = newUser.makeSalt()
+        newUser.hashedPassword = newUser.encryptPassword(data.password, newUser.salt)
+        await newUser.save()
+        return newUser
+      }
     })
 }
 
