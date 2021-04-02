@@ -138,7 +138,7 @@ function getUserVoucherList (conditions) {
       required: true
     }, {
       model: db.Voucher,
-      as: 'voucher',
+      as: 'userVouchers',
       attributes: ['zip', 'uid']
     },
     {

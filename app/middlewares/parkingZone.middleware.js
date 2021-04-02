@@ -136,7 +136,7 @@ const validateGetParkingZone = (req, res, done) => {
 
   if (req.user && req.user.RoleId === 3 && req.user.id) {
     validatedConditions.status = 'Active'
-    validatedConditions.activeAfter = true
+    // validatedConditions.activeAfter = true
   } else if (query.hasOwnProperty('status' && query.status)) {
     validatedConditions.status = query.status
   }
