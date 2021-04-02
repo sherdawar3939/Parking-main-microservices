@@ -153,6 +153,13 @@ const getReportListing = async (conditions) => {
   if (conditions.ClientId) {
     ClientWhere.ClientId = conditions.ClientId
   }
+  if (conditions.search) {
+    where[Op.or] = {
+      licensePlate: {
+        [Op.like]: '%' + conditions.search + '%'
+      }
+    }
+  }
 
   if (conditions.startDate) {
     where = [sequelize.where(sequelize.fn('date', sequelize.col('Parking.createdAt')), '>=', conditions.startDate)]

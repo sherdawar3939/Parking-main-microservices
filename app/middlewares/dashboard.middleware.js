@@ -39,7 +39,9 @@ const validateGetClientsRevenue = (req, res, done) => {
       message: 'Please provide user type as client or admin.'
     })
   }
-
+  if (query.hasOwnProperty('search') && query.search) {
+    validatedConditions.search = query.search
+  }
   if (query.hasOwnProperty('startDate') && query.startDate) {
     validatedConditions.startDate = query.startDate
   }
@@ -109,6 +111,10 @@ const validateGetReportListing = (req, res, done) => {
       })
     }
     validatedConditions.ClientId = query.ClientId
+  }
+
+  if (query.hasOwnProperty('search') && query.search) {
+    validatedConditions.search = query.search
   }
 
   if (query.hasOwnProperty('startDate') && query.startDate) {
