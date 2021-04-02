@@ -269,6 +269,26 @@ function updateParkingZone (id, data) {
             return foundContract.save()
           })
       }
+
+      /** Update Holidays */
+      if (data.holidays && data.holidays.length) {
+        console.log(data.holidays)
+        const holidaysToInsert = []
+        data.holidays.forEach(holiday => {
+          holidaysToInsert.push({
+            holidayDate: new Date(holiday),
+            ParkingZoneId: id
+          })
+        })
+        db.ParkingZoneHoliday.destroy({
+          where: { ParkingZoneId: id }
+        })
+          .then(() => {
+            console.log(holidaysToInsert)
+            return db.ParkingZoneHoliday.bulkCreate(holidaysToInsert)
+          })
+      }
+
       parkingZone.set(data)
       return parkingZone.save()
     })

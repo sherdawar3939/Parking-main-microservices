@@ -24,9 +24,10 @@ const getDashboardDetails = async (conditions) => {
 const getDashboardClientCounts = async (id) => {
   const InspectorCountQuery = await db.Inspector.count({ where: { ClientId: id } })
   console.log('count', InspectorCountQuery)
-
+  let finance
   // return InspectorCountQuery
   const ParkingCounts = await db.ParkingZone.findAll({
+
     raw: true,
     nest: false,
     where: {
@@ -49,11 +50,32 @@ const getDashboardClientCounts = async (id) => {
     console.log(error)
   })
 
+  const parkingZone = await db.ParkingZone.findAll({
+    where: {
+      ClientId: id
+    },
+    attributes: ['id'],
+    raw: true
+  }).catch((error) => {
+    console.log(error)
+  })
+  for (let i = 0; i < parkingZone.length; i++) {
+    let calculationsQuery = `SELECT SUM(adminProfit + clientProfit) as TotalProfit, SUM(clientTax+adminTax) as TotalTax
+    FROM parkings as p WHERE ParkingZoneId=${parkingZone[i].id}`
+
+    finance = await db.sequelize.query(calculationsQuery, {
+      type: db.sequelize.QueryTypes.SELECT
+    }).catch((error) => {
+      console.log(error)
+    })
+    // console.log('finance', finance)
+    // parkingZone[i].finance = finance.length > 0 ? finance[0] : finance
+  }
   let parkingCount = 0
   if (ParkingCounts.length) {
     parkingCount = ParkingCounts[0].parkingCounts
   }
-  return { InspectorCountQuery: InspectorCountQuery, parkingCounts: parkingCount }
+  return { InspectorCountQuery: InspectorCountQuery, parkingCounts: parkingCount, TotalProfit: finance[0].TotalProfit, TotalTax: finance[0].TotalTax }
 }
 
 const getClientRevenueDetails = (conditions, field = 'adminProfit') => {
@@ -358,6 +380,31 @@ const validSeasonalPass = async (conditions) => {
   return voucherData
 }
 
+// /** Inspector Activity */
+const inspectorActivity = async (conditions) => {
+  let where = {}
+
+  if (conditions.ClientId) {
+    where.ClientId = conditions.ClientId
+  }
+
+  const InspectorData = await db.Inspector.findAll({
+    where,
+    include: [{
+      model: db.User,
+      as: 'userInspector'
+    }]
+  }).catch((error) => {
+    console.log(error)
+  })
+
+  // for (let i = 0; i < InspectorData.length; i++) {
+  //   let inspectedCounts = await db.UserVoucher.count({}).catch((error) => { console.log(error) })
+  //   InspectorData[i].dataValues. = inspectedCounts
+  // }
+  return InspectorData
+}
+
 module.exports = {
   getDashboardDetails,
   getDashboardClientCounts,
@@ -366,5 +413,6 @@ module.exports = {
   getReportListing,
   parkingZoneOverview,
   seasonalVoucherSold,
-  validSeasonalPass
+  validSeasonalPass,
+  inspectorActivity
 }

@@ -58,7 +58,7 @@ const validatePostInspection = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
 
-  if (!req.user || !req.user.RoleId || req.user.RoleId != 4) {
+  if (!req.user || !req.user.RoleId || req.user.RoleId !== 4) {
     errorArray.push({
       field: 'licensePlate',
       error: 'MVCI-0005',

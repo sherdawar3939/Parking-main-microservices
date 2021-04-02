@@ -265,6 +265,20 @@ const validateUpdateParkingZone = (req, res, done) => {
     validatedBody.endTime = body.endTime
   }
 
+  console.log('body.holidays0', body.holidays)
+
+  // validating Holidays Array as optional number field
+  if (body.hasOwnProperty('holidays') && body.holidays) {
+    if (!_.isArray(body.holidays) || body.holidays.length < 1) {
+      errorArray.push({
+        field: 'holidays ',
+        error: 90131,
+        message: 'Please provide only valid \'holidays \' as Array.'
+      })
+    }
+    validatedBody.holidays = body.holidays
+  }
+
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }

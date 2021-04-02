@@ -1,13 +1,15 @@
 'use strict'
 const SERVER_RESPONSE = require('../config/serverResponses')
-const { getDashboardDetails,
+const {
+  getDashboardDetails,
   getDashboardClientCounts,
   getClientRevenueDetails,
   getParkingCounts,
   getReportListing,
   parkingZoneOverview,
   seasonalVoucherSold,
-  validSeasonalPass
+  validSeasonalPass,
+  inspectorActivity
 } = require('../helpers/dashboard.helper')
 const StandardError = require('standard-error')
 const generalController = require('./general.controller')
@@ -107,6 +109,19 @@ const validSeasonalTicket = function (req, res) {
       generalController.errorResponse(res, err, 'Please check originalError for details', 'dashboard.controller.validSeasonalTicket', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
     })
 }
+
+/** Inspector Activity */
+
+const InspectorActivity = function (req, res) {
+  return inspectorActivity(req.conditions)
+    .then(function (data) {
+      generalController.successResponse(res, 'Inspector Details fetched successfully.', data, 'dashboard.controller.InspectorActivity')
+    }).catch(StandardError, function (err) {
+      generalController.errorResponse(res, err, null, 'dashboard.controller.InspectorActivity', SERVER_RESPONSE.VALIDATION_ERROR)
+    }).catch(function (err) {
+      generalController.errorResponse(res, err, 'Please check originalError for details', 'dashboard.controller.InspectorActivity', SERVER_RESPONSE.INTERNAL_SERVER_ERROR)
+    })
+}
 module.exports = {
   adminDashboardDetail,
   clientDashboardDetails,
@@ -115,5 +130,6 @@ module.exports = {
   profitReportListing,
   parkingZoneReport,
   seasonalTicketSold,
-  validSeasonalTicket
+  validSeasonalTicket,
+  InspectorActivity
 }
