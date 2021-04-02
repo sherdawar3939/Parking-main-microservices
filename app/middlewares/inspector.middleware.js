@@ -29,7 +29,6 @@ const validatePostInspector = (req, res, done) => {
         message: 'Please provide only valid \'lName\' as string, length must be between 2 and 100.'
       })
     }
-    validatedUserData.lName = body.lName
   }
 
   // email is an required string property, if it is given than validate it.
@@ -41,7 +40,14 @@ const validatePostInspector = (req, res, done) => {
         message: 'Please provide only valid \'email\' as string, length must be between 5 and 100.'
       })
     }
-    validatedUserData.email = body.email
+  }
+  // validating as required number field
+  if (_.isEmpty(body.password) || !_.isString(body.password) || body.password.length < 8 || body.password.length > 16) {
+    errorArray.push({
+      field: 'password',
+      error: 'MVGCR-8063',
+      message: 'The field is required with min 8 and max 16 value.'
+    })
   }
 
   if (!_.isEmpty(errorArray)) {
@@ -51,7 +57,9 @@ const validatePostInspector = (req, res, done) => {
   validatedUserData.fName = body.fName
   validatedUserData.lName = body.lName
   validatedUserData.email = body.email
-
+  validatedUserData.password = body.password
+  validatedUserData.RoleId = 4
+  validatedUserData.isVerified = true
   req.validatedUserData = validatedUserData
   req.validatedInspectorData = validatedInspectorData
   done()
@@ -90,7 +98,16 @@ const validateUpdateInspector = (req, res, done) => {
     }
     validatedBody.email = body.email
   }
-
+  if (body.hasOwnProperty('password') && body.password) {
+    if (_.isEmpty(body.password) || !_.isString(body.password) || body.password.length < 8 || body.password.length > 16) {
+      errorArray.push({
+        field: 'password',
+        error: 'MVGCR-8066',
+        message: 'The field is required with min 8 and max 16 value.'
+      })
+    }
+    validatedBody.password = body.password
+  }
   if (!_.isEmpty(errorArray)) {
     return generalMiddleware.standardErrorResponse(res, errorArray, 'parkingZone.middleware.validateUpdateParkingZone')
   }
