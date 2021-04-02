@@ -118,6 +118,7 @@ const validateCreateParkingZone = (req, res, done) => {
   validatedBody.startTime = body.startTime
   validatedBody.endTime = body.endTime
   validatedBody.activeAfter = date
+  validatedBody.status = 'Active'
   req.validatedBody = validatedBody
   done()
 }
