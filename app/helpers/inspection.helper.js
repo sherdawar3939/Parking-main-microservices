@@ -4,6 +4,12 @@ const Op = db.Sequelize.Op
 const generalHelper = require('./general.helper')
 var sequelize = require('sequelize')
 
+function getInspectionCountsHelper (conditions) {
+  return db.Inspection.count({
+    where: conditions
+  })
+}
+
 // Fetch Inspection
 function getInspectionHelper (conditions, limit, offset) {
   const includes = []
@@ -90,4 +96,4 @@ function createInspectionHelper (userData) {
     .catch(generalHelper.catchException)
 }
 
-module.exports = { getInspectionHelper, createInspectionHelper }
+module.exports = { getInspectionHelper, createInspectionHelper, getInspectionCountsHelper }

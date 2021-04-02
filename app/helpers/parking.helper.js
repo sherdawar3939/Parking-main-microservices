@@ -14,10 +14,10 @@ const createParkingHelper = (data) => {
   return db.ParkingZone.findOne({
     where: {
       id: data.ParkingZoneId,
-      status: 'Active',
-      activeAfter: {
-        [Op.lt]: new Date()
-      }
+      status: 'Active'
+      // activeAfter: {
+      //   [Op.lt]: new Date()
+      // }
     },
     raw: true
   })
@@ -147,6 +147,27 @@ const endParkingHelper = (id) => {
           }
         })
 
+      const foundVoucher = await db.UserVoucher.findOne({
+        raw: true,
+        where: {},
+        include: [{
+          model: db.UserVehicle,
+          as: 'userVehicle',
+          attributes: ['licensePlate'],
+          where: {
+            licensePlate: result.licensePlate
+          },
+          required: true
+        }, {
+          model: db.Voucher,
+          as: 'userVouchers',
+          attributes: ['zip', 'uid'],
+          where: {
+            zip: result.zip
+          }
+        }]
+      })
+
       let adminProfit = 0.5
       let adminTax = adminProfit * countryTax
       let totalSeconds = (new Date() - new Date(result.startedOn)) / 1000
@@ -156,11 +177,19 @@ const endParkingHelper = (id) => {
       let clientTax = parkingCharges * countryTax
       let total = parkingCharges + clientTax + adminProfit + adminTax
 
-      bill = { status: 'Ended', endedOn: new Date(), totalSeconds, parkingCharges, clientTax, clientProfit, adminTax, adminProfit, total }
+      if (foundVoucher) {
+        bill = { status: 'Ended', endedOn: new Date(), totalSeconds, parkingCharges: 0, clientTax: 0, clientProfit: 0, adminTax: 0, adminProfit: 0, total: 0 }
+      } else {
+        bill = { status: 'Ended', endedOn: new Date(), totalSeconds, parkingCharges, clientTax, clientProfit, adminTax, adminProfit, total }
+      }
       console.log(bill)
       db.Parking.update(
         bill, { where: { id: id } }
       )
+
+      if (bill.total <= 0) {
+        return {}
+      }
 
       const createPaymentJson = JSON.stringify({
         intent: 'sale',
@@ -184,11 +213,12 @@ const endParkingHelper = (id) => {
       // return bill
     })
     .then((payment) => {
-      let paypalUrl = payment.links.filter(link => link.rel === 'approval_url')
-      if (paypalUrl && paypalUrl.length) {
-        bill.paypalUrl = paypalUrl[0].href
-      } else {
-        bill.paypalUrl = {}
+      bill.paypalUrl = ''
+      if (payment && bill.total > 0) {
+        let paypalUrl = payment.links.filter(link => link.rel === 'approval_url')
+        if (paypalUrl && paypalUrl.length) {
+          bill.paypalUrl = paypalUrl[0].href
+        }
       }
       return bill
     })
