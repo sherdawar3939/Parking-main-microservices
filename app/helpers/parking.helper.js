@@ -14,10 +14,10 @@ const createParkingHelper = (data) => {
   return db.ParkingZone.findOne({
     where: {
       id: data.ParkingZoneId,
-      status: 'Active',
-      activeAfter: {
-        [Op.lt]: new Date()
-      }
+      status: 'Active'
+      // activeAfter: {
+      //   [Op.lt]: new Date()
+      // }
     },
     raw: true
   })
@@ -159,8 +159,6 @@ const endParkingHelper = (id) => {
           }
         }]
       })
-
-      console.log(foundVoucher);
 
       let adminProfit = 0.5
       let adminTax = adminProfit * countryTax
