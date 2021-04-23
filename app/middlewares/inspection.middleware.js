@@ -10,7 +10,7 @@ const validateGetTodayInspectionCount = (req, res, done) => {
   const validatedConditions = {}
   const query = req.query
 
-  if (req.user.RoleId && req.user.RoleId == 4) {
+  if (req.user.RoleId && req.user.RoleId === 4) {
     validatedConditions.InspectorId = req.user.employeeId
   } else if (query.hasOwnProperty('InspectorId') && query.InspectorId) {
     if (isNaN(query.InspectorId) || query.InspectorId < 0 || query.InspectorId > 9999999999) {
@@ -95,7 +95,7 @@ const validatePostInspection = (req, res, done) => {
   const body = req.body
   const validatedBody = {}
 
-  if (!req.user || !req.user.RoleId || req.user.RoleId != 4) {
+  if (!req.user || !req.user.RoleId || req.user.RoleId !== 4) {
     errorArray.push({
       field: 'licensePlate',
       error: 'MVCI-0005',

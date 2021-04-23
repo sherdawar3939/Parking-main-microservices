@@ -63,6 +63,14 @@ function ActiveParkingListHelper (conditions, limit, offset) {
   const parkingZoneWhere = {}
   let includes = []
 
+  if (conditions.search) {
+    parkingWhere[Op.or] = {
+      licensePlate: {
+        [Op.like]: '%' + conditions.search + '%'
+      }
+    }
+  }
+
   if (conditions.ClientId) {
     parkingZoneWhere.ClientId = conditions.ClientId
   }

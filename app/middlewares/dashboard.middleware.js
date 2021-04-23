@@ -39,7 +39,9 @@ const validateGetClientsRevenue = (req, res, done) => {
             message: 'Please provide user type as client or admin.'
         })
     }
-
+    if (query.hasOwnProperty('search') && query.search) {
+        validatedConditions.search = query.search
+    }
     if (query.hasOwnProperty('startDate') && query.startDate) {
         validatedConditions.startDate = query.startDate
     }
@@ -109,6 +111,10 @@ const validateGetReportListing = (req, res, done) => {
             })
         }
         validatedConditions.ClientId = query.ClientId
+    }
+
+    if (query.hasOwnProperty('search') && query.search) {
+        validatedConditions.search = query.search
     }
 
     if (query.hasOwnProperty('startDate') && query.startDate) {
@@ -238,4 +244,40 @@ const validateValidSeasonalTicket = (req, res, done) => {
 
     done()
 }
-module.exports = { validateGetClientsRevenue, validateGetParkingCounts, validateGetReportListing, validateParkingZoneReport, validateSeasonalPassSold, validateValidSeasonalTicket }
+
+/** Inspector Activity */
+const validateInspectorActivity = (req, res, done) => {
+    const errorArray = []
+    const query = req.query
+    const validatedConditions = {}
+
+    if (req.user && req.user.RoleId === 4 && req.user.employeeId) {
+        validatedConditions.InspectorId = req.user.employeeId
+    } else if (query.hasOwnProperty('InspectorId') && query.InspectorId && !isNaN(query.InspectorId)) {
+        validatedConditions.InspectorId = query.InspectorId
+    }
+
+    if (query.hasOwnProperty('fromDate') && query.fromDate) {
+        validatedConditions.fromDate = query.fromDate
+    }
+    if (query.hasOwnProperty('toDate') && query.toDate) {
+        validatedConditions.toDate = query.toDate
+    }
+
+    if (!_.isEmpty(errorArray)) {
+        return generalMiddleware.standardErrorResponse(res, errorArray, 'dashboard.middleware.validateInspectorActivity')
+    }
+
+    req.conditions = validatedConditions
+
+    done()
+}
+module.exports = {
+    validateGetClientsRevenue,
+    validateGetParkingCounts,
+    validateGetReportListing,
+    validateParkingZoneReport,
+    validateSeasonalPassSold,
+    validateValidSeasonalTicket,
+    validateInspectorActivity
+}
